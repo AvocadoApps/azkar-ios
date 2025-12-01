@@ -17,8 +17,9 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
     
     var availableTransliterationTypes: [ZikrTransliterationType] {
         switch preferences.contentLanguage {
-        case .arabic, .english, .georgian, .turkish: return [.community, .DIN31635]
-        case .russian, .chechen, .ingush, .kazakh, .kyrgyz, .uzbek: return [.community, .ruScientific, .DIN31635]
+        case .arabic, .english, .georgian, .turkish: return [.DIN31635]
+        case .russian, .chechen: return [.community, .ruScientific, .DIN31635]
+        case .ingush, .kazakh, .kyrgyz, .uzbek: return [.ruScientific, .DIN31635]
         }
     }
     
@@ -55,7 +56,7 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
     func setContentLanguage(_ language: Language) {
         preferences.contentLanguage = language
         if availableTransliterationTypes.contains(preferences.transliterationType) == false {
-            preferences.transliterationType = .community
+            preferences.transliterationType = availableTransliterationTypes.first ?? .DIN31635
         }
     }
     

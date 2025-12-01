@@ -36,7 +36,6 @@ public extension Ad {
             size: .regular,
             title: "Did you hear about our bot?",
             body: "We created a Telegram bot which helps you download free books",
-            actionTitle: "Open Bot",
             actionLink: URL(string: "https://t.me/kutubist_bot")!,
             imageLink: URL(string: "https://images.unsplash.com/photo-1655388333786-6b8270e2e154?q=80&w=3131&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
             imageMode: .background

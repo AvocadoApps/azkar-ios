@@ -168,30 +168,41 @@ public struct AdButton: View {
     }
 }
 
-#Preview("Telegram Bot") {
-    return AdButton(
-        item: AdButtonItem(ad: .telegramBotDemo),
-        onClose: {},
-        action: {}
-    )
+@available(iOS 17, *)
+#Preview("Telegram Bot", traits: .fixedLayout(width: 375, height: 150)) {
+    VStack {
+        Spacer()
+        AdButton(
+            item: AdButtonItem(ad: .telegramBotDemo),
+            onClose: {},
+            action: {}
+        )
+        .frame(height: 120)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .padding()
+    }
 }
 
 @available(iOS 17, *)
-#Preview("Tickets. Minimal", traits: .fixedLayout(width: 350, height: 200)) {
-    return AdButton(
+#Preview("Tickets. Minimal", traits: .fixedLayout(width: 375, height: 125)) {
+    AdButton(
         item: AdButtonItem(ad: .ticketsDemo),
         onClose: {},
         action: {}
     )
+    .background(Color(.secondarySystemBackground))
     .padding()
 }
 
 @available(iOS 17, *)
-#Preview("Find Hotel. Minimal", traits: .fixedLayout(width: 350, height: 200)) {
-    return AdButton(
-        item: AdButtonItem(ad: .hotelsDemo),
-        onClose: {},
-        action: {}
-    )
-    .padding()
+#Preview("Find Hotel. Minimal", traits: .fixedLayout(width: 375, height: 125)) {
+    VStack {
+        Spacer()
+        AdButton(
+            item: AdButtonItem(ad: .hotelsDemo),
+            onClose: {},
+            action: {}
+        )
+        .padding()
+    }
 }
