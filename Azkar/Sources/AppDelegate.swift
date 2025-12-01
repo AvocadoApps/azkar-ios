@@ -60,6 +60,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             })
 
         registerUserDefaults()
+        ensureValidTransliterationPreference()
         setupRevenueCat()
         setupFirebase()
         setupSuperwall()
@@ -137,6 +138,23 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             trackAutomaticEvents: false
         )
         Mixpanel.mainInstance().loggingEnabled = true
+    }
+    
+    private func ensureValidTransliterationPreference() {
+        let preferences = Preferences.shared
+        let availableTypes: [ZikrTransliterationType]
+        switch preferences.contentLanguage {
+        case .arabic, .english, .georgian, .turkish:
+            availableTypes = [.DIN31635]
+        case .russian, .chechen:
+            availableTypes = [.community, .ruScientific, .DIN31635]
+        case .ingush, .kazakh, .kyrgyz, .uzbek:
+            availableTypes = [.ruScientific, .DIN31635]
+        }
+        
+        if availableTypes.contains(preferences.transliterationType) == false {
+            preferences.transliterationType = availableTypes.first ?? .community
+        }
     }
     
 }
