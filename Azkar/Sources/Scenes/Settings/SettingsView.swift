@@ -98,6 +98,7 @@ struct SettingsView: View {
                 
                 Image(systemName: "chevron.right")
             }
+            .contentShape(Rectangle())
             .padding(4)
             .multilineTextAlignment(.leading)
         }
