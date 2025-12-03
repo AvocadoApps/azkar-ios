@@ -61,6 +61,13 @@ struct MainMenuView: View {
             }
             .padding(.vertical, 20)
         }
+        .overlay(alignment: .bottom) {
+            ZStack {
+                if let ad = viewModel.ad {
+                    adView(ad)
+                }
+            }
+        }
         .customScrollContentBackground()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -115,7 +122,9 @@ struct MainMenuView: View {
         }
         
         if let ad = viewModel.ad {
+            // Placeholder for proper scroll insets.
             adView(ad)
+                .opacity(0)
         }
     }
     
