@@ -1,4 +1,1 @@
-- Corrected typos in various adhkar texts.
-- Enhanced file storage for faster and more stable loading of articles, fonts, and background images.
-- Updated the Share Dhikr section: choose from new fonts and backgrounds.
-- Improved support for iOS 26
+- Fixed selection of transliteration for Kazakh, Uzbek and other languages (uses the DIN 31635 standard)

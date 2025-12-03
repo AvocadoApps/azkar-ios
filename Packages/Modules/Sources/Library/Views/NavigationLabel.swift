@@ -31,6 +31,7 @@ public struct NavigationLabel: View {
             Image(systemName: "chevron.right")
                 .foregroundStyle(.secondaryText)
         }
+        .contentShape(Rectangle())
         .systemFont(.body)
         .padding(.vertical, applyVerticalPadding ? 8 : 0)
     }
