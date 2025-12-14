@@ -1,1 +1,1 @@
-- Fixed selection of transliteration for Kazakh, Uzbek and other languages (uses the DIN 31635 standard)
+- New Counter sizes
