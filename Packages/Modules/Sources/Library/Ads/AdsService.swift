@@ -11,7 +11,8 @@ public final class AdsService: AdsServiceType {
     
     public init(
         databasePath: String,
-        language: Language
+        language: Language,
+        analyticsDatabase: AnalyticsDatabaseService?
     ) throws {
         let supabaseClient = try getSupabaseClient()
         localStorageRepository = try AdsSQLiteRepository(
@@ -22,7 +23,10 @@ public final class AdsService: AdsServiceType {
             supabaseClient: supabaseClient,
             language: language
         )
-        analyticsService = AnalyticsService(supabaseClient: supabaseClient)
+        analyticsService = AnalyticsService(
+            supabaseClient: supabaseClient,
+            analyticsDatabase: analyticsDatabase
+        )
     }
     
     public func getAd() -> AsyncStream<Ad> {
@@ -61,11 +65,13 @@ public final class AdsService: AdsServiceType {
     }
     
     public func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {
-        analyticsService.sendAnalyticsEvent(
-            objectId: ad.id,
-            recordType: .ad,
-            actionType: action
-        )
+        Task {
+            await analyticsService.sendAnalyticsEvent(
+                objectId: ad.id,
+                recordType: .ad,
+                actionType: action
+            )
+        }
     }
     
 }

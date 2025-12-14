@@ -44,6 +44,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         AzkarDatabase(language: preferences.contentLanguage)
     }
     var preferencesDatabase: PreferencesDatabase?
+    var analyticsDatabase: AnalyticsDatabaseService?
     let deeplinker: Deeplinker
     let player: Player
     var articlesService: ArticlesServiceType?
@@ -78,17 +79,25 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         do {
             let language = preferences.contentLanguage.fallbackLanguage
+            
+            let analyticsDatabasePath = appGroupFolder
+                .appendingPathComponent("analytics.db")
+                .absoluteString
+            analyticsDatabase = try? AnalyticsSQLiteDatabaseService(databasePath: analyticsDatabasePath)
+            
             articlesService = try ArticlesService(
                 databasePath: appGroupFolder
                     .appendingPathComponent("articles.db")
                     .absoluteString,
-                language: language
+                language: language,
+                analyticsDatabase: analyticsDatabase
             )
             adsService = try AdsService(
                 databasePath: appGroupFolder
                     .appendingPathComponent("ads.db")
                     .absoluteString,
-                language: language
+                language: language,
+                analyticsDatabase: analyticsDatabase
             )
 
             let preferencesDatabasePath = appGroupFolder

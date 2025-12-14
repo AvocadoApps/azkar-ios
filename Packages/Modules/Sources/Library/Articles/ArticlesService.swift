@@ -13,11 +13,15 @@ public final class ArticlesService: ArticlesServiceType {
     
     public init(
         databasePath: String,
-        language: Language
+        language: Language,
+        analyticsDatabase: AnalyticsDatabaseService?
     ) throws {
         let supabaseClient = try getSupabaseClient()
         localRepository = try ArticlesSQLiteDatabaseService(language: language, databaseFilePath: databasePath)
-        articlesAnalyticsService = ArticlesAnalyticsService(supabaseClient: supabaseClient)
+        articlesAnalyticsService = ArticlesAnalyticsService(
+            supabaseClient: supabaseClient,
+            analyticsDatabase: analyticsDatabase
+        )
         remoteRepository = ArticlesSupabaseRepository(
             supabaseClient: supabaseClient,
             language: language,
