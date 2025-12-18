@@ -9,5 +9,6 @@ final class DemoAdsService: AdsServiceType {
             continuation.finish()
         }
     }
+    func saveAd(_ ad: Ad) async throws {}
     func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {}
 }

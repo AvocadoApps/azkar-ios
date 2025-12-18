@@ -27,6 +27,7 @@ public struct Ad: Identifiable, Codable, Hashable {
     public var updatedAt = Date()
     public var beginDate = Date()
     public var expireDate = Date()
+    public var isHidden = false
 }
 
 public extension Ad {

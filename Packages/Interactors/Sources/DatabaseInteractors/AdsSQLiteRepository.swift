@@ -52,6 +52,12 @@ public final class AdsSQLiteRepository: AdsRepository {
                 t.column("updated_at", .datetime).notNull()
                 t.column("begin_date", .datetime).notNull()
                 t.column("expire_date", .datetime).notNull()
+                t.column("is_hidden", .boolean).defaults(to: false)
+            }
+        }
+        migrator.registerMigration("Add is_hidden column") { db in
+            try db.alter(table: "ads") { t in
+                t.add(column: "is_hidden", .boolean).defaults(to: false)
             }
         }
         migrator.eraseDatabaseOnSchemaChange = true
@@ -96,6 +102,7 @@ public final class AdsSQLiteRepository: AdsRepository {
                 return try query
                     .filter(sql: "begin_date < ?", arguments: [formattedDate])
                     .filter(sql: "expire_date > ?", arguments: [formattedDate])
+                    .filter(sql: "is_hidden = ?", arguments: [false])
                     .order(sql: "created_at DESC")
                     .limit(limit)
                     .fetchAll(db)

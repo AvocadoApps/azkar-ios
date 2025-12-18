@@ -64,6 +64,10 @@ public final class AdsService: AdsServiceType {
         }
     }
     
+    public func saveAd(_ ad: Ad) async throws {
+        try await localStorageRepository.saveAd(ad)
+    }
+    
     public func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {
         Task {
             await analyticsService.sendAnalyticsEvent(
@@ -73,5 +77,5 @@ public final class AdsService: AdsServiceType {
             )
         }
     }
-    
+
 }

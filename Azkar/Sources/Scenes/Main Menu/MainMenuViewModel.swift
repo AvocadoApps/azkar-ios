@@ -242,8 +242,15 @@ final class MainMenuViewModel: ObservableObject {
         router.trigger(.settings(.appearance))
     }
     
-    func hideAd(_ ad: Ad) {
+    func hideAd(_ ad: Ad, permanently: Bool = false) {
         self.ad = nil
+        Task {
+            var hiddenAd = ad
+            if permanently {
+                hiddenAd.isHidden = true
+                try await adsService.saveAd(hiddenAd)
+            }
+        }
         adsService.sendAnalytics(for: ad, action: .hide)
         AnalyticsReporter.reportEvent("azkar_ads_hide", metadata: ["id": ad.id])
     }
