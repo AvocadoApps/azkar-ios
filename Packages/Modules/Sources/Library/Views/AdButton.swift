@@ -38,34 +38,43 @@ public struct AdButton: View {
         item.imageMode == .background ? .white : (item.foregroundColor ?? colorTheme.getColor(.text))
     }
     
-    private var size: AdSize { item.size }
+    private var presentationType: AdPresentationType { item.presentationType }
     private var backgroundColor: Color { item.backgroundColor ?? colorTheme.getColor(.contentBackground) }
     private var accentColor: Color { item.accentColor }
 
     public var body: some View {
+        Button(action: action) {
+            label
+                .glassEffectCompat(.regular.interactive(true), in: RoundedRectangle(cornerRadius: cornerRadius))
+        }
+        .contentShape(RoundedRectangle(cornerRadius: cornerRadius))
+    }
+
+    var label: some View {
         HStack(alignment: .center, spacing: 0) {
             if let imageLink = item.imageLink, item.imageMode == .icon {
                 iconImageView(imageLink)
-                    .frame(width: 80 * item.size.scale, height: 80 * item.size.scale)
+                    .frame(width: 80 * item.presentationType.scale, height: 80 * item.presentationType.scale)
                     .clipShape(CustomContainerRelativeShape(cornerRadius: cornerRadius))
                     .shadow(color: item.accentColor.opacity(0.5), radius: 3)
                     .removeSaturationIfNeeded()
             }
             
             HStack(alignment: .bottom, spacing: 0) {
-                VStack(alignment: .leading, spacing: size.scale * 8) {
+                VStack(alignment: .leading, spacing: presentationType.scale * 8) {
                     if let title = item.title {
                         Text(title)
                             .foregroundStyle(effectiveforegroundStyle)
-                            .font(size.titleFont)
+                            .font(presentationType.titleFont)
                     }
                     
                     if let subtitle = item.body {
                         Text(subtitle)
                             .foregroundStyle(effectiveforegroundStyle)
-                            .font(size.bodyFont)
+                            .font(presentationType.bodyFont)
                     }
                 }
+                .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
                 
@@ -76,9 +85,8 @@ public struct AdButton: View {
                 }
             }
         }
-        .padding(.vertical, 20 * size.scale)
-        .padding(.horizontal, 15 * size.scale)
-        .onTapGesture(perform: action)
+        .padding(.vertical, 20 * presentationType.scale)
+        .padding(.horizontal, 15 * presentationType.scale)
         .overlay(alignment: .topTrailing) {
             GeometryReader { geometry in
                 VStack(alignment: .trailing) {
@@ -90,12 +98,13 @@ public struct AdButton: View {
                         arrowImage
                     }
                 }
-                .padding([.trailing, .vertical], 20 * size.scale)
+                .padding([.trailing, .vertical], 20 * presentationType.scale)
                 .frame(width: geometry.size.width, height: geometry.size.height, alignment: .trailing)
             }
         }
         .background(
             ZStack {
+                Color.black.opacity(0.1)
                 backgroundColor
                 if let imageLink = item.imageLink, item.imageMode == .background {
                     backgroundImageView(for: imageLink)
@@ -109,8 +118,8 @@ public struct AdButton: View {
         Image(systemName: "arrow.up.forward")
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: size.scale * 10, height: size.scale * 10)
-            .padding(size.scale * 5)
+            .frame(width: presentationType.scale * 10, height: presentationType.scale * 10)
+            .padding(presentationType.scale * 5)
             .foregroundStyle(effectiveforegroundStyle.opacity(0.75))
     }
     
@@ -118,9 +127,9 @@ public struct AdButton: View {
         Image(systemName: "xmark")
             .resizable()
             .aspectRatio(contentMode: .fill)
-            .frame(width: size.scale * 10, height: size.scale * 10)
+            .frame(width: presentationType.scale * 10, height: presentationType.scale * 10)
             .foregroundStyle(effectiveforegroundStyle)
-            .padding(size.scale * 5)
+            .padding(presentationType.scale * 5)
             .contentShape(Rectangle())
             .highPriorityGesture(
                 TapGesture()
@@ -130,10 +139,10 @@ public struct AdButton: View {
     
     private func actionButton(_ title: String) -> some View {
         Text(title)
-            .font(size.actionFont)
+            .font(presentationType.actionFont)
             .foregroundStyle(Color.white)
             .shadow(color: item.accentColor.opacity(0.5), radius: 10, x: 0, y: 5)
-            .padding(size.scale * 10)
+            .padding(presentationType.scale * 10)
             .background {
                 CustomContainerRelativeShape(cornerRadius: cornerRadius)
                     .fill(item.accentColor)
@@ -178,9 +187,8 @@ public struct AdButton: View {
             action: {}
         )
         .frame(height: 120)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .padding()
     }
+    .padding()
 }
 
 @available(iOS 17, *)
@@ -203,6 +211,6 @@ public struct AdButton: View {
             onClose: {},
             action: {}
         )
-        .padding()
     }
+    .padding()
 }

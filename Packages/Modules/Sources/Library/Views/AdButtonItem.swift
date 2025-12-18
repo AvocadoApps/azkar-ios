@@ -2,39 +2,39 @@ import SwiftUI
 import Entities
 import Extensions
 
-extension AdSize {
+extension AdPresentationType {
     var scale: CGFloat {
         switch self {
-        case .minimal: return 0.65
-        case .regular: return 1
+        case .bannerMinimal: return 0.65
+        case .bannerRegular, .bottomSheet: return 1
         }
     }
     
     var titleFont: Font {
         switch self {
-        case .minimal: return Font.callout.weight(.medium)
-        case .regular: return Font.headline
+        case .bannerMinimal: return Font.callout.weight(.medium)
+        case .bannerRegular, .bottomSheet: return Font.headline
         }
     }
     
     var bodyFont: Font {
         switch self {
-        case .minimal: return Font.caption
-        case .regular: return Font.footnote
+        case .bannerMinimal: return Font.caption
+        case .bannerRegular, .bottomSheet: return Font.footnote
         }
     }
     
     var actionFont: Font {
         switch self {
-        case .minimal: return Font.caption2.weight(.semibold)
-        case .regular: return Font.body.weight(.semibold)
+        case .bannerMinimal: return Font.caption2.weight(.semibold)
+        case .bannerRegular, .bottomSheet: return Font.body.weight(.semibold)
         }
     }
 }
 
 public struct AdButtonItem: Identifiable {
     public let id: Int
-    let size: AdSize
+    let presentationType: AdPresentationType
     let title: String?
     let body: String?
     let actionTitle: String?
@@ -49,7 +49,7 @@ public struct AdButtonItem: Identifiable {
 extension AdButtonItem {
     public init(ad: Ad) {
         self.id = ad.id
-        size = ad.size
+        presentationType = ad.presentationType
         title = ad.title
         body = ad.body
         actionTitle = ad.actionTitle

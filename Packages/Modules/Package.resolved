@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-spm",
       "state" : {
-        "revision" : "b842598f1295f3ffa1475b1580672d1fe5b83580",
-        "version" : "4.5.0"
+        "revision" : "04f2fd18cc9404a0a0917265a449002674f24ec9",
+        "version" : "4.5.2"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bmoliveira/MarkdownKit",
       "state" : {
-        "revision" : "5056f3305d3499f44d8815530d560b87082e0cf5",
-        "version" : "1.7.1"
+        "revision" : "39ea7a3fc7e65bcafe55152592b834859be574a5",
+        "version" : "1.7.3"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
-        "revision" : "8ecbfc886da39bccb01c34abef5f2ff4073ad633",
-        "version" : "12.4.0"
+        "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
+        "version" : "12.8.0"
       }
     },
     {
@@ -77,8 +77,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/supabase-community/supabase-swift",
       "state" : {
-        "revision" : "12694543f0c5f407504b54276f0dc1536065e016",
-        "version" : "2.14.3"
+        "revision" : "90c7cf5a5f5cf6a52afbda038c7367aebdd8f1c1",
+        "version" : "2.38.1"
+      }
+    },
+    {
+      "identity" : "swift-clocks",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-clocks",
+      "state" : {
+        "revision" : "cc46202b53476d64e824e0b6612da09d84ffde8e",
+        "version" : "1.0.6"
       }
     },
     {
@@ -100,6 +109,15 @@
       }
     },
     {
+      "identity" : "swift-http-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-http-types.git",
+      "state" : {
+        "revision" : "45eb0224913ea070ec4fba17291b9e7ecf4749ca",
+        "version" : "1.5.1"
+      }
+    },
+    {
       "identity" : "swiftbackports",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/shaps80/SwiftBackports",
@@ -113,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",
       "state" : {
-        "revision" : "18e965f867e37a558ad13c12d330dbe047099180",
-        "version" : "1.1.2"
+        "revision" : "a08b87f96b41055577721a6e397562b21ad52454",
+        "version" : "26.0.0"
       }
     },
     {
@@ -133,6 +151,15 @@
       "state" : {
         "revision" : "521310a2ff995dd724bbc6e66a094e60f6dc1724",
         "version" : "3.0.1"
+      }
+    },
+    {
+      "identity" : "xctest-dynamic-overlay",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
+      "state" : {
+        "revision" : "31073495cae9caf243c440eac94b3ab067e3d7bc",
+        "version" : "1.8.0"
       }
     }
   ],

@@ -21,7 +21,11 @@ struct MainMenuView: View {
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
     @EnvironmentObject var counter: ZikrCounter
+
     @State private var showAd = true
+    @State private var didShowBottomSheetAdThisSession = false
+    @State private var showAdBottomSheet = false
+    @State private var adBottomSheetHeight: CGFloat = 0
     
     private let articleCellHeight: CGFloat = 230
     private let borderWidth: CGFloat = 2
@@ -34,6 +38,38 @@ struct MainMenuView: View {
             .textInputAutocapitalization(.never)
             .onAppear {
                 AnalyticsReporter.reportScreen("Main Menu", className: viewName)
+                if let ad = viewModel.ad, ad.presentationType == .bottomSheet, didShowBottomSheetAdThisSession == false {
+                    showAdBottomSheet = true
+                    didShowBottomSheetAdThisSession = true
+                }
+            }
+            .onChange(of: viewModel.ad) { newAd in
+                if let newAd, newAd.presentationType == .bottomSheet, didShowBottomSheetAdThisSession == false {
+                    showAdBottomSheet = true
+                    didShowBottomSheetAdThisSession = true
+                }
+            }
+            .sheet(isPresented: $showAdBottomSheet) {
+                if let ad = viewModel.ad {
+                    AdBottomSheetView(
+                        item: AdButtonItem(ad: ad),
+                        onAction: {
+                            viewModel.handleAdSelection(ad)
+                            showAdBottomSheet = false
+                        },
+                        onDismiss: {
+                            showAdBottomSheet = false
+                        },
+                        onDontShowAgain: {
+                            viewModel.hideAd(ad, permanently: true)
+                            showAdBottomSheet = false
+                        }
+                    )
+                    .onPreferenceChange(HeightPreferenceKey.self) { height in
+                        adBottomSheetHeight = height
+                    }
+                    .applyPresentationDetents(height: adBottomSheetHeight)
+                }
             }
             .background(
                 GeometryReader { proxy in
@@ -63,7 +99,7 @@ struct MainMenuView: View {
         }
         .overlay(alignment: .bottom) {
             ZStack {
-                if let ad = viewModel.ad {
+                if let ad = viewModel.ad, ad.presentationType != .bottomSheet {
                     adView(ad)
                 }
             }
@@ -121,7 +157,7 @@ struct MainMenuView: View {
             articlesView
         }
         
-        if let ad = viewModel.ad {
+        if let ad = viewModel.ad, ad.presentationType != .bottomSheet {
             // Placeholder for proper scroll insets.
             adView(ad)
                 .opacity(0)
@@ -264,6 +300,7 @@ struct MainMenuView: View {
             }
         }
         .applyMenuPadding()
+        .removeSaturationIfNeeded()
         .transition(.asymmetric(
             insertion: .move(edge: .top).combined(with: .opacity),
             removal: .move(edge: .bottom).combined(with: .opacity)

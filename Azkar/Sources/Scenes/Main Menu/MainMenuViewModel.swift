@@ -217,7 +217,7 @@ final class MainMenuViewModel: ObservableObject {
             self.ad = ad
         }
     }
-    
+
     func navigateToArticle(_ article: Article) {
         router.trigger(.article(article))
     }

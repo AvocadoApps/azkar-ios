@@ -44,7 +44,7 @@ public final class AdsSQLiteRepository: AdsRepository {
                 t.column("foreground_color", .text)
                 t.column("accent_color", .text)
                 
-                t.column("size", .text).notNull()
+                t.column("presentation_type", .text).notNull()
                 t.column("image_mode", .text).notNull()
                 t.column("language", .text).notNull()
                 
@@ -56,8 +56,17 @@ public final class AdsSQLiteRepository: AdsRepository {
             }
         }
         migrator.registerMigration("Add is_hidden column") { db in
-            try db.alter(table: "ads") { t in
-                t.add(column: "is_hidden", .boolean).defaults(to: false)
+            if try db.tableExists("ads"), try !db.columns(in: "ads").map(\.name).contains("is_hidden") {
+                try db.alter(table: "ads") { t in
+                    t.add(column: "is_hidden", .boolean).defaults(to: false)
+                }
+            }
+        }
+        migrator.registerMigration("Add presentation_type column") { db in
+            if try db.tableExists("ads"), try !db.columns(in: "ads").map(\.name).contains("presentation_type") {
+                try db.alter(table: "ads") { t in
+                    t.add(column: "presentation_type", .text).defaults(to: "banner_regular")
+                }
             }
         }
         migrator.eraseDatabaseOnSchemaChange = true

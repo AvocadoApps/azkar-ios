@@ -83,6 +83,10 @@ internal enum L10n {
       internal static let title = L10n.tr("Localizable", "adhkar-collections.onboarding.title", fallback: "Morning and Evening Adhkar Collections")
     }
   }
+  internal enum Ads {
+    /// Do not show again
+    internal static let dontShowAgain = L10n.tr("Localizable", "ads.dont-show-again", fallback: "Do not show again")
+  }
   internal enum Alerts {
     /// Select your favorite app icon
     internal static let checkoutIconPacks = L10n.tr("Localizable", "alerts.checkout-icon-packs", fallback: "Select your favorite app icon")
@@ -104,10 +108,18 @@ internal enum L10n {
     internal static let other = L10n.tr("Localizable", "category.other", fallback: "Important adhkar")
   }
   internal enum Common {
+    /// About
+    internal static let about = L10n.tr("Localizable", "common.about", fallback: "About")
+    /// Apply
+    internal static let apply = L10n.tr("Localizable", "common.apply", fallback: "Apply")
+    /// Back
+    internal static let back = L10n.tr("Localizable", "common.back", fallback: "Back")
     /// Cancel
     internal static let cancel = L10n.tr("Localizable", "common.cancel", fallback: "Cancel")
     /// Complete
     internal static let complete = L10n.tr("Localizable", "common.complete", fallback: "Complete")
+    /// Feedback
+    internal static let contact = L10n.tr("Localizable", "common.contact", fallback: "Feedback")
     /// Continue
     internal static let `continue` = L10n.tr("Localizable", "common.continue", fallback: "Continue")
     /// Default
@@ -122,16 +134,30 @@ internal enum L10n {
     internal static let enable = L10n.tr("Localizable", "common.enable", fallback: "Enable")
     /// Error
     internal static let error = L10n.tr("Localizable", "common.error", fallback: "Error")
+    /// Language
+    internal static let language = L10n.tr("Localizable", "common.language", fallback: "Language")
+    /// Menu
+    internal static let menu = L10n.tr("Localizable", "common.menu", fallback: "Menu")
+    /// Next
+    internal static let next = L10n.tr("Localizable", "common.next", fallback: "Next")
     /// No search results
     internal static let noSearchResults = L10n.tr("Localizable", "common.no-search-results", fallback: "No search results")
     /// OK
     internal static let ok = L10n.tr("Localizable", "common.ok", fallback: "OK")
+    /// Open
+    internal static let `open` = L10n.tr("Localizable", "common.open", fallback: "Open")
+    /// Please select section
+    internal static let pickSection = L10n.tr("Localizable", "common.pick-section", fallback: "Please select section")
+    /// project
+    internal static let project = L10n.tr("Localizable", "common.project", fallback: "project")
     /// Report a problem
     internal static let reportProblem = L10n.tr("Localizable", "common.report-problem", fallback: "Report a problem")
     /// Reset counter
     internal static let resetCounter = L10n.tr("Localizable", "common.reset-counter", fallback: "Reset counter")
     /// Restore
     internal static let restore = L10n.tr("Localizable", "common.restore", fallback: "Restore")
+    /// Search
+    internal static let search = L10n.tr("Localizable", "common.search", fallback: "Search")
     /// Send
     internal static let send = L10n.tr("Localizable", "common.send", fallback: "Send")
     /// Settings
@@ -140,6 +166,12 @@ internal enum L10n {
     internal static let share = L10n.tr("Localizable", "common.share", fallback: "Share")
     /// Share Azkar App
     internal static let shareApp = L10n.tr("Localizable", "common.share-app", fallback: "Share Azkar App")
+    /// Skip
+    internal static let skip = L10n.tr("Localizable", "common.skip", fallback: "Skip")
+    /// Theme
+    internal static let theme = L10n.tr("Localizable", "common.theme", fallback: "Theme")
+    /// Unable to Load
+    internal static let unableToLoad = L10n.tr("Localizable", "common.unable-to-load", fallback: "Unable to Load")
     /// Version
     internal static let version = L10n.tr("Localizable", "common.version", fallback: "Version")
   }
@@ -156,8 +188,6 @@ internal enum L10n {
     internal static let graphics = L10n.tr("Localizable", "credits.graphics", fallback: "🎨 Graphic materials and fonts")
     /// 🧱 Open source libraries
     internal static let libraries = L10n.tr("Localizable", "credits.libraries", fallback: "🧱 Open source libraries")
-    /// 🥜 Jawziyya Studio
-    internal static let links = L10n.tr("Localizable", "credits.links", fallback: "🥜 Jawziyya Studio")
     /// 🗃 Reference
     internal static let materials = L10n.tr("Localizable", "credits.materials", fallback: "🗃 Reference")
     /// Font of «King Fahd Complex for the Printing of the Holy Quran»
@@ -194,6 +224,8 @@ internal enum L10n {
     }
   }
   internal enum Fonts {
+    /// Monospaced
+    internal static let monospaceFont = L10n.tr("Localizable", "fonts.monospace-font", fallback: "Monospaced")
     /// System font
     internal static let standardFont = L10n.tr("Localizable", "fonts.standard-font", fallback: "System font")
     /// Fonts
@@ -253,6 +285,54 @@ internal enum L10n {
       internal static let title = L10n.tr("Localizable", "notifications.jumua.title", fallback: "Dua in Jumua day")
     }
   }
+  internal enum Onboarding {
+    internal enum Collections {
+      /// The app offers 2 adhkar collections
+      internal static let message = L10n.tr("Localizable", "onboarding.collections.message", fallback: "The app offers 2 adhkar collections")
+      /// Collections of adhkar
+      internal static let title = L10n.tr("Localizable", "onboarding.collections.title", fallback: "Collections of adhkar")
+    }
+    internal enum Completion {
+      /// Contact us on Telegram
+      internal static let contact = L10n.tr("Localizable", "onboarding.completion.contact", fallback: "Contact us on Telegram")
+      /// Thank you! If you need any help or want to share feedback, feel free to reach out to us on Telegram — we’re always here to assist you.
+      internal static let message = L10n.tr("Localizable", "onboarding.completion.message", fallback: "Thank you! If you need any help or want to share feedback, feel free to reach out to us on Telegram — we’re always here to assist you.")
+      /// Setup complete!
+      internal static let title = L10n.tr("Localizable", "onboarding.completion.title", fallback: "Setup complete!")
+    }
+    internal enum ReadingMode {
+      /// You have two reading modes available. The normal mode displays the text as sections. The combined mode shows the text line by line.
+      internal static let message = L10n.tr("Localizable", "onboarding.reading-mode.message", fallback: "You have two reading modes available. The normal mode displays the text as sections. The combined mode shows the text line by line.")
+      /// Reading mode
+      internal static let title = L10n.tr("Localizable", "onboarding.reading-mode.title", fallback: "Reading mode")
+    }
+    internal enum Transliteration {
+      /// Transliteration helps you read Arabic text using Latin letters.
+      internal static let intro = L10n.tr("Localizable", "onboarding.transliteration.intro", fallback: "Transliteration helps you read Arabic text using Latin letters.")
+      /// Transliteration
+      internal static let title = L10n.tr("Localizable", "onboarding.transliteration.title", fallback: "Transliteration")
+      internal enum Types {
+        /// A strict scientific system for Latinizing Arabic script. It represents each Arabic letter unambiguously using diacritics. Suitable for precise academic reading.
+        internal static let din31635 = L10n.tr("Localizable", "onboarding.transliteration.types.DIN31635", fallback: "A strict scientific system for Latinizing Arabic script. It represents each Arabic letter unambiguously using diacritics. Suitable for precise academic reading.")
+      }
+    }
+    internal enum Welcome {
+      /// Let me show you a brief guide to configuring the app’s features.
+      /// 
+      /// This will help you set it up for more convenient use.
+      internal static let message = L10n.tr("Localizable", "onboarding.welcome.message", fallback: "Let me show you a brief guide to configuring the app’s features.\n\nThis will help you set it up for more convenient use.")
+      /// Welcome to Azkar!
+      internal static let title = L10n.tr("Localizable", "onboarding.welcome.title", fallback: "Welcome to Azkar!")
+    }
+  }
+  internal enum Purchases {
+    /// We are unable to display subscription options at this time. Please try again later.
+    internal static let genericError = L10n.tr("Localizable", "purchases.generic-error", fallback: "We are unable to display subscription options at this time. Please try again later.")
+    /// In-app Purchases Unavailable
+    internal static let unavailable = L10n.tr("Localizable", "purchases.unavailable", fallback: "In-app Purchases Unavailable")
+    /// This device cannot make purchases because billing is not available. Please ensure the store app is installed and you are signed in, then try again
+    internal static let unavailableMessage = L10n.tr("Localizable", "purchases.unavailable-message", fallback: "This device cannot make purchases because billing is not available. Please ensure the store app is installed and you are signed in, then try again")
+  }
   internal enum Read {
     /// narrated by
     internal static let narratedBy = L10n.tr("Localizable", "read.narrated-by", fallback: "narrated by")
@@ -297,14 +377,6 @@ internal enum L10n {
     /// 
     internal static let zero = L10n.tr("Localizable", "repeats_number.zero", fallback: "")
   }
-  internal enum Root {
-    /// About
-    internal static let about = L10n.tr("Localizable", "root.about", fallback: "About")
-    /// Please select section
-    internal static let pickSection = L10n.tr("Localizable", "root.pick-section", fallback: "Please select section")
-    /// Settings
-    internal static let settings = L10n.tr("Localizable", "root.settings", fallback: "Settings")
-  }
   internal enum Search {
     /// Adhkar
     internal static let suggestedAdhkar = L10n.tr("Localizable", "search.suggested-adhkar", fallback: "Adhkar")
@@ -319,6 +391,8 @@ internal enum L10n {
     /// These are features which make Azkar app a bit beautiful but some people find useless and annoying.
     internal static let useFunFeaturesTip = L10n.tr("Localizable", "settings.use_fun_features_tip", fallback: "These are features which make Azkar app a bit beautiful but some people find useless and annoying.")
     internal enum Appearance {
+      /// App language
+      internal static let language = L10n.tr("Localizable", "settings.appearance.language", fallback: "App language")
       /// Themes and app icons
       internal static let subtitle = L10n.tr("Localizable", "settings.appearance.subtitle", fallback: "Themes and app icons")
       /// Appearance
@@ -333,8 +407,8 @@ internal enum L10n {
       }
       internal enum ColorScheme {
         internal enum Auto {
-          /// The app automatically adapts to your iOS appearance setting.
-          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.description", fallback: "The app automatically adapts to your iOS appearance setting.")
+          /// The app automatically adapts to your device appearance setting.
+          internal static let description = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.description", fallback: "The app automatically adapts to your device appearance setting.")
           /// System
           internal static let title = L10n.tr("Localizable", "settings.appearance.color-scheme.auto.title", fallback: "System")
         }
@@ -373,10 +447,10 @@ internal enum L10n {
       internal static let title = L10n.tr("Localizable", "settings.breaks.title", fallback: "Use smart line-breaks")
     }
     internal enum Counter {
-      /// Enable counter haptic feedback
-      internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics", fallback: "Enable counter haptic feedback")
-      /// Enable counter ticker sound
-      internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker", fallback: "Enable counter ticker sound")
+      /// Haptic feedback
+      internal static let counterHaptics = L10n.tr("Localizable", "settings.counter.counter-haptics", fallback: "Haptic feedback")
+      /// Ticker sound
+      internal static let counterTicker = L10n.tr("Localizable", "settings.counter.counter-ticker", fallback: "Ticker sound")
       /// Go to next dhikr when repeats completed
       internal static let goToNextDhikr = L10n.tr("Localizable", "settings.counter.go-to-next-dhikr", fallback: "Go to next dhikr when repeats completed")
       /// If this option is enabled whenever you finish repeating a dhikr Azkar will show the next one
@@ -392,12 +466,12 @@ internal enum L10n {
         internal static let `left` = L10n.tr("Localizable", "settings.counter.counter-position.left", fallback: "Left")
         /// Right
         internal static let `right` = L10n.tr("Localizable", "settings.counter.counter-position.right", fallback: "Right")
-        /// Counter position
-        internal static let title = L10n.tr("Localizable", "settings.counter.counter-position.title", fallback: "Counter position")
+        /// Position
+        internal static let title = L10n.tr("Localizable", "settings.counter.counter-position.title", fallback: "Position")
       }
       internal enum CounterSize {
-        /// Size of counter
-        internal static let title = L10n.tr("Localizable", "settings.counter.counter-size.title", fallback: "Size of counter")
+        /// Size
+        internal static let title = L10n.tr("Localizable", "settings.counter.counter-size.title", fallback: "Size")
       }
       internal enum CounterType {
         /// Button
@@ -408,8 +482,8 @@ internal enum L10n {
         internal static let info = L10n.tr("Localizable", "settings.counter.counter-type.info", fallback: "This option allows you to switch type of the counter used.\n\nIf you choose 'button' Azkar will display a button at the bottom of reading screen. If you choose 'tap' there will be no visible indication, but you will be able to tap twice at any area to decrement the counter.")
         /// Tap
         internal static let tap = L10n.tr("Localizable", "settings.counter.counter-type.tap", fallback: "Tap")
-        /// Counter type
-        internal static let title = L10n.tr("Localizable", "settings.counter.counter-type.title", fallback: "Counter type")
+        /// Type
+        internal static let title = L10n.tr("Localizable", "settings.counter.counter-type.title", fallback: "Type")
       }
     }
     internal enum Icon {
@@ -443,6 +517,12 @@ internal enum L10n {
         /// Vibrant Crescent
         internal static let vibrantMoon = L10n.tr("Localizable", "settings.icon.pro.vibrantMoon", fallback: "Vibrant Crescent")
       }
+    }
+    internal enum Onboarding {
+      /// How to use the app
+      internal static let subtitle = L10n.tr("Localizable", "settings.onboarding.subtitle", fallback: "How to use the app")
+      /// Onboarding
+      internal static let title = L10n.tr("Localizable", "settings.onboarding.title", fallback: "Onboarding")
     }
     internal enum Reminders {
       /// Enable reminders
@@ -505,14 +585,14 @@ internal enum L10n {
       internal static let extra = L10n.tr("Localizable", "settings.text.extra", fallback: "Extra settings")
       /// Text size
       internal static let fontSize = L10n.tr("Localizable", "settings.text.font-size", fallback: "Text size")
-      /// Language
-      internal static let language = L10n.tr("Localizable", "settings.text.language", fallback: "Language")
+      /// Translation language
+      internal static let language = L10n.tr("Localizable", "settings.text.language", fallback: "Translation language")
       /// Line spacing
       internal static let lineSpacing = L10n.tr("Localizable", "settings.text.line-spacing", fallback: "Line spacing")
       /// Show tashkeel
       internal static let showTashkeel = L10n.tr("Localizable", "settings.text.show-tashkeel", fallback: "Show tashkeel")
-      /// Standard iOS
-      internal static let standardFontName = L10n.tr("Localizable", "settings.text.standard-font-name", fallback: "Standard iOS")
+      /// System Font
+      internal static let standardFontName = L10n.tr("Localizable", "settings.text.standard-font-name", fallback: "System Font")
       /// Fonts, line spacing, text size
       internal static let subtitle = L10n.tr("Localizable", "settings.text.subtitle", fallback: "Fonts, line spacing, text size")
       /// Text
@@ -543,13 +623,27 @@ internal enum L10n {
         internal static let header = L10n.tr("Localizable", "settings.text.fonts.header", fallback: "Fonts")
       }
       internal enum ReadingMode {
-        /// Line by line
-        internal static let lineByLine = L10n.tr("Localizable", "settings.text.reading_mode.line_by_line", fallback: "Line by line")
-        /// Normal
-        internal static let normal = L10n.tr("Localizable", "settings.text.reading_mode.normal", fallback: "Normal")
         /// Reading mode
         internal static let title = L10n.tr("Localizable", "settings.text.reading_mode.title", fallback: "Reading mode")
+        internal enum LineByLine {
+          /// Displays each line of the original text followed immediately by its translation.
+          internal static let description = L10n.tr("Localizable", "settings.text.reading_mode.line_by_line.description", fallback: "Displays each line of the original text followed immediately by its translation.")
+          /// Line by line
+          internal static let title = L10n.tr("Localizable", "settings.text.reading_mode.line_by_line.title", fallback: "Line by line")
+        }
+        internal enum Normal {
+          /// Shows the full original text, then the full translation in separate blocks.
+          internal static let description = L10n.tr("Localizable", "settings.text.reading_mode.normal.description", fallback: "Shows the full original text, then the full translation in separate blocks.")
+          /// Normal
+          internal static let title = L10n.tr("Localizable", "settings.text.reading_mode.normal.title", fallback: "Normal")
+        }
       }
+    }
+    internal enum Zikr {
+      /// Adhkar reading settings
+      internal static let subtitle = L10n.tr("Localizable", "settings.zikr.subtitle", fallback: "Adhkar reading settings")
+      /// Adhkar
+      internal static let title = L10n.tr("Localizable", "settings.zikr.title", fallback: "Adhkar")
     }
   }
   internal enum Share {
