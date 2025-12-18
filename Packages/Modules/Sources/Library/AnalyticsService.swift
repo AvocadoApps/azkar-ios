@@ -2,6 +2,7 @@ import Foundation
 import Supabase
 import Entities
 import AzkarServices
+import UIKit
 
 public actor AnalyticsService {
 
@@ -28,6 +29,11 @@ public actor AnalyticsService {
         recordType: AnalyticsRecord.RecordType,
         actionType: AnalyticsRecord.ActionType
     ) {
+        if !UIApplication.shared.shouldSendAnalytics {
+            print("[ANALYTICS] Supabase Event: objectId=\(objectId), recordType=\(recordType), actionType=\(actionType)")
+            return
+        }
+        
         // Check in-memory tracker to prevent sending the same event within 1 minute
         let key = "\(objectId)-\(recordType)-\(actionType)"
         if let lastDate = lastSentEvents[key], Date().timeIntervalSince(lastDate) < deduplicationWindow {

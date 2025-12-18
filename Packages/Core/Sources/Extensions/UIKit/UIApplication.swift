@@ -30,6 +30,14 @@ public extension UIApplication {
         #endif
     }
 
+    var shouldSendAnalytics: Bool {
+        #if DEBUG
+        return CommandLine.arguments.contains("SEND_ANALYTICS")
+        #else
+        return true
+        #endif
+    }
+
     var inTestMode: Bool {
         inSandboxMode || isRanInSimulator || inDebugMode
     }

@@ -1,4 +1,6 @@
 import Foundation
+import UIKit
+import Extensions
 
 // MARK: - AnalyticsTarget Protocol
 
@@ -39,6 +41,28 @@ public final class AnalyticsReporter {
     /// Private initializer to enforce singleton usage.
     private init() {}
     
+    // MARK: - Private Methods
+    
+    private func logEvent(name: String, metadata: [String: Any]?) {
+        var message = "[ANALYTICS] Event: \(name)"
+        if let metadata = metadata, !metadata.isEmpty {
+            message += ", Metadata: \(metadata)"
+        }
+        print(message)
+    }
+    
+    private func logScreen(screenName: String, className: String?) {
+        var message = "[ANALYTICS] Screen: \(screenName)"
+        if let className = className {
+            message += ", Class: \(className)"
+        }
+        print(message)
+    }
+    
+    private func logUserAttribute(_ type: UserAttributeType, value: String) {
+        print("[ANALYTICS] User Attribute: \(type.rawValue) = \(value)")
+    }
+    
     // MARK: - Public Methods
     
     /// Adds an analytics target.
@@ -55,8 +79,12 @@ public final class AnalyticsReporter {
     ///   - metadata: Optional dictionary containing additional information about the event.
     public static func reportEvent(_ name: String, metadata: [String: Any]? = nil) {
         shared.serialQueue.sync {
-            for target in shared.targets {
-                target.reportEvent(name: name, metadata: metadata)
+            if UIApplication.shared.shouldSendAnalytics {
+                for target in shared.targets {
+                    target.reportEvent(name: name, metadata: metadata)
+                }
+            } else {
+                shared.logEvent(name: name, metadata: metadata)
             }
         }
     }
@@ -67,8 +95,12 @@ public final class AnalyticsReporter {
     ///   - className: The name of the class.
     public static func reportScreen(_ screenName: String, className: String? = nil) {
         shared.serialQueue.sync {
-            for target in shared.targets {
-                target.reportScreen(screenName: screenName, className: className)
+            if UIApplication.shared.shouldSendAnalytics {
+                for target in shared.targets {
+                    target.reportScreen(screenName: screenName, className: className)
+                }
+            } else {
+                shared.logScreen(screenName: screenName, className: className)
             }
         }
     }
@@ -79,8 +111,12 @@ public final class AnalyticsReporter {
     ///   - value: The value of the user attribute.
     public static func setUserAttribute(_ type: UserAttributeType, value: String) {
         shared.serialQueue.sync {
-            for target in shared.targets {
-                target.setUserAttribute(type, value: value)
+            if UIApplication.shared.shouldSendAnalytics {
+                for target in shared.targets {
+                    target.setUserAttribute(type, value: value)
+                }
+            } else {
+                shared.logUserAttribute(type, value: value)
             }
         }
     }
