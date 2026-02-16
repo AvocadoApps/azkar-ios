@@ -19,7 +19,7 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
         switch preferences.contentLanguage {
         case .arabic, .english, .georgian, .turkish: return [.DIN31635]
         case .russian, .chechen: return [.community, .ruScientific, .DIN31635]
-        case .ingush, .kazakh, .kyrgyz, .uzbek: return [.ruScientific, .DIN31635]
+        case .ingush, .kazakh, .kyrgyz, .uzbek, .tatar: return [.ruScientific, .DIN31635]
         }
     }
     

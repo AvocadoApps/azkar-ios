@@ -148,7 +148,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             availableTypes = [.DIN31635]
         case .russian, .chechen:
             availableTypes = [.community, .ruScientific, .DIN31635]
-        case .ingush, .kazakh, .kyrgyz, .uzbek:
+        case .ingush, .kazakh, .kyrgyz, .uzbek, .tatar:
             availableTypes = [.ruScientific, .DIN31635]
         }
         
