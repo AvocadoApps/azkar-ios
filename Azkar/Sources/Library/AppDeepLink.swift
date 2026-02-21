@@ -5,6 +5,7 @@ enum AppDeepLink: Equatable {
     case category(ZikrCategory)
     case zikr(Int)
     case article(Int)
+    case hadith(Int)
 
     private static let scheme = "azkar"
     private static let searchableIdentifierNamespace = "io.jawziyya.azkar-app.spotlight"
@@ -14,6 +15,7 @@ enum AppDeepLink: Equatable {
     private static let categoryTokenPrefix = "category:"
     private static let zikrTokenPrefix = "zikr:"
     private static let articleTokenPrefix = "article:"
+    private static let hadithTokenPrefix = "hadith:"
     private static let tagTokenPrefix = "tag:"
 
     init?(url: URL) {
@@ -70,6 +72,16 @@ enum AppDeepLink: Equatable {
             }
             self = .article(id)
 
+        case "hadith":
+            guard
+                let idString = pathComponents.first,
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            self = .hadith(id)
+
         default:
             return nil
         }
@@ -99,6 +111,8 @@ enum AppDeepLink: Equatable {
             value = "\(Self.scheme)://zikr/\(id)"
         case .article(let id):
             value = "\(Self.scheme)://article/\(id)"
+        case .hadith(let id):
+            value = "\(Self.scheme)://hadith/\(id)"
         }
         return URL(string: value)!
     }
@@ -113,6 +127,8 @@ enum AppDeepLink: Equatable {
             return Self.zikrTokenPrefix + String(id)
         case .article(let id):
             return Self.articleTokenPrefix + String(id)
+        case .hadith(let id):
+            return Self.hadithTokenPrefix + String(id)
         }
     }
 
@@ -139,6 +155,8 @@ enum AppDeepLink: Equatable {
             return .zikr(id)
         case .article(let id):
             return .article(id)
+        case .hadith:
+            return .home
         }
     }
 
@@ -175,6 +193,17 @@ enum AppDeepLink: Equatable {
                 return nil
             }
             return .article(id)
+        }
+
+        if token.hasPrefix(hadithTokenPrefix) {
+            let idString = String(token.dropFirst(hadithTokenPrefix.count))
+            guard
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            return .hadith(id)
         }
 
         if token.hasPrefix(tagTokenPrefix) {

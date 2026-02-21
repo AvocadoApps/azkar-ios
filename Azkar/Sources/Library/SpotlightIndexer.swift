@@ -216,6 +216,9 @@ private extension SpotlightIndexer {
         let articles = try await loadArticles(language: language)
         items += articles.map { makeArticleItem($0, scope: identifierScope) }
 
+        let ahadith = try database.getAhadith()
+        items += ahadith.map { makeHadithItem($0, scope: identifierScope) }
+
         logIdentifierUniqueness(of: items)
         return items
     }
@@ -366,6 +369,37 @@ private extension SpotlightIndexer {
 
         let item = CSSearchableItem(
             uniqueIdentifier: makeUniqueIdentifier(for: .article(article.id), scope: scope),
+            domainIdentifier: domainIdentifier,
+            attributeSet: attributeSet
+        )
+        item.expirationDate = .distantFuture
+        return item
+    }
+
+    func makeHadithItem(_ hadith: Hadith, scope: String) -> CSSearchableItem {
+        let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
+        attributeSet.title = shortText(hadith.translation, maxLength: 90)
+            ?? shortText(hadith.text, maxLength: 90)
+            ?? L10n.Common.dhikr(hadith.id)
+        attributeSet.contentDescription = normalizedText(hadith.source)
+        attributeSet.keywords = uniqueKeywords([
+            "hadith",
+            "ahadith",
+            "حديث",
+            "хадис",
+            normalizedText(hadith.source)
+        ].compactMap { $0 })
+        attributeSet.textContent = [
+            normalizedText(hadith.translation),
+            normalizedText(hadith.text),
+            normalizedText(hadith.source)
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
+        attributeSet.contentURL = AppDeepLink.hadith(hadith.id).url
+
+        let item = CSSearchableItem(
+            uniqueIdentifier: makeUniqueIdentifier(for: .hadith(hadith.id), scope: scope),
             domainIdentifier: domainIdentifier,
             attributeSet: attributeSet
         )
