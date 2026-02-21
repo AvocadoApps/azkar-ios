@@ -161,7 +161,7 @@ extension SubscriptionManager: PurchaseController {
         assert(Purchases.isConfigured, "You must configure RevenueCat before calling this method.")
         observerSubsriptionStateWithinSuperwall()
         Task {
-            if let customerInfo = try? await Purchases.shared.syncPurchases() {
+            if let customerInfo = try? await Purchases.shared.customerInfo() {
                 await handleCustomerInfo(customerInfo)
             }
             for await customerInfo in Purchases.shared.customerInfoStream {
