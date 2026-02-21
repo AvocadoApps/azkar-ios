@@ -6,9 +6,13 @@ enum AppDeepLink: Equatable {
     case zikr(Int)
 
     private static let scheme = "azkar"
-    private static let appIdentifier = "app"
-    private static let categoryPrefix = "category."
-    private static let zikrPrefix = "zikr."
+    private static let searchableIdentifierNamespace = "io.jawziyya.azkar-app.spotlight"
+    private static let searchableIdentifierSeparator = "|"
+
+    private static let homeToken = "home"
+    private static let categoryTokenPrefix = "category:"
+    private static let zikrTokenPrefix = "zikr:"
+    private static let tagTokenPrefix = "tag:"
 
     init?(url: URL) {
         guard url.scheme?.lowercased() == Self.scheme else {
@@ -60,29 +64,12 @@ enum AppDeepLink: Equatable {
     }
 
     init?(searchableIdentifier: String) {
-        if searchableIdentifier == Self.appIdentifier {
-            self = .home
-            return
-        }
+        let candidate = searchableIdentifier
+            .components(separatedBy: Self.searchableIdentifierSeparator)
+            .last ?? searchableIdentifier
 
-        if searchableIdentifier.hasPrefix(Self.categoryPrefix) {
-            let rawValue = String(searchableIdentifier.dropFirst(Self.categoryPrefix.count))
-            guard let category = ZikrCategory(rawValue: rawValue) else {
-                return nil
-            }
-            self = .category(category)
-            return
-        }
-
-        if searchableIdentifier.hasPrefix(Self.zikrPrefix) {
-            let idString = String(searchableIdentifier.dropFirst(Self.zikrPrefix.count))
-            guard
-                let id = Int(idString),
-                id > 0
-            else {
-                return nil
-            }
-            self = .zikr(id)
+        if let link = Self.parseSearchableToken(candidate) {
+            self = link
             return
         }
 
@@ -102,15 +89,28 @@ enum AppDeepLink: Equatable {
         return URL(string: value)!
     }
 
-    var searchableIdentifier: String {
+    var searchableToken: String {
         switch self {
         case .home:
-            return Self.appIdentifier
+            return Self.homeToken
         case .category(let category):
-            return Self.categoryPrefix + category.rawValue
+            return Self.categoryTokenPrefix + category.rawValue
         case .zikr(let id):
-            return Self.zikrPrefix + String(id)
+            return Self.zikrTokenPrefix + String(id)
         }
+    }
+
+    var searchableIdentifier: String {
+        searchableToken
+    }
+
+    func scopedSearchableIdentifier(scope: String) -> String {
+        [
+            Self.searchableIdentifierNamespace,
+            scope,
+            searchableToken
+        ]
+        .joined(separator: Self.searchableIdentifierSeparator)
     }
 
     var route: Deeplinker.Route {
@@ -122,5 +122,36 @@ enum AppDeepLink: Equatable {
         case .zikr(let id):
             return .zikr(id)
         }
+    }
+
+    static func parseSearchableToken(_ token: String) -> AppDeepLink? {
+        if token == homeToken {
+            return .home
+        }
+
+        if token.hasPrefix(categoryTokenPrefix) {
+            let rawValue = String(token.dropFirst(categoryTokenPrefix.count))
+            guard let category = ZikrCategory(rawValue: rawValue) else {
+                return nil
+            }
+            return .category(category)
+        }
+
+        if token.hasPrefix(zikrTokenPrefix) {
+            let idString = String(token.dropFirst(zikrTokenPrefix.count))
+            guard
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            return .zikr(id)
+        }
+
+        if token.hasPrefix(tagTokenPrefix) {
+            return .home
+        }
+
+        return nil
     }
 }

@@ -39,6 +39,29 @@
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>kMDItemKeywords</key>
+	<array>
+		<string>azkar</string>
+		<string>adhkar</string>
+		<string>dhikr</string>
+		<string>zikr</string>
+		<string>dua</string>
+		<string>prayer</string>
+		<string>supplication</string>
+		<string>muslim</string>
+		<string>islam</string>
+		<string>quran</string>
+		<string>sunnah</string>
+		<string>morning adhkar</string>
+		<string>evening adhkar</string>
+		<string>اذكار</string>
+		<string>أذكار</string>
+		<string>ذكر</string>
+		<string>دعاء</string>
+		<string>азкары</string>
+		<string>зикр</string>
+		<string>дуа</string>
+	</array>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.reference</string>
 	<key>LSApplicationQueriesSchemes</key>

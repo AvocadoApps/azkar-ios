@@ -8,13 +8,19 @@ final class SpotlightIndexer {
     static let shared = SpotlightIndexer()
 
     private let defaults = UserDefaults.standard
+    private let index = CSSearchableIndex(name: "AzkarMainIndex")
     private let domainIdentifier = "io.jawziyya.azkar-app.spotlight"
-    private let versionSalt = "spotlight-v1"
+    private let versionSalt = "spotlight-v5"
 
     private init() {}
 
     func indexIfNeeded() {
+#if targetEnvironment(simulator)
+        log("Running on Simulator; Spotlight indexing can be delayed or unavailable")
+#endif
+
         guard CSSearchableIndex.isIndexingAvailable() else {
+            log("Indexing not available on this runtime")
             return
         }
 
@@ -29,10 +35,17 @@ final class SpotlightIndexer {
             language: language,
             zikrCollectionSource: zikrCollectionSource
         )
+        let forceReindex = CommandLine.arguments.contains("FORCE_SPOTLIGHT_REINDEX")
 
-        guard defaults.string(forKey: Keys.spotlightIndexVersion) != expectedVersion else {
+        guard forceReindex || defaults.string(forKey: Keys.spotlightIndexVersion) != expectedVersion else {
+            log("Index is up to date: \(expectedVersion)")
             return
         }
+
+        if forceReindex {
+            log("Force reindex enabled")
+        }
+        log("Starting reindex: \(expectedVersion)")
 
         Task(priority: .utility) {
             do {
@@ -40,10 +53,12 @@ final class SpotlightIndexer {
                     language: language,
                     zikrCollectionSource: zikrCollectionSource
                 )
+                log("Prepared \(items.count) searchable items")
                 try await resetAndIndex(items)
                 defaults.set(expectedVersion, forKey: Keys.spotlightIndexVersion)
+                log("Spotlight index updated")
             } catch {
-                print("Spotlight indexing failed: \(error.localizedDescription)")
+                log("Spotlight indexing failed: \(error.localizedDescription)")
             }
         }
     }
@@ -77,6 +92,10 @@ private extension SpotlightIndexer {
         ]
     }
 
+    var appSearchText: String {
+        appKeywords.joined(separator: " ")
+    }
+
     func buildSearchableItems(
         language: Language,
         zikrCollectionSource: ZikrCollectionSource
@@ -87,13 +106,24 @@ private extension SpotlightIndexer {
             database: database,
             zikrCollectionSource: zikrCollectionSource
         )
+        let identifierScope = makeIdentifierScope(
+            language: language,
+            zikrCollectionSource: zikrCollectionSource
+        )
 
-        var items = [makeAppItem()]
+        var items = [makeAppItem(scope: identifierScope)]
         items += ZikrCategory
             .allCases
-            .map(makeCategoryItem)
+            .map { makeCategoryItem($0, scope: identifierScope) }
         items += adhkar
-            .map { makeZikrItem($0, categories: categoryLookup[$0.id] ?? []) }
+            .map {
+                makeZikrItem(
+                    $0,
+                    categories: categoryLookup[$0.id] ?? [],
+                    scope: identifierScope
+                )
+            }
+        logIdentifierUniqueness(of: items)
         return items
     }
 
@@ -123,46 +153,60 @@ private extension SpotlightIndexer {
         return map
     }
 
-    func makeAppItem() -> CSSearchableItem {
-        let attributeSet = CSSearchableItemAttributeSet(itemContentType: UTType.text.identifier)
+    func makeAppItem(scope: String) -> CSSearchableItem {
+        let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
         attributeSet.title = L10n.appName
-        attributeSet.contentDescription = "Daily adhkar and duas from Quran and Sunnah"
+        attributeSet.displayName = L10n.appName
+        attributeSet.alternateNames = appKeywords
+        attributeSet.contentDescription = appKeywords.joined(separator: " · ")
         attributeSet.keywords = appKeywords
+        attributeSet.textContent = appSearchText
         attributeSet.contentURL = AppDeepLink.home.url
 
-        return CSSearchableItem(
-            uniqueIdentifier: AppDeepLink.home.searchableIdentifier,
+        let item = CSSearchableItem(
+            uniqueIdentifier: makeUniqueIdentifier(for: .home, scope: scope),
             domainIdentifier: domainIdentifier,
             attributeSet: attributeSet
         )
+        item.expirationDate = .distantFuture
+        return item
     }
 
-    func makeCategoryItem(_ category: ZikrCategory) -> CSSearchableItem {
-        let attributeSet = CSSearchableItemAttributeSet(itemContentType: UTType.text.identifier)
+    func makeCategoryItem(_ category: ZikrCategory, scope: String) -> CSSearchableItem {
+        let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
         attributeSet.title = category.title
         attributeSet.contentDescription = L10n.appName
         attributeSet.keywords = uniqueKeywords(
-            appKeywords +
             [
                 category.rawValue,
-                category.title
+                category.title,
+                "azkar",
+                "adhkar",
+                "dhikr",
+                "dua"
             ]
         )
+        attributeSet.textContent = "\(category.title) \(category.rawValue)"
         attributeSet.contentURL = AppDeepLink.category(category).url
 
-        return CSSearchableItem(
-            uniqueIdentifier: AppDeepLink.category(category).searchableIdentifier,
+        let item = CSSearchableItem(
+            uniqueIdentifier: makeUniqueIdentifier(for: .category(category), scope: scope),
             domainIdentifier: domainIdentifier,
             attributeSet: attributeSet
         )
+        item.expirationDate = .distantFuture
+        return item
     }
 
-    func makeZikrItem(_ zikr: Zikr, categories: [ZikrCategory]) -> CSSearchableItem {
-        let attributeSet = CSSearchableItemAttributeSet(itemContentType: UTType.text.identifier)
+    func makeZikrItem(
+        _ zikr: Zikr,
+        categories: [ZikrCategory],
+        scope: String
+    ) -> CSSearchableItem {
+        let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
         attributeSet.title = title(for: zikr)
         attributeSet.contentDescription = description(for: zikr)
         attributeSet.keywords = uniqueKeywords(
-            appKeywords +
             categories.map(\.rawValue) +
             categories.map(\.title) +
             [
@@ -171,13 +215,23 @@ private extension SpotlightIndexer {
             ]
             .compactMap { $0 }
         )
+        attributeSet.textContent = [
+            normalizedText(zikr.title),
+            normalizedText(zikr.translation),
+            normalizedText(zikr.text),
+            normalizedText(zikr.source)
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
         attributeSet.contentURL = AppDeepLink.zikr(zikr.id).url
 
-        return CSSearchableItem(
-            uniqueIdentifier: AppDeepLink.zikr(zikr.id).searchableIdentifier,
+        let item = CSSearchableItem(
+            uniqueIdentifier: makeUniqueIdentifier(for: .zikr(zikr.id), scope: scope),
             domainIdentifier: domainIdentifier,
             attributeSet: attributeSet
         )
+        item.expirationDate = .distantFuture
+        return item
     }
 
     func title(for zikr: Zikr) -> String {
@@ -255,6 +309,17 @@ private extension SpotlightIndexer {
         return unique
     }
 
+    func makeIdentifierScope(
+        language: Language,
+        zikrCollectionSource: ZikrCollectionSource
+    ) -> String {
+        "\(language.id).\(zikrCollectionSource.rawValue).\(versionSalt)"
+    }
+
+    func makeUniqueIdentifier(for deepLink: AppDeepLink, scope: String) -> String {
+        deepLink.scopedSearchableIdentifier(scope: scope)
+    }
+
     func makeIndexVersion(
         language: Language,
         zikrCollectionSource: ZikrCollectionSource
@@ -274,7 +339,7 @@ private extension SpotlightIndexer {
 
     func deleteItemsInDomain() async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            CSSearchableIndex.default().deleteSearchableItems(
+            index.deleteSearchableItems(
                 withDomainIdentifiers: [domainIdentifier],
                 completionHandler: { error in
                     if let error {
@@ -289,7 +354,7 @@ private extension SpotlightIndexer {
 
     func index(_ items: [CSSearchableItem]) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            CSSearchableIndex.default().indexSearchableItems(items) { error in
+            index.indexSearchableItems(items) { error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {
@@ -297,6 +362,27 @@ private extension SpotlightIndexer {
                 }
             }
         }
+    }
+
+    func log(_ message: String) {
+#if DEBUG
+        print("[Spotlight] \(message)")
+#endif
+    }
+
+    func logIdentifierUniqueness(of items: [CSSearchableItem]) {
+#if DEBUG
+        let identifiers = items.compactMap(\.uniqueIdentifier)
+        let duplicates = Dictionary(grouping: identifiers, by: { $0 })
+            .filter { $1.count > 1 }
+            .map(\.key)
+
+        if duplicates.isEmpty {
+            log("Identifiers are unique: \(identifiers.count) items")
+        } else {
+            log("Found duplicate identifiers: \(duplicates.prefix(5))")
+        }
+#endif
     }
 
 }

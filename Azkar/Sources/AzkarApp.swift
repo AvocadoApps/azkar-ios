@@ -7,6 +7,7 @@ import Entities
 import AudioPlayer
 import Stinsen
 import StoreKit
+import CoreSpotlight
 
 @main
 struct AzkarApp: App {
@@ -60,11 +61,24 @@ struct AzkarApp: App {
             .onOpenURL { url in
                 handleIncomingURL(url)
             }
+            .onContinueUserActivity(CSSearchableItemActionType) { userActivity in
+                handleSearchActivity(userActivity)
+            }
         }
     }
 
     private func handleIncomingURL(_ url: URL) {
         guard let deepLink = AppDeepLink(url: url) else {
+            return
+        }
+        deepLinker.route = deepLink.route
+    }
+
+    private func handleSearchActivity(_ userActivity: NSUserActivity) {
+        guard
+            let searchableIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
+            let deepLink = AppDeepLink(searchableIdentifier: searchableIdentifier)
+        else {
             return
         }
         deepLinker.route = deepLink.route
