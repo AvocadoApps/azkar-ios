@@ -32,6 +32,7 @@ enum Keys {
     
     static let transliterationType = "kTransliterationType"
     static let contentLanguage = "kContentLanguage"
+    static let spotlightIndexVersion = "kSpotlightIndexVersion"
     
     // MARK: Reminders
     static let enableReminders = "kEnableNotifications"

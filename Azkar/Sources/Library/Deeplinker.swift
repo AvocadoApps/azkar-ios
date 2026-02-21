@@ -11,11 +11,15 @@ import Combine
 
 final class Deeplinker: ObservableObject {
 
+    static let shared = Deeplinker()
+
     @Published var route: Route?
 
     enum Route: Hashable {
+        case home
         case settings(SettingsRoute)
         case azkar(ZikrCategory)
+        case zikr(Int)
     }
     
 }

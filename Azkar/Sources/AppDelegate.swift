@@ -17,12 +17,14 @@ import FirebaseCore
 import FirebaseMessaging
 import SuperwallKit
 import Mixpanel
+import CoreSpotlight
 
 @MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
     let notificationsHandler = NotificationsHandler.shared
+    private let spotlightIndexer = SpotlightIndexer.shared
     
     func application(
         _ application: UIApplication,
@@ -31,10 +33,36 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
         initialize(launchOptions: launchOptions)
+        spotlightIndexer.indexIfNeeded()
         if let launchOptions, let userInfo = launchOptions[.remoteNotification] as? [AnyHashable: Any] {
             notificationsHandler.handleLaunchNotification(userInfo)
         }
         return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        if
+            userActivity.activityType == CSSearchableItemActionType,
+            let searchableIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
+            let deepLink = AppDeepLink(searchableIdentifier: searchableIdentifier)
+        {
+            Deeplinker.shared.route = deepLink.route
+            return true
+        }
+
+        if
+            let url = userActivity.webpageURL,
+            let deepLink = AppDeepLink(url: url)
+        {
+            Deeplinker.shared.route = deepLink.route
+            return true
+        }
+
+        return false
     }
     
     func application(

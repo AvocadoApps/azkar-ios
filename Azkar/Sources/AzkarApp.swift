@@ -14,7 +14,7 @@ struct AzkarApp: App {
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     
     let preferences = Preferences.shared
-    let deepLinker = Deeplinker()
+    let deepLinker = Deeplinker.shared
     
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
@@ -57,7 +57,17 @@ struct AzkarApp: App {
                 }
                 self.deepLinker.route = .azkar(category)
             }
+            .onOpenURL { url in
+                handleIncomingURL(url)
+            }
         }
+    }
+
+    private func handleIncomingURL(_ url: URL) {
+        guard let deepLink = AppDeepLink(url: url) else {
+            return
+        }
+        deepLinker.route = deepLink.route
     }
     
     private func getColor(_ type: ColorType, theme: ColorTheme) -> Color {

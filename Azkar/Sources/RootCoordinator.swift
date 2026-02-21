@@ -115,21 +115,31 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         deeplinker
             .$route
             .handleEvents(receiveOutput: { [unowned self] route in
+                guard route != nil else {
+                    return
+                }
                 popToRoot()
             })
             .receive(on: DispatchQueue.main)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] route in
+                guard let route else {
+                    return
+                }
+
                 switch route {
+
+                case .home:
+                    break
 
                 case .settings(let section):
                     self.trigger(.settings(section))
                     
                 case .azkar(let category):
                     self.trigger(.category(category))
-                    
-                default:
-                    break
+
+                case .zikr(let id):
+                    self.trigger(.goToZikr(id))
                     
                 }
             })
