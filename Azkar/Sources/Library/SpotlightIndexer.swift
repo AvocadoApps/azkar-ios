@@ -1,7 +1,8 @@
-import Foundation
+import UIKit
 import CoreSpotlight
 import UniformTypeIdentifiers
 import Entities
+import DatabaseInteractors
 
 final class SpotlightIndexer {
 
@@ -10,7 +11,7 @@ final class SpotlightIndexer {
     private let defaults = UserDefaults.standard
     private let index = CSSearchableIndex(name: "AzkarMainIndex")
     private let domainIdentifier = "io.jawziyya.azkar-app.spotlight"
-    private let versionSalt = "spotlight-v5"
+    private let versionSalt = "spotlight-v1"
 
     private init() {}
 
@@ -49,7 +50,7 @@ final class SpotlightIndexer {
 
         Task(priority: .utility) {
             do {
-                let items = try buildSearchableItems(
+                let items = try await buildSearchableItems(
                     language: language,
                     zikrCollectionSource: zikrCollectionSource
                 )
@@ -69,26 +70,114 @@ private extension SpotlightIndexer {
 
     var appKeywords: [String] {
         [
+            // English
             "azkar",
             "adhkar",
             "dhikr",
             "zikr",
             "dua",
+            "duas",
             "prayer",
+            "prayers",
             "supplication",
             "muslim",
             "islam",
+            "islamic",
             "quran",
             "sunnah",
+            "hadith",
             "morning adhkar",
             "evening adhkar",
+            "morning dua",
+            "evening dua",
+            "night dua",
+            "sleep dua",
+            "after prayer",
+            "after salah",
+            "remembrance",
+            "daily prayers",
+            "daily adhkar",
+            "tasbih",
+            "istighfar",
+            "forgiveness",
+            "ruqyah",
+            "protection",
+            "fortress of muslim",
+            "hisn al muslim",
+            "hisn",
+            "thikr",
+            "dikr",
+            "invocation",
+            "praise",
+            "praise Allah",
+            "subhanallah",
+            "alhamdulillah",
+            "allahu akbar",
+            "la ilaha illallah",
+            "astaghfirullah",
+            "bismillah",
+            "salawat",
+
+            // Arabic
             "اذكار",
             "أذكار",
             "ذكر",
             "دعاء",
+            "أدعية",
+            "اذكار الصباح",
+            "اذكار المساء",
+            "أذكار الصباح",
+            "أذكار المساء",
+            "أذكار النوم",
+            "أذكار بعد الصلاة",
+            "حصن المسلم",
+            "تسبيح",
+            "استغفار",
+            "صلاة",
+            "سبحان الله",
+            "الحمد لله",
+            "الله أكبر",
+            "لا إله إلا الله",
+            "أستغفر الله",
+            "بسم الله",
+            "رقية",
+            "قرآن",
+            "سنة",
+            "حديث",
+
+            // Russian
             "азкары",
             "зикр",
-            "дуа"
+            "дуа",
+            "молитва",
+            "молитвы",
+            "мусульманин",
+            "ислам",
+            "исламские",
+            "коран",
+            "сунна",
+            "хадис",
+            "утренние азкары",
+            "вечерние азкары",
+            "азкары утренние",
+            "азкары вечерние",
+            "ночные дуа",
+            "после намаза",
+            "после молитвы",
+            "поминание Аллаха",
+            "тасбих",
+            "истигфар",
+            "крепость мусульманина",
+            "хисн аль муслим",
+            "субханаллах",
+            "альхамдулиллях",
+            "аллаху акбар",
+            "астагфируллах",
+            "бисмиллях",
+            "салават",
+            "рукъя",
+            "защита",
+            "мольба",
         ]
     }
 
@@ -99,7 +188,7 @@ private extension SpotlightIndexer {
     func buildSearchableItems(
         language: Language,
         zikrCollectionSource: ZikrCollectionSource
-    ) throws -> [CSSearchableItem] {
+    ) async throws -> [CSSearchableItem] {
         let database = AzkarDatabase(language: language)
         let adhkar = try database.getAllAdhkar()
         let categoryLookup = try makeCategoryLookup(
@@ -123,6 +212,10 @@ private extension SpotlightIndexer {
                     scope: identifierScope
                 )
             }
+
+        let articles = try await loadArticles(language: language)
+        items += articles.map { makeArticleItem($0, scope: identifierScope) }
+
         logIdentifierUniqueness(of: items)
         return items
     }
@@ -234,6 +327,52 @@ private extension SpotlightIndexer {
         return item
     }
 
+    func loadArticles(language: Language) async throws -> [Article] {
+        let databasePath = FileManager.default
+            .appGroupContainerURL
+            .appendingPathComponent("articles.db")
+            .absoluteString
+        let repository = try ArticlesSQLiteDatabaseService(
+            language: language,
+            databaseFilePath: databasePath
+        )
+        return try await repository.getArticles(limit: 500, newerThan: nil)
+    }
+
+    func makeArticleItem(_ article: Article, scope: String) -> CSSearchableItem {
+        let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
+        attributeSet.title = article.title
+        let plainText = article.textFormat == .markdown
+            ? stripMarkdown(article.text)
+            : article.text
+        attributeSet.contentDescription = shortText(plainText, maxLength: 200)
+        attributeSet.keywords = article.tags
+        attributeSet.textContent = [
+            article.title,
+            normalizedText(plainText)
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
+        attributeSet.contentURL = AppDeepLink.article(article.id).url
+
+        switch article.coverImage?.imageType {
+        case .link(let url):
+            attributeSet.thumbnailURL = url
+        case .resource(let name):
+            attributeSet.thumbnailData = UIImage(named: name)?.jpegData(compressionQuality: 0.7)
+        case .none:
+            break
+        }
+
+        let item = CSSearchableItem(
+            uniqueIdentifier: makeUniqueIdentifier(for: .article(article.id), scope: scope),
+            domainIdentifier: domainIdentifier,
+            attributeSet: attributeSet
+        )
+        item.expirationDate = .distantFuture
+        return item
+    }
+
     func title(for zikr: Zikr) -> String {
         if let title = normalizedText(zikr.title) {
             return title
@@ -262,6 +401,64 @@ private extension SpotlightIndexer {
         }
 
         return parts.joined(separator: " - ")
+    }
+
+    func stripMarkdown(_ text: String) -> String {
+        var result = text
+        // Remove images: ![alt](url)
+        result = result.replacingOccurrences(
+            of: #"!\[.*?\]\(.*?\)"#,
+            with: "",
+            options: .regularExpression
+        )
+        // Convert links [text](url) to just text
+        result = result.replacingOccurrences(
+            of: #"\[([^\]]*)\]\([^\)]*\)"#,
+            with: "$1",
+            options: .regularExpression
+        )
+        // Remove headings markers
+        result = result.replacingOccurrences(
+            of: #"(?m)^#{1,6}\s+"#,
+            with: "",
+            options: .regularExpression
+        )
+        // Remove bold/italic markers
+        result = result.replacingOccurrences(
+            of: #"(\*{1,3}|_{1,3})(.+?)\1"#,
+            with: "$2",
+            options: .regularExpression
+        )
+        // Remove inline code
+        result = result.replacingOccurrences(
+            of: #"`([^`]+)`"#,
+            with: "$1",
+            options: .regularExpression
+        )
+        // Remove blockquote markers
+        result = result.replacingOccurrences(
+            of: #"(?m)^>\s+"#,
+            with: "",
+            options: .regularExpression
+        )
+        // Remove horizontal rules
+        result = result.replacingOccurrences(
+            of: #"(?m)^[-*_]{3,}\s*$"#,
+            with: "",
+            options: .regularExpression
+        )
+        // Remove list markers
+        result = result.replacingOccurrences(
+            of: #"(?m)^[\s]*[-*+]\s+"#,
+            with: "",
+            options: .regularExpression
+        )
+        result = result.replacingOccurrences(
+            of: #"(?m)^[\s]*\d+\.\s+"#,
+            with: "",
+            options: .regularExpression
+        )
+        return result
     }
 
     func normalizedText(_ value: String?) -> String? {
@@ -320,6 +517,12 @@ private extension SpotlightIndexer {
         deepLink.scopedSearchableIdentifier(scope: scope)
     }
 
+    var deviceLanguage: String {
+        Bundle.main.preferredLocalizations.first
+            ?? Locale.current.languageCode
+            ?? "en"
+    }
+
     func makeIndexVersion(
         language: Language,
         zikrCollectionSource: ZikrCollectionSource
@@ -328,7 +531,7 @@ private extension SpotlightIndexer {
             .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
         let build = Bundle.main
             .object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0"
-        return [versionSalt, shortVersion, build, language.id, zikrCollectionSource.rawValue]
+        return [versionSalt, shortVersion, build, language.id, deviceLanguage, zikrCollectionSource.rawValue]
             .joined(separator: "-")
     }
 

@@ -140,7 +140,17 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
 
                 case .zikr(let id):
                     self.trigger(.goToZikr(id))
-                    
+
+                case .article(let id):
+                    Task {
+                        guard let article = try? await self.articlesService?.getArticle(id, updatedAfter: nil) else {
+                            return
+                        }
+                        await MainActor.run {
+                            self.trigger(.article(article))
+                        }
+                    }
+
                 }
             })
             .store(in: &cancellables)

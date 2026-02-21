@@ -20,6 +20,7 @@ final class Deeplinker: ObservableObject {
         case settings(SettingsRoute)
         case azkar(ZikrCategory)
         case zikr(Int)
+        case article(Int)
     }
     
 }
