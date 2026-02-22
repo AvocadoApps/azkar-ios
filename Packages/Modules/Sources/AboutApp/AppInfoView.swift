@@ -2,8 +2,6 @@
 
 import UIKit
 import SwiftUI
-import SwiftUIIntrospect
-import SwiftUIBackports
 import Library
 import AzkarResources
 
@@ -13,7 +11,6 @@ public struct AppInfoView: View {
     @Environment(\.safariPresenter) var safariPresenter
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
-    
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
     }
@@ -27,9 +24,25 @@ public struct AppInfoView: View {
         }
         .toolbar {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
-                Backport.ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
-                    Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.accent)
+                if #available(iOS 16, *) {
+                    ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.accent)
+                    }
+                } else {
+                    Button {
+                        let url = URL(string: "https://apps.apple.com/app/id1511423586")!
+                        let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        UIApplication.shared.connectedScenes
+                            .compactMap { $0 as? UIWindowScene }
+                            .flatMap { $0.windows }
+                            .first { $0.isKeyWindow }?
+                            .rootViewController?
+                            .present(vc, animated: true)
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.accent)
+                    }
                 }
             }
         }

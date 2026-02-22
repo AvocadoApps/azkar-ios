@@ -85,8 +85,6 @@ let package = Package(
             extensions,
             azkarServices,
             "Library",
-            .product(name: "SwiftUIBackports", package: "SwiftUIBackports"),
-            .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
         ]),
         .target(name: "ZikrCollectionsOnboarding", dependencies: [
             entities,
