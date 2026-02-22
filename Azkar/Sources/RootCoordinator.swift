@@ -151,6 +151,12 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                         }
                     }
 
+                case .hadith(let id):
+                    guard let zikr = try? self.databaseService.getZikrForHadith(id) else {
+                        return
+                    }
+                    self.trigger(.goToZikr(zikr.id))
+
                 }
             })
             .store(in: &cancellables)

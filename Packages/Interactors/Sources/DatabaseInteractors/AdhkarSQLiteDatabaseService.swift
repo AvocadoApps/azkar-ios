@@ -160,6 +160,15 @@ public extension AdhkarSQLiteDatabaseService {
         }
     }
     
+    func getZikrForHadith(_ hadithId: Int) throws -> Zikr? {
+        guard let record = try getDatabaseQueue().read({ db in
+            try ZikrOrigin.fetchOne(db, sql: "SELECT * FROM azkar WHERE hadith = ? LIMIT 1", arguments: [hadithId])
+        }) else {
+            return nil
+        }
+        return try getZikr(record.id, language: language)
+    }
+
     func getZikrBeforeBreakingFast() -> Zikr? {
         let fastBreakingZikrId = 48
         return try? getZikr(fastBreakingZikrId, language: language)

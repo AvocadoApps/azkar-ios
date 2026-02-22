@@ -21,6 +21,7 @@ final class Deeplinker: ObservableObject {
         case azkar(ZikrCategory)
         case zikr(Int)
         case article(Int)
+        case hadith(Int)
     }
     
 }

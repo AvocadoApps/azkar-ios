@@ -155,8 +155,8 @@ enum AppDeepLink: Equatable {
             return .zikr(id)
         case .article(let id):
             return .article(id)
-        case .hadith:
-            return .home
+        case .hadith(let id):
+            return .hadith(id)
         }
     }
 
