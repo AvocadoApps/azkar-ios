@@ -21,6 +21,7 @@ enum RootSection: Equatable, RouteKind {
     case settings(_ intitialRoute: SettingsRoute? = nil, presentModally: Bool = false)
     case shareOptions(Zikr)
     case article(Article)
+    case hadith(Hadith)
     case zikrCollectionsOnboarding
 }
 
@@ -37,6 +38,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     @Route(.modal) var modalSettings = makeModalSettingsView
     @Route(.modal) var shareOptions = makeShareOptionsView
     @Route(.push) var articleView = makeArticleView
+    @Route(.push) var hadithView = makeHadithView
     @Route(.modal) var zikrCollectionsOnboarding = makeZikrCollectionsOnboardingCoordinator
     
     let preferences: Preferences
@@ -152,10 +154,10 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
                     }
 
                 case .hadith(let id):
-                    guard let zikr = try? self.databaseService.getZikrForHadith(id) else {
+                    guard let hadith = try? self.databaseService.getHadith(id) else {
                         return
                     }
-                    self.trigger(.goToZikr(zikr.id))
+                    self.trigger(.hadith(hadith))
 
                 }
             })
@@ -228,6 +230,9 @@ private extension RootCoordinator {
         case .article(let article):
             route(to: \.articleView, article)
             articlesService?.sendAnalyticsEvent(.view, articleId: article.id)
+
+        case .hadith(let hadith):
+            route(to: \.hadithView, hadith)
 
         case .zikrPages(let vm):
             route(to: \.zikrPages, vm)
@@ -503,6 +508,10 @@ extension RootCoordinator {
         )
     }
     
+    func makeHadithView(_ hadith: Hadith) -> some View {
+        HadithView(viewModel: HadithViewModel(hadith: hadith, highlightPattern: nil, preferences: preferences))
+    }
+
     func makeZikrCollectionsOnboardingCoordinator() -> NavigationViewCoordinator<ZikrCollectionsOnboardingCoordinator> {
         NavigationViewCoordinator(
             ZikrCollectionsOnboardingCoordinator(
