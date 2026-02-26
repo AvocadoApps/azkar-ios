@@ -35,30 +35,93 @@
 
 ## Tech Stack
 
-- **UI Framework**: SwiftUI
-- **Architecture**: MVVM with Coordinators
-- **Project Generation**: [Tuist](https://tuist.io)
-- **Dependency Management**: Swift Package Manager
-- **Database**: GRDB
-- **Analytics**: Firebase Analytics, Mixpanel
-- **Payments**: RevenueCat
-- **Ads**: Superwall
-- **Backend**: Supabase
+| Library | Purpose |
+|---------|---------|
+| SwiftUI | UI framework |
+| [Stinsen](https://github.com/rundfunk47/stinsen) | Coordinator-based navigation |
+| [Tuist](https://tuist.io) | Xcode project generation |
+| [GRDB](https://github.com/groue/GRDB.swift) | SQLite database access |
+| [Supabase](https://supabase.com) | Backend API |
+| [RevenueCat](https://www.revenuecat.com) | In-app subscriptions |
+| [SuperwallKit](https://superwall.com) | Paywall presentation |
+| Firebase Analytics + Messaging | Analytics and push notifications |
+| Mixpanel | Event analytics |
+| Lottie | Animations |
+| Alamofire | HTTP networking |
+| NukeUI | Image loading |
+
+---
+
+## Architecture
+
+**SwiftUI + MVVM with Coordinator navigation**
+
+- Navigation is handled by `RootCoordinator` using the Stinsen coordinator library
+- Each scene has a `ViewModel` (ObservableObject) and a SwiftUI `View`
+- Dependency injection is constructor-based, passed through coordinators
+- Combine is used for reactive state alongside SwiftUI property wrappers
+- Reusable modules live in local SPM packages under `Packages/`
 
 ---
 
 ## Project Structure
 
 ```
-Azkar/
-├── Azkar/                    # Main app target
-│   ├── Sources/              # Swift source files
-│   └── Resources/            # Assets, localizations, database
-├── AzkarWidgets/             # Home screen widgets extension
-├── AzkarTests/               # Unit tests
-├── AzkarUITests/             # UI tests
-├── Tuist/                    # Tuist package definitions
-└── scripts/                  # Build scripts
+azkar-ios/
+├── Azkar/                        # Main app target
+│   └── Sources/
+│       ├── Scenes/               # Feature modules (MVVM)
+│       ├── Services/             # App-level services
+│       ├── Library/              # Shared utilities, subscription logic
+│       └── Extensions/           # Swift/UIKit extensions
+├── AzkarWidgets/                 # Home screen widget extension
+├── AzkarTests/                   # Unit tests
+├── AzkarUITests/                 # UI tests
+├── Packages/                     # Local SPM packages
+│   ├── Core/                     # Entities, AzkarServices, AzkarResources
+│   ├── Interactors/              # Database access layer (GRDB)
+│   └── Modules/                  # Library, Components, AudioPlayer, ArticleReader, …
+├── Tuist/
+│   └── Package.swift             # All external SPM dependencies
+└── scripts/                      # Build helpers (SwiftLint, secrets, localizations)
+```
+
+---
+
+## Getting Started
+
+The project uses **Tuist** for Xcode project generation. Edit `Project.swift` to change targets, settings, or build phases — `.xcodeproj` is regenerated from it.
+
+### Prerequisites
+
+- [Mise](https://mise.jdx.dev) — manages Tuist version (`brew install mise`)
+- Xcode 16+
+
+### Setup
+
+```bash
+# Install Tuist (version pinned in .mise.toml)
+mise install
+
+# Fetch SPM dependencies and generate the Xcode project
+mise x -- tuist install
+mise x -- tuist generate
+
+# Open in Xcode
+open Azkar.xcworkspace
+```
+
+### Secrets
+
+Local builds require `Azkar/Resources/Secrets.plist`. Generate it from environment variables:
+
+```bash
+export AZKAR_SUPABASE_API_KEY=...
+export AZKAR_SUPABASE_API_URL=...
+export REVENUE_CAT_API_KEY=...
+export SUPERWALL_API_KEY=...
+export MIXPANEL_TOKEN=...
+scripts/configure_secrets.sh
 ```
 
 ---
