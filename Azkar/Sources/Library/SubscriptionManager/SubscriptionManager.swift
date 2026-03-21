@@ -170,7 +170,7 @@ extension SubscriptionManager: PurchaseController {
         }
     }
     
-    private func handleCustomerInfo(_ customerInfo: CustomerInfo) async {
+    private func handleCustomerInfo(_ customerInfo: RevenueCat.CustomerInfo) async {
         // Gets called whenever new CustomerInfo is available
         let superwallEntitlements = customerInfo.entitlements.activeInCurrentEnvironment.keys.map { id in
             SuperwallKit.Entitlement(id: id)

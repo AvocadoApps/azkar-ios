@@ -159,6 +159,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupSuperwall() {
         let options = SuperwallOptions()
         options.paywalls.shouldPreload = true
+        options.shouldBypassAppTransactionCheck = true
         let purchaseController = SubscriptionManager.shared
         Superwall.configure(
             apiKey: readSecret(AzkarSecretKey.SUPERWALL_API_KEY)!,
