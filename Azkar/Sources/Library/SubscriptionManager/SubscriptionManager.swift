@@ -83,10 +83,10 @@ final class SubscriptionManager: SubscriptionManagerType {
             AnalyticsReporter.reportEvent("paywall_presentation_error", metadata: ["source": sourceScreenName, "error": error.localizedDescription, "entitlement": entitlement.rawValue])
             completion?()
         }
-        presentationHandler.onPresent { info in
+        presentationHandler.onPresent { _ in
             AnalyticsReporter.reportEvent("paywall_presentation", metadata: ["source": sourceScreenName, "entitlement": entitlement.rawValue])
         }
-        presentationHandler.onDismiss { [weak self] info, result in
+        presentationHandler.onDismiss { [weak self] _, result in
             let event = "paywall_dismiss"
             switch result {
             case .declined:

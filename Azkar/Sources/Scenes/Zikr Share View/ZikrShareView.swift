@@ -259,7 +259,7 @@ struct ZikrShareView: View {
             }
             .background {
                 if isBackgroundImage {
-                    if #available(iOS 26, *) { } else {
+                    if #unavailable(iOS 26) {
                         Rectangle()
                             .fill(.ultraThinMaterial)
                     }

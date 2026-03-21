@@ -20,7 +20,7 @@ final class ZikrFeedbackActivity: UIActivity {
         UIImage(systemName: "flag")
     }
     
-    override class var activityCategory: UIActivity.Category {
+    override static var activityCategory: UIActivity.Category {
         UIActivity.Category.action
     }
     

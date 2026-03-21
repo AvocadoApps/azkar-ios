@@ -1,8 +1,6 @@
 import SwiftUI
 import Library
 
-
-
 struct ReminderSoundPickerView: View {
     
     @ObservedObject var viewModel: ReminderSoundPickerViewModel

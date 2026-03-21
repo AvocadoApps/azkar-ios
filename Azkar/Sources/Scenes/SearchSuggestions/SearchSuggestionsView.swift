@@ -39,7 +39,7 @@ struct SearchSuggestionsView: View {
     
     var suggestedSearchQueriesSection: some View {
         Section {
-            ForEachIndexed(viewModel.suggestedQueries) { idx, position, query in
+            ForEachIndexed(viewModel.suggestedQueries) { _, position, query in
                 Button {
                     onSearchSuggestionSelection(query)
                 } label: {
@@ -66,7 +66,7 @@ struct SearchSuggestionsView: View {
     
     var suggestedAzkarSection: some View {
         Section {
-            ForEachIndexed(viewModel.suggestedAzkar) { idx, position, zikr in
+            ForEachIndexed(viewModel.suggestedAzkar) { _, position, zikr in
                 let text = zikr.title ?? zikr.translation ?? zikr.text
                 NavigationButton(
                     title: text.prefix(50) + "...",

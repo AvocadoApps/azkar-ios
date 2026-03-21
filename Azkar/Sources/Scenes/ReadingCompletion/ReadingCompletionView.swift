@@ -51,7 +51,7 @@ struct ReadingCompletionView: View {
                     Task {
                         await markAsCompleted()
                     }
-                }) {
+                }, label: {
                     Text(L10n.ReadingCompletion.markAsCompleted)
                         .systemFont(.body, weight: .semibold)
                         .padding()
@@ -60,7 +60,7 @@ struct ReadingCompletionView: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                         .padding(.horizontal)
-                }
+                })
                 .padding(.top, 8)
             }
         }

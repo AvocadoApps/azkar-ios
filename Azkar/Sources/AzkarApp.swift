@@ -34,7 +34,7 @@ struct AzkarApp: App {
             .task { await presentPaywall() }
             .connectAppTheme()
             .connectCustomFonts()
-            .attachEnvironmentOverrides(onChange: { change in
+            .attachEnvironmentOverrides(onChange: { _ in
                 setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
             })
             .onReceive(preferences.$appTheme) { newTheme in
@@ -118,7 +118,7 @@ struct AzkarApp: App {
         
         scrollEdgeAppearance.titleTextAttributes = titleTextAttributes
         scrollEdgeAppearance.largeTitleTextAttributes = largeTitleTextAttributes
-        if #available(iOS 26, *) {} else {
+        if #unavailable(iOS 26) {
             scrollEdgeAppearance.backgroundColor = UIColor(getColor(.background, theme: colorTheme))
         }
 
@@ -156,8 +156,7 @@ struct AzkarApp: App {
         navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
         navigationController.navigationBar.tintColor = tintColor
     }
-        
-    
+
     private func getFont(customName: String?, style: UIFont.TextStyle, design: UIFontDescriptor.SystemDesign) -> UIFont {
         let systemFont = UIFont.preferredFont(forTextStyle: style)
         let font: UIFont

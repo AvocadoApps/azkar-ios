@@ -1,54 +1,48 @@
-//
-//  HiddenContainerRecognizer.swift
-//  
-//
-//  Created by David on 2022/8/17.
-//
-
 import UIKit
 
-/// Beware that if you add view to subview that has been pulled out from this recognizer,
-/// calling getter will result in nil value.
-struct HiddenContainerRecognizer {
+class HiddenContainerRecognizer {
 
-    private enum Error: Swift.Error {
+    enum Error: Swift.Error {
+        case noTextFieldFound
         case unsupportedOSVersion(version: Float)
-        case desiredContainerNotFound(_ containerName: String)
     }
 
-    func getHiddenContainer(from view: UIView) throws -> UIView {
-        let containerName = try getHiddenContainerTypeInStringRepresentation()
-        let containers = view.subviews.filter { subview in
-            type(of: subview).description() == containerName
+    func getHiddenContainer(from textField: UITextField) throws -> UIView {
+        // iOS 15 uses _UITextLayoutCanvasView
+        if let containerView = textField.subviews.first(where: {
+            type(of: $0).description() == "_UITextLayoutCanvasView"
+        }) {
+            return containerView
         }
 
-        guard let container = containers.first else {
-            throw Error.desiredContainerNotFound(containerName)
+        // iOS 17 uses _UITextLayoutFragmentView
+        if let containerView = textField.subviews.first(where: {
+            type(of: $0).description().contains("TextLayoutFragmentView")
+        }) {
+            return containerView
         }
 
-        return container
-    }
-
-    private func getHiddenContainerTypeInStringRepresentation() throws -> String {
-
-        if #available(iOS 15, *) {
-            return "_UITextLayoutCanvasView"
+        // iOS 18+ uses _UITextFieldCanvasView
+        if let containerView = textField.subviews.first(where: {
+            type(of: $0).description().contains("CanvasView")
+        }) {
+            return containerView
         }
 
-        if #available(iOS 14, *) {
-            return "_UITextFieldCanvasView"
+        // Check if there's any suitable subview
+        if let containerView = textField.subviews.first(where: {
+            let typeName = type(of: $0).description()
+            return typeName.hasPrefix("_UI") && (
+                typeName.contains("Text") ||
+                typeName.contains("Canvas") ||
+                typeName.contains("Layout")
+            )
+        }) {
+            return containerView
         }
 
-        if #available(iOS 13, *) {
-            return "_UITextFieldCanvasView"
-        }
-
-        if #available(iOS 12, *) {
-            return "_UITextFieldContentView"
-        }
-
+        // If no suitable subview found, throw an error
         let currentIOSVersion = (UIDevice.current.systemVersion as NSString).floatValue
         throw Error.unsupportedOSVersion(version: currentIOSVersion)
     }
 }
-

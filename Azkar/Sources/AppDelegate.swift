@@ -56,16 +56,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         if
             userActivity.activityType == CSSearchableItemActionType,
             let searchableIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
-            let deepLink = AppDeepLink(searchableIdentifier: searchableIdentifier)
-        {
+            let deepLink = AppDeepLink(searchableIdentifier: searchableIdentifier) {
             Deeplinker.shared.route = deepLink.route
             return true
         }
 
         if
             let url = userActivity.webpageURL,
-            let deepLink = AppDeepLink(url: url)
-        {
+            let deepLink = AppDeepLink(url: url) {
             Deeplinker.shared.route = deepLink.route
             return true
         }

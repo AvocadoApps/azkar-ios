@@ -45,7 +45,6 @@ final class ZikrShareCoordinator: NavigationCoordinatable {
         }
     }
 
-    
     private func shareText(options: ZikrShareOptionsView.ShareOptions) {
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = scene.windows.first,

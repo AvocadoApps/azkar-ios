@@ -21,6 +21,7 @@ excluded:
  - fastlane
  - Packages
  - Tuist
+ - "**/Generated"
 
 included:
  - Azkar

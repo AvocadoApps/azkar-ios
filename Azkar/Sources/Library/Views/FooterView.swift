@@ -13,4 +13,3 @@ struct FooterView: View {
             .padding(.bottom)
     }
 }
-

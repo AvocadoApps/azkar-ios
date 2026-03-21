@@ -84,7 +84,7 @@ enum AzkarTarget: String, CaseIterable {
                 resources: "Azkar/Resources/**",
                 entitlements: "Azkar/Azkar.entitlements",
                 scripts: [
-                    .post(path: "./scripts/swiftlint.sh", name: "SwiftLint")
+                    .post(path: "./scripts/swiftlint.sh", name: "SwiftLint", basedOnDependencyAnalysis: false)
                 ],
                 dependencies: [
                     .target(name: "AzkarWidgets"),

@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 extension Color {

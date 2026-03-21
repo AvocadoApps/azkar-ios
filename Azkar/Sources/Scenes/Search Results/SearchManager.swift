@@ -10,8 +10,7 @@ final class SearchManager {
         searchResultSectionsPublisher.eraseToAnyPublisher()
     }
     let category: ZikrCategory
-    
-    
+
     private var searchTask: Task<Void, Never>?
     private let searchResultSectionsPublisher = PassthroughSubject<SearchResultsSection, Never>()
     private var cancellables = Set<AnyCancellable>()
