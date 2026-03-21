@@ -4,6 +4,8 @@ import AzkarServices
 import DatabaseInteractors
 
 public final class AdsService: AdsServiceType {
+
+    private let remoteAdsFetchLimit = 10
     
     let localStorageRepository: AdsRepository
     let remoteStorageRepository: AdsRepository
@@ -49,11 +51,14 @@ public final class AdsService: AdsServiceType {
                     let remoteAds = try await remoteStorageRepository.getAds(
                         newerThan: createdDate,
                         orUpdatedAfter: updatedDate,
-                        limit: 1
+                        limit: remoteAdsFetchLimit
                     )
-                    if let ad = remoteAds.first {
-                        try await localStorageRepository.saveAd(ad)
-                        continuation.yield(ad)
+                    for ad in remoteAds {
+                        if try await localStorageRepository.isAdSeen(ad) == false {
+                            try await localStorageRepository.saveAd(ad)
+                            continuation.yield(ad)
+                            break
+                        }
                     }
                     
                     continuation.finish()
@@ -75,6 +80,12 @@ public final class AdsService: AdsServiceType {
                 recordType: .ad,
                 actionType: action
             )
+        }
+    }
+
+    public func markAsSeen(ad: Ad) {
+        Task {
+            try await localStorageRepository.markAsSeen(ad: ad)
         }
     }
 

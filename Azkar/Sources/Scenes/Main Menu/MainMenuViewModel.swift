@@ -258,6 +258,7 @@ final class MainMenuViewModel: ObservableObject {
     func handleAdSelection(_ ad: Ad) {
         UIApplication.shared.open(ad.actionLink)
         adsService.sendAnalytics(for: ad, action: .open)
+        adsService.markAsSeen(ad: ad)
         AnalyticsReporter.reportEvent("azkar_ads_open", metadata: ["id": ad.id])
     }
     

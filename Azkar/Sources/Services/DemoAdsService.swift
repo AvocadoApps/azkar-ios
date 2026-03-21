@@ -11,4 +11,5 @@ final class DemoAdsService: AdsServiceType {
     }
     func saveAd(_ ad: Ad) async throws {}
     func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {}
+    func markAsSeen(ad: Ad) {}
 }
