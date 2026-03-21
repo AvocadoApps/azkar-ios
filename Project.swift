@@ -6,7 +6,6 @@ let kDebugSigningIdentity = "iPhone Developer"
 let kReleaseSigningIdentity = "iPhone Distribution"
 let kCompilationConditions = "SWIFT_ACTIVE_COMPILATION_CONDITIONS"
 let kDevelopmentTeam = "DEVELOPMENT_TEAM"
-let kDeadCodeStripping = "DEAD_CODE_STRIPPING"
 
 let companyName = "Al Jawziyya"
 let teamId = "486STKKP6Y"
@@ -30,10 +29,8 @@ private func getDefaultSettings(
 let baseSettingsDictionary = SettingsDictionary()
     .bitcodeEnabled(false)
     .merging([kDevelopmentTeam: SettingValue(stringLiteral: teamId)])
-
-    // A workaround due https://bugs.swift.org/browse/SR-11564
-    // Should be removed when the bug is resolved.
-    .merging([kDeadCodeStripping: SettingValue(booleanLiteral: false)])
+    .merging(["DEAD_CODE_STRIPPING": "YES"])
+    .merging(["ENABLE_USER_SCRIPT_SANDBOXING": "NO"])
 
 let settings = Settings.settings(
     base: baseSettingsDictionary
@@ -124,6 +121,8 @@ enum AzkarTarget: String, CaseIterable {
                 settings: Settings.settings(
                     base: baseSettingsDictionary
                         .merging(["DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER": "NO"])
+                        .merging(["ENABLE_APP_SANDBOX": "YES"])
+                        .merging(["ENABLE_HARDENED_RUNTIME": "YES"])
                         .addingObjcLinkerFlag
                     ,
                     configurations: [
@@ -162,10 +161,7 @@ enum AzkarTarget: String, CaseIterable {
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",
-                    "Azkar/Resources/ru.lproj/Localizable.strings",
-                    "Azkar/Resources/ru.lproj/Localizable.stringsdict",
-                    "Azkar/Resources/en.lproj/Localizable.strings",
-                    "Azkar/Resources/en.lproj/Localizable.stringsdict",
+                    "Azkar/Resources/Localizable.xcstrings",
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [
@@ -231,8 +227,7 @@ enum AzkarTarget: String, CaseIterable {
                 infoPlist: "AzkarUITests/Info.plist",
                 sources: "AzkarUITests/Sources/**",
                 resources: [
-                    "Azkar/Resources/en.lproj/Localizable.strings",
-                    "Azkar/Resources/ru.lproj/Localizable.strings"
+                    "Azkar/Resources/Localizable.xcstrings",
                 ],
                 dependencies: [
                     .target(name: AzkarTarget.azkarApp.rawValue),
