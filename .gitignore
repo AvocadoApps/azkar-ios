@@ -29,6 +29,7 @@ build/
 xcuserdata
 *.xccheckout
 *.moved-aside
+**/Derived/*
 DerivedData
 *.hmap
 *.ipa
