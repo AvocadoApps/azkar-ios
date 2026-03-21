@@ -481,6 +481,7 @@ struct ZikrView: View {
                     )
                     .hoverEffect(HoverEffect.highlight)
                 })
+                .accessibilityIdentifier("zikr_source_link")
                 .disabled(viewModel.hadithViewModel == nil)
                 .padding(.horizontal)
                 .padding(.vertical, 10)

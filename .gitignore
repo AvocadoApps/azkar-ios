@@ -45,3 +45,4 @@ fastlane/.env
 .env
 Azkar/Resources/Secrets.plist
 .claude/settings.local.json
+fastlane/screenshots

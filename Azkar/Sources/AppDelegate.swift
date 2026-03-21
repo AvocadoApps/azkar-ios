@@ -30,6 +30,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        if CommandLine.arguments.contains("DISABLE_ANIMATIONS") {
+            DispatchQueue.main.async {
+                UIApplication.shared.connectedScenes
+                    .compactMap { $0 as? UIWindowScene }
+                    .flatMap(\.windows)
+                    .forEach { $0.layer.speed = 100 }
+            }
+        }
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
         initialize(launchOptions: launchOptions)
