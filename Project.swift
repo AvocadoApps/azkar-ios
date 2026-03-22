@@ -213,6 +213,9 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
+                        .merging(["CODE_SIGN_STYLE": "Manual"])
+                        .merging(["CODE_SIGN_IDENTITY": "iPhone Developer"])
+                        .merging(["CODE_SIGN_IDENTITY[sdk=macosx*]": "Mac Developer"])
                 ),
                 launchArguments: []
             )
@@ -234,6 +237,9 @@ enum AzkarTarget: String, CaseIterable {
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
+                        .merging(["CODE_SIGN_STYLE": "Manual"])
+                        .merging(["CODE_SIGN_IDENTITY": "iPhone Developer"])
+                        .merging(["CODE_SIGN_IDENTITY[sdk=macosx*]": "Mac Developer"])
                 ),
                 launchArguments: []
             )
