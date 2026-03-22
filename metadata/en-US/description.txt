@@ -1,0 +1,40 @@
+Azkar is an app for reading and memorizing various duas and adhkar (morning, evening, and after-prayer).
+
+ADHKAR & DUA
+• Morning and evening adhkar (Hisn al-Muslim and Azkar.ru collections)
+• After-prayer adhkar
+• "100 Duas from the Quran and Sunnah"
+• Audio recitation for correct pronunciation
+• Two reading modes for convenient study with translation
+• Repetition counter with auto-advance to the next dhikr
+• Transliteration using DIN 31635 standard
+
+APPEARANCE
+• 6 color themes and dark mode
+• 11 app icon options
+• Multiple fonts for Arabic text and translation
+• Adjustable text size
+• Show/hide diacritical marks (tashkeel)
+
+REMINDERS
+• Notifications for morning and evening adhkar
+• Friday (Jumu'ah) reminder
+• Custom notification sounds
+
+WIDGETS & INTEGRATION
+• Home screen widgets
+• Spotlight search
+• Share dhikr as image or text
+
+11 LANGUAGES
+• English
+• Arabic (العربية)
+• Russian (Русский)
+• Turkish (Türkçe)
+• Chechen (Нохчийн)
+• Ingush (ГӀалгӀай)
+• Georgian
+• Uzbek (O'zbekcha)
+• Kazakh (Қазақша)
+• Kyrgyz (Кыргызча)
+• Tatar (Татарча)
