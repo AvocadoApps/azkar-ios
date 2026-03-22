@@ -49,7 +49,7 @@ struct FontsView: View {
                                 }
                         }
                     } header: {
-                        HeaderView(text: section.type.title)
+                        HeaderView(text: LocalizedStringKey(section.type.title))
                             .padding(.vertical, 15)
                     }
                 }
@@ -66,12 +66,12 @@ struct FontsView: View {
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .onAppear(perform: viewModel.loadData)
-        .navigationTitle(L10n.Fonts.title)
+        .navigationTitle("fonts.title")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if viewModel.fontsType == .arabic {
                     Templates.Menu {
-                        Text(L10n.Fonts.Arabic.info)
+                        Text("fonts.arabic.info")
                             .foregroundStyle(Color.primary)
                             .padding()
                             .cornerRadius(10)

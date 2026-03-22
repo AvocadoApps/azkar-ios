@@ -251,8 +251,8 @@ private extension SpotlightIndexer {
 
     func makeAppItem(scope: String) -> CSSearchableItem {
         let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
-        attributeSet.title = L10n.appName
-        attributeSet.displayName = L10n.appName
+        attributeSet.title = String(localized: "app-name")
+        attributeSet.displayName = String(localized: "app-name")
         attributeSet.alternateNames = appKeywords
         attributeSet.contentDescription = appKeywords.joined(separator: " · ")
         attributeSet.keywords = appKeywords
@@ -271,7 +271,7 @@ private extension SpotlightIndexer {
     func makeCategoryItem(_ category: ZikrCategory, scope: String) -> CSSearchableItem {
         let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
         attributeSet.title = category.title
-        attributeSet.contentDescription = L10n.appName
+        attributeSet.contentDescription = String(localized: "app-name")
         attributeSet.keywords = uniqueKeywords(
             [
                 category.rawValue,
@@ -380,7 +380,7 @@ private extension SpotlightIndexer {
         let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
         attributeSet.title = shortText(hadith.translation, maxLength: 90)
             ?? shortText(hadith.text, maxLength: 90)
-            ?? L10n.Common.dhikr(hadith.id)
+            ?? String(format: String(localized: "common.dhikr"), locale: Locale.current, String(describing: hadith.id))
         attributeSet.contentDescription = normalizedText(hadith.source)
         attributeSet.keywords = uniqueKeywords([
             "hadith",
@@ -416,7 +416,7 @@ private extension SpotlightIndexer {
             return translationSnippet
         }
 
-        return L10n.Common.dhikr(zikr.id)
+        return String(format: String(localized: "common.dhikr"), locale: Locale.current, String(describing: zikr.id))
     }
 
     func description(for zikr: Zikr) -> String {

@@ -28,7 +28,7 @@ struct TextSettingsScreen: View {
         .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.Text.title)
+        .navigationTitle("settings.text.title")
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -37,7 +37,7 @@ struct TextSettingsScreen: View {
     var collectionSection: some View {
         VStack(spacing: 0) {
             HStack {
-                HeaderView(text: L10n.Settings.Text.AdhkarCollectionsSource.header)
+                HeaderView(text: "settings.text.adhkar_collections_source.header")
                 Spacer()
                 Button(
                     action: {
@@ -51,7 +51,7 @@ struct TextSettingsScreen: View {
             }
             
             PickerMenu(
-                title: L10n.Settings.Text.AdhkarCollectionsSource.title,
+                title: "settings.text.adhkar_collections_source.title",
                 selection: $viewModel.preferences.zikrCollectionSource,
                 items: ZikrCollectionSource.allCases,
                 itemTitle: { item in
@@ -61,21 +61,19 @@ struct TextSettingsScreen: View {
             .pickerStyle(.menu)
             .applyContainerStyle()
             
-            FooterView(
-                text: viewModel.preferences.zikrCollectionSource == .azkarRU
-                       ? L10n.AdhkarCollections.AzkarRu.description
-                       : L10n.AdhkarCollections.Hisn.description
-            )
+            FooterView(text: viewModel.preferences.zikrCollectionSource == .azkarRU
+                ? "adhkar-collections.azkar-ru.description"
+                : "adhkar-collections.hisn.description")
         }
     }
     
     var textContentSettings: some View {
         VStack(spacing: 0) {
-            HeaderView(text: L10n.Settings.Text.Content.header)
+            HeaderView(text: "settings.text.content.header")
             
             VStack {
                 PickerMenu(
-                    title: L10n.Settings.Text.language,
+                    title: "settings.text.language",
                     selection: .init(get: {
                         viewModel.preferences.contentLanguage
                     }, set: viewModel.setContentLanguage),
@@ -87,10 +85,10 @@ struct TextSettingsScreen: View {
                 Divider()
                 
                 PickerMenu(
-                    title: L10n.Settings.Text.transliteration,
+                    title: "settings.text.transliteration",
                     selection: $viewModel.preferences.transliterationType,
                     items: viewModel.availableTransliterationTypes,
-                    itemTitle: { $0.title ?? L10n.Common.default }
+                    itemTitle: { $0.title ?? String(localized: "common.default") }
                 )
                 .pickerStyle(.menu)
             }
@@ -100,14 +98,14 @@ struct TextSettingsScreen: View {
     
     var fonts: some View {
         VStack(spacing: 0) {
-            HeaderView(text: L10n.Settings.Text.Fonts.header)
+            HeaderView(text: "settings.text.fonts.header")
             
             VStack {
                 NavigationLink {
                     arabicFontsPicker
                 } label: {
                     NavigationLabel(
-                        title: L10n.Settings.Text.arabicTextFont,
+                        title: "settings.text.arabic-text-font",
                         label: viewModel.preferences.preferredArabicFont.name
                     )
                 }
@@ -118,7 +116,7 @@ struct TextSettingsScreen: View {
                     translationFontsPicker
                 } label: {
                     NavigationLabel(
-                        title: L10n.Settings.Text.translationTextFont,
+                        title: "settings.text.translation_text_font",
                         label: viewModel.preferences.preferredTranslationFont.name
                     )
                 }
@@ -131,7 +129,7 @@ struct TextSettingsScreen: View {
         NavigationLink {
             ExtraTextSettingsScreen(viewModel: viewModel)
         } label: {
-            NavigationLabel(title: L10n.Settings.Text.extra)
+            NavigationLabel(title: "settings.text.extra")
         }
         .applyContainerStyle()
     }

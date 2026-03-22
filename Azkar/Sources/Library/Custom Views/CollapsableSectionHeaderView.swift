@@ -4,7 +4,7 @@ import SwiftUI
 
 struct CollapsableSectionHeaderView: View {
 
-    let title: String?
+    let title: LocalizedStringKey?
     let isExpanded: Bool
     let isExpandable: Bool
 

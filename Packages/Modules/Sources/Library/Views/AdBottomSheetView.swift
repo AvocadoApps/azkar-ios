@@ -74,7 +74,7 @@ public struct AdBottomSheetView: View {
                     
                     VStack(spacing: 12) {
                         Button(action: onAction) {
-                            Text(item.actionTitle ?? NSLocalizedString("common.open", comment: ""))
+                            Text(item.actionTitle ?? String(localized: "common.open"))
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -84,7 +84,7 @@ public struct AdBottomSheetView: View {
                         }
                         
                         Button(action: onDontShowAgain) {
-                            Text(NSLocalizedString("ads.dont-show-again", comment: ""))
+                            Text("ads.dont-show-again")
                                 .font(.subheadline)
                                 .foregroundColor(colorTheme.getColor(.secondaryText))
                                 .frame(maxWidth: .infinity)

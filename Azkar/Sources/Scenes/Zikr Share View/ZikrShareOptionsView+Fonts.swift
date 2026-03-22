@@ -11,7 +11,7 @@ extension ZikrShareOptionsView {
         Group {
             if includeOriginalText {
                 fontMenu(
-                    title: L10n.Settings.Text.arabicTextFont,
+                    title: "settings.text.arabic-text-font",
                     selection: $selectedArabicFont,
                     availableFonts: availableArabicFonts,
                     onSelect: handleArabicFontSelection
@@ -19,7 +19,7 @@ extension ZikrShareOptionsView {
             }
             if zikr.translation != nil || zikr.transliteration != nil || zikr.benefits != nil {
                 fontMenu(
-                    title: L10n.Settings.Text.translationTextFont,
+                    title: "settings.text.translation_text_font",
                     selection: $selectedTranslationFont,
                     availableFonts: availableTranslationFonts,
                     onSelect: handleTranslationFontSelection
@@ -29,7 +29,7 @@ extension ZikrShareOptionsView {
     }
 
     func fontMenu<T: AppFont & Identifiable & Hashable>(
-        title: String,
+        title: LocalizedStringKey,
         selection: Binding<T>,
         availableFonts: [T],
         onSelect: @escaping (T, T) -> Void

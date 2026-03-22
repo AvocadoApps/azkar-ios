@@ -2,9 +2,8 @@ import SwiftUI
 import Library
 
 struct PickerView<T: View>: View {
-
-    var label: String
-    var navigationTitle: String?
+    let label: LocalizedStringKey
+    var navigationTitle: LocalizedStringKey?
     var titleDisplayMode: NavigationBarItem.TitleDisplayMode = .automatic
     var subtitle: String
     var destination: T
@@ -13,11 +12,7 @@ struct PickerView<T: View>: View {
         NavigationLink(
             destination: destination.navigationBarTitle(navigationTitle ?? label, displayMode: titleDisplayMode)
         ) {
-            NavigationLabel(
-                title: label,
-                label: subtitle
-            )
+            NavigationLabel(title: label, label: subtitle)
         }
     }
-
 }

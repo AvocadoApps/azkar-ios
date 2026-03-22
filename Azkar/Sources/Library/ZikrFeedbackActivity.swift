@@ -13,7 +13,7 @@ final class ZikrFeedbackActivity: UIActivity {
     }
     
     override var activityTitle: String? {
-        L10n.Common.reportProblem
+        String(localized: "common.report-problem")
     }
     
     override var activityImage: UIImage? {

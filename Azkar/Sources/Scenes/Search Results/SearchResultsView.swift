@@ -39,7 +39,7 @@ struct SearchResultsView: View {
                     speed: 1.0
                 )
                 .frame(height: 150)
-                Text(L10n.Common.noSearchResults)
+                Text("common.no-search-results")
                     .systemFont(.title3)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondaryText)

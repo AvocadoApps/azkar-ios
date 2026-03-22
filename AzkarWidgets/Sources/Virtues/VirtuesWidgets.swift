@@ -37,8 +37,8 @@ struct VirtuesWidgets: Widget {
             VirtueView(fadl: entry.fadl)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .configurationDisplayName(L10n.Widgets.Virtues.title)
-        .description(L10n.Widgets.Virtues.description)
+        .configurationDisplayName("widgets.virtues.title")
+        .description("widgets.virtues.description")
     }
     
 }

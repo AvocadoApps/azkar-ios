@@ -18,9 +18,9 @@ final class NotificationsDisabledViewModel: ObservableObject {
         var title: String {
             switch self {
             case .generalAccess:
-                return L10n.Settings.Reminders.NoAccess.titleGeneral
+                return String(localized: "settings.reminders.no-access.title-general")
             case .soundAccess:
-                return L10n.Settings.Reminders.NoAccess.titleSound
+                return String(localized: "settings.reminders.no-access.title-sound")
             }
         }
         
@@ -97,7 +97,7 @@ struct NotificationsDisabledView: View {
                     UIApplication.shared.canOpenURL(url) else { return }
                 UIApplication.shared.open(url)
             } label: {
-                Text(L10n.Settings.Reminders.NoAccess.turnOnTitle)
+                Text("settings.reminders.no-access.turn-on-title")
                     .systemFont(.body)
                     .foregroundStyle(.accent)
                     .frame(maxWidth: .infinity, alignment: .leading)

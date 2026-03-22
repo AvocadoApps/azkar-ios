@@ -104,7 +104,7 @@ struct ColorSchemesView: View {
                         dismissOnSelect: false
                     )
                 } footer: {
-                    FooterView(text: viewModel.preferences.theme.description)
+                    FooterView(text: LocalizedStringKey(viewModel.preferences.theme.description))
                 }
                 
                 Section {
@@ -122,7 +122,7 @@ struct ColorSchemesView: View {
                         isItemProtected: { _ in false }
                     )
                 } header: {
-                    HeaderView(text: L10n.Settings.Appearance.ColorTheme.header)
+                    HeaderView(text: "settings.appearance.color-theme.header")
                 }
                  
                 Section {
@@ -152,7 +152,7 @@ struct ColorSchemesView: View {
                             if viewModel.subscriptionManager.isProUser() == false && isProItemSelected {
                                 Image(systemName: "lock.fill")
                             }
-                            Text(L10n.Common.done)
+                            Text("common.done")
                         }
                     })
                     .transition(.opacity)

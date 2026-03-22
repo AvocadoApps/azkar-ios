@@ -20,7 +20,7 @@ enum ShareBackgroundTypes: Hashable, Identifiable, CaseIterable {
     
     var title: String {
         switch self {
-        case .any: return L10n.Share.BackgroundType.all
+        case .any: return String(localized: "share.background-type.all")
         case .type(let type): return type.title
         }
     }
@@ -37,9 +37,9 @@ struct ZikrShareOptionsView: View {
             var message: String? {
                 switch self {
                 case .saveImage:
-                    return L10n.Share.imageSaved
+                    return String(localized: "share.image_saved")
                 case .copyText:
-                    return L10n.Share.textCopied
+                    return String(localized: "share.text_copied")
                 case .sheet:
                     return nil
                 }
@@ -206,7 +206,7 @@ struct ZikrShareOptionsView: View {
         mainContent
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(L10n.Common.done) {
+                    Button(LocalizedStringKey("common.done")) {
                         presentation.dismiss()
                     }
                 }
@@ -274,7 +274,7 @@ struct ZikrShareOptionsView: View {
                     share(actionType: .sheet)
                 }
             }, label: {
-                Text(L10n.Common.share)
+                Text("common.share")
             })
         }
     }

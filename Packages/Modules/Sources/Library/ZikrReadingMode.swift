@@ -7,8 +7,8 @@ public enum ZikrReadingMode: String, Codable, CaseIterable, Identifiable {
     
     public var title: String {
         switch self {
-        case .normal: NSLocalizedString("settings.text.reading_mode.normal", comment: "")
-        case .lineByLine: NSLocalizedString("settings.text.reading_mode.line_by_line", comment: "")
+        case .normal: String(localized: "settings.text.reading_mode.normal.title")
+        case .lineByLine: String(localized: "settings.text.reading_mode.line_by_line.title")
         }
     }
 }

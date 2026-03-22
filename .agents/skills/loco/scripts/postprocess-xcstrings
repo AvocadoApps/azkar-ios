@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+"""Post-process .xcstrings: convert plural keys without number references to substitutions format.
+
+Loco exports plural keys in simple variations.plural format, which requires the
+number that drives plural selection to appear in the string. Some plural keys use
+the count only for selection without displaying it. These cause Xcode warnings:
+"Plural variation requires referencing the number in the string."
+
+This script auto-detects such keys and converts them to the substitutions format,
+where the count drives plural selection via a named substitution (%#@count@)
+without needing to appear in the output.
+"""
+
+import json
+import re
+import sys
+
+INT_SPECIFIER_RE = re.compile(r"%(\d+\$)?[-+ 0#]*(\d+|\*)?\.?(\d+|\*)?(lld|ld|d|i|u|lu|llu)")
+FORMAT_SPECIFIER_RE = re.compile(r"%((\d+)\$)?[-+ 0#]*(\d+|\*)?\.?(\d+|\*)?[diouxXeEfgGaAcspn@%]|%#@\w+@")
+
+
+def has_int_specifier(text):
+    return bool(INT_SPECIFIER_RE.search(text))
+
+
+def count_format_specs(text):
+    return sum(1 for m in FORMAT_SPECIFIER_RE.finditer(text)
+               if m.group() != "%%" and not m.group().startswith("%#@"))
+
+
+def word_diff(one, other):
+    """Return (prefix_len, suffix_len) in words between one and other forms."""
+    a, b = one.split(), other.split()
+    prefix = 0
+    for i in range(min(len(a), len(b))):
+        if a[i] == b[i]:
+            prefix = i + 1
+        else:
+            break
+    suffix = 0
+    for i in range(1, min(len(a), len(b)) + 1):
+        if a[-i] == b[-i]:
+            suffix = i
+        else:
+            break
+    if prefix + suffix > min(len(a), len(b)):
+        suffix = min(len(a), len(b)) - prefix
+    return prefix, suffix
+
+
+def extract_middle(text, prefix, suffix):
+    """Extract the middle segment of text given word-level prefix/suffix lengths."""
+    words = text.split()
+    end = len(words) - suffix if suffix else len(words)
+    return " ".join(words[prefix:end])
+
+
+def build_template(text, prefix, suffix):
+    """Build template with %#@count@ replacing the varying middle segment."""
+    words = text.split()
+    end = len(words) - suffix if suffix else len(words)
+    parts = []
+    head = " ".join(words[:prefix])
+    tail = " ".join(words[end:])
+    if head:
+        parts.append(head)
+    parts.append("%#@count@")
+    if tail:
+        parts.append(tail)
+    return " ".join(parts)
+
+
+def needs_conversion(key_data):
+    """True if the key has plural variations without integer specifiers."""
+    localizations = key_data.get("localizations", {})
+    has_plural = False
+    for loc_val in localizations.values():
+        if "substitutions" in loc_val:
+            return False
+        plural = loc_val.get("variations", {}).get("plural")
+        if plural:
+            has_plural = True
+            for cat_val in plural.values():
+                if has_int_specifier(cat_val.get("stringUnit", {}).get("value", "")):
+                    return False
+    return has_plural
+
+
+def convert_key(key_data):
+    """Convert a key's localizations from variations.plural to substitutions format."""
+    localizations = key_data.get("localizations", {})
+
+    # argNum = (visible format specifiers in original string) + 1.
+    # Must be consistent across all locales.
+    arg_num = 1
+    for loc_val in localizations.values():
+        for cat_val in loc_val.get("variations", {}).get("plural", {}).values():
+            n = count_format_specs(cat_val.get("stringUnit", {}).get("value", ""))
+            if n > 0:
+                arg_num = n + 1
+                break
+        if arg_num > 1:
+            break
+
+    converted = False
+    for locale, loc_val in list(localizations.items()):
+        plural = loc_val.get("variations", {}).get("plural")
+        if not plural:
+            continue
+
+        forms = {c: v.get("stringUnit", {}).get("value", "") for c, v in plural.items()}
+        states = {c: v.get("stringUnit", {}).get("state", "translated") for c, v in plural.items()}
+        one, other = forms.get("one"), forms.get("other")
+
+        if one is not None and other is not None:
+            prefix, suffix = word_diff(one, other)
+            template = build_template(one, prefix, suffix)
+            sub_vars = {c: {"stringUnit": {"state": states[c], "value": extract_middle(v, prefix, suffix)}}
+                        for c, v in forms.items()}
+        else:
+            template = "%#@count@"
+            sub_vars = {c: {"stringUnit": {"state": states[c], "value": v}}
+                        for c, v in forms.items()}
+
+        localizations[locale] = {
+            "stringUnit": {"state": "translated", "value": template},
+            "substitutions": {
+                "count": {
+                    "argNum": arg_num,
+                    "formatSpecifier": "lld",
+                    "variations": {"plural": sub_vars}
+                }
+            }
+        }
+        converted = True
+
+    return converted
+
+
+def xcode_json_dumps(data):
+    raw = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False)
+    raw = re.sub(r'(?<=") *: ', " : ", raw)
+    return raw + "\n"
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <path-to-xcstrings>", file=sys.stderr)
+        sys.exit(1)
+
+    path = sys.argv[1]
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    converted_keys = [k for k, v in data.get("strings", {}).items()
+                      if needs_conversion(v) and convert_key(v)]
+
+    if converted_keys:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(xcode_json_dumps(data))
+        for k in sorted(converted_keys):
+            print(f"  🔀 Converted: {k}")
+        print(f"✅ Converted {len(converted_keys)} plural key(s) to substitutions format.")
+    else:
+        print("👌 No plural keys need conversion.")
+
+
+if __name__ == "__main__":
+    main()

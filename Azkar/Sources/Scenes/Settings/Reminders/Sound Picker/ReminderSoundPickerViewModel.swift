@@ -27,7 +27,7 @@ enum ReminderSound: String, Identifiable, Hashable, Codable {
     var title: String {
         switch self {
         case .standard:
-            return L10n.Common.default
+            return String(localized: "common.default")
         case .forSure:
             return "For Sure"
         case .beyondDoubt:
@@ -110,7 +110,7 @@ final class ReminderSoundPickerViewModel: ObservableObject {
         
         var title: String {
             switch self {
-            case .standard: return L10n.Settings.Reminders.Sounds.standard
+            case .standard: return String(localized: "settings.reminders.sounds.standard")
             case .custom: return "PRO"
             }
         }

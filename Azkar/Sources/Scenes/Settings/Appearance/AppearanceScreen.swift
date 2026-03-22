@@ -15,7 +15,7 @@ struct AppearanceScreen: View {
         }
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.Appearance.title)
+        .navigationTitle("settings.appearance.title")
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -24,7 +24,7 @@ struct AppearanceScreen: View {
     var content: some View {
         Group {
             PickerView(
-                label: L10n.Settings.Appearance.AppTheme.title,
+                label: "settings.appearance.app-theme.title",
                 subtitle: viewModel.themeTitle,
                 destination: themePicker
             )
@@ -33,7 +33,7 @@ struct AppearanceScreen: View {
 
             if viewModel.canChangeIcon {
                 PickerView(
-                    label: L10n.Settings.Icon.title,
+                    label: "settings.icon.title",
                     subtitle: viewModel.preferences.appIcon.title,
                     destination: iconPicker
                 )
@@ -43,13 +43,13 @@ struct AppearanceScreen: View {
 
             Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
                 HStack {
-                    Text(L10n.Settings.useFunFeatures)
+                    Text("settings.use_fun_features")
                         .systemFont(.body)
                         .foregroundStyle(.text)
                     Spacer()
                     
                     Templates.Menu {
-                        Text(L10n.Settings.useFunFeaturesTip)
+                        Text("settings.use_fun_features_tip")
                             .padding()
                             .cornerRadius(10)
                     } label: { _ in

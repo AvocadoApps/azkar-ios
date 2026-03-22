@@ -8,7 +8,7 @@ extension ZikrShareOptionsView {
 
     var toolbar: some View {
         HStack(spacing: 16) {
-            Button(L10n.Common.done) {
+            Button(LocalizedStringKey("common.done")) {
                 presentation.dismiss()
             }
             Spacer()
@@ -41,7 +41,7 @@ extension ZikrShareOptionsView {
 
                 Divider()
 
-                Toggle(L10n.Share.showExtraOptions, isOn: $showExtraOptions)
+                Toggle("share.show-extra-options", isOn: $showExtraOptions)
                     .padding(.horizontal, 16)
 
                 if showExtraOptions {
@@ -56,14 +56,14 @@ extension ZikrShareOptionsView {
                     HStack {
                         let isLogoOptionLocked = !includeLogo && !subscriptionManager.isProUser()
 
-                        Text(L10n.Share.includeAzkarLogo)
+                        Text("share.include-azkar-logo")
                         Spacer()
                         Image(systemName: "lock.fill")
                             .foregroundStyle(.accent)
                             .scaleEffect(isLogoOptionLocked ? 1 : 0)
                             .opacity(isLogoOptionLocked ? 1 : 0)
                             .animation(.smooth, value: isLogoOptionLocked)
-                        Toggle(L10n.Share.includeAzkarLogo, isOn: $includeLogo.animation(.smooth))
+                        Toggle("share.include-azkar-logo", isOn: $includeLogo.animation(.smooth))
                             .labelsHidden()
                     }
                     .padding(.horizontal, 16)
@@ -168,7 +168,7 @@ extension ZikrShareOptionsView {
     var backgroundPickerSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
-                Text(L10n.Share.backgroundHeader)
+                Text("share.background-header")
                     .foregroundStyle(.secondaryText)
                     .systemFont(.subheadline, modification: .smallCaps)
                     .padding(.horizontal, 16)
@@ -196,7 +196,7 @@ extension ZikrShareOptionsView {
 
     var shareAsSection: some View {
         Section {
-            Picker(L10n.Share.shareAs, selection: $selectedShareType.animation(.smooth)) {
+            Picker("share.share-as", selection: $selectedShareType.animation(.smooth)) {
                 ForEach(ZikrShareType.allCases) { type in
                     Label(type.title, systemImage: type.imageName)
                         .tag(type)
@@ -211,38 +211,38 @@ extension ZikrShareOptionsView {
     var shareOptions: some View {
         Section {
             if zikr.title != nil {
-                Toggle(L10n.Share.includeTitle, isOn: $includeTitle)
+                Toggle("share.include-title", isOn: $includeTitle)
             }
             if zikr.translation != nil {
-                Toggle(L10n.Share.includeOriginalText, isOn: $includeOriginalText.onChange { newValue in
+                Toggle("share.include-original-text", isOn: $includeOriginalText.onChange { newValue in
                     if !newValue && !includeTranslation {
                         includeTranslation = true
                     }
                 })
             }
             if zikr.translation != nil {
-                Toggle(L10n.Share.includeTranslation, isOn: $includeTranslation.onChange { newValue in
+                Toggle("share.include-translation", isOn: $includeTranslation.onChange { newValue in
                     if !newValue && !includeOriginalText {
                         includeOriginalText = true
                     }
                 })
             }
             if zikr.transliteration != nil {
-                Toggle(L10n.Share.includeTransliteration, isOn: $includeTransliteration)
+                Toggle("share.include-transliteration", isOn: $includeTransliteration)
             }
             if zikr.benefits != nil {
-                Toggle(L10n.Share.includeBenefit, isOn: $includeBenefits)
+                Toggle("share.include-benefit", isOn: $includeBenefits)
             }
 
-            Toggle(L10n.Settings.Breaks.title, isOn: $enableLineBreaks)
+            Toggle("settings.breaks.title", isOn: $enableLineBreaks)
 
             if selectedShareType != .text {
                 Divider()
 
                 HStack(spacing: 16) {
-                    Text(L10n.Share.textAlignment)
+                    Text("share.text-alignment")
                     Spacer()
-                    Picker(L10n.Share.textAlignment, selection: $textAlignment) {
+                    Picker("share.text-alignment", selection: $textAlignment) {
                         ForEach(alignments) { alignment in
                             Image(systemName: alignment.imageName)
                                 .tag(alignment)
@@ -253,7 +253,7 @@ extension ZikrShareOptionsView {
                 Divider()
 
                 HStack(spacing: 12) {
-                    Text(L10n.Share.fontSize)
+                    Text("share.font-size")
                     Spacer()
                     fontSizeButton(false, isDisabled: selectedDynamicTypeSize == DynamicTypeSize.allCases.first)
                     fontSizeButton(true, isDisabled: selectedDynamicTypeSize == DynamicTypeSize.allCases.last)

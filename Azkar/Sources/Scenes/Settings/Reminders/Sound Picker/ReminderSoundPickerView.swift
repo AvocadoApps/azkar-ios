@@ -10,7 +10,7 @@ struct ReminderSoundPickerView: View {
         ScrollView {
             ForEach(viewModel.sections) { section in
                 VStack(spacing: 0) {
-                    HeaderView(text: section.title)
+                    HeaderView(text: LocalizedStringKey(section.title))
                     
                     VStack {
                         ForEachIndexed(section.sounds) { _, position, sound in
@@ -33,7 +33,7 @@ struct ReminderSoundPickerView: View {
         .environment(\.horizontalSizeClass, .regular)
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.Reminders.Sounds.sound)
+        .navigationTitle("settings.reminders.sounds.sound")
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }

@@ -9,8 +9,8 @@ enum CounterType: Int, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .floatingButton: return L10n.Settings.Counter.CounterType.button
-        case .tap: return L10n.Settings.Counter.CounterType.tap
+        case .floatingButton: return String(localized: "settings.counter.counter-type.button")
+        case .tap: return String(localized: "settings.counter.counter-type.tap")
         }
     }
 }

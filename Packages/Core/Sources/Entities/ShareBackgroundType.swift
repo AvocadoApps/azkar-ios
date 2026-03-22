@@ -9,9 +9,9 @@ public enum ShareBackgroundType: String, Codable, Hashable, CaseIterable, Identi
 
     public var title: String {
         switch self {
-        case .color: NSLocalizedString("share.background-type.color", comment: "")
-        case .image: NSLocalizedString("share.background-type.image", comment: "")
-        case .pattern: NSLocalizedString("share.background-type.pattern", comment: "")
+        case .color: String(localized: "share.background-type.color")
+        case .image: String(localized: "share.background-type.image")
+        case .pattern: String(localized: "share.background-type.pattern")
         }
     }
 }

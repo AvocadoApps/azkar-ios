@@ -103,7 +103,7 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuItem(
                 category: .night,
                 imageName: "categories/night",
-                title: L10n.Category.night,
+                title: String(localized: "category.night"),
                 color: Color.init(uiColor: .systemMint),
                 count: nil,
                 iconType: .bundled(resourcesBunbdle)
@@ -111,7 +111,7 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuItem(
                 category: .afterSalah,
                 imageName: "categories/after-salah",
-                title: L10n.Category.afterSalah,
+                title: String(localized: "category.after-salah"),
                 color: Color.init(.systemBlue),
                 count: nil,
                 iconType: .bundled(resourcesBunbdle)
@@ -119,7 +119,7 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuItem(
                 category: .other,
                 imageName: "categories/important-adhkar",
-                title: L10n.Category.other,
+                title: String(localized: "category.other"),
                 color: Color.init(.systemTeal),
                 count: nil,
                 iconType: .bundled(resourcesBunbdle)
@@ -127,7 +127,7 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuItem(
                 category: .hundredDua,
                 imageName: "categories/hundred-dua",
-                title: L10n.Category.hundredDua,
+                title: String(localized: "category.hundred-dua"),
                 color: Color.init(.systemPink),
                 count: nil,
                 iconType: .bundled(resourcesBunbdle)

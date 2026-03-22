@@ -17,7 +17,7 @@ struct RemindersScreen: View {
         .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.Reminders.title)
+        .navigationTitle("settings.reminders.title")
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -47,11 +47,11 @@ struct RemindersScreen: View {
     
     var adhkarReminderSection: some View {
         VStack(spacing: 0) {
-            HeaderView(text: L10n.Settings.Reminders.MorningEvening.label)
+            HeaderView(text: "settings.reminders.morning-evening.label")
             
             VStack {
                 Toggle(
-                    L10n.Settings.Reminders.MorningEvening.switchLabel,
+                    "settings.reminders.morning-evening.switch-label",
                     isOn: $viewModel.preferences.enableAdhkarReminder
                 )
                 
@@ -64,7 +64,7 @@ struct RemindersScreen: View {
                     
                     if viewModel.notificationsDisabledViewModel.isAccessGranted {
                         NavigationButton(
-                            title: L10n.Settings.Reminders.Sounds.sound,
+                            title: "settings.reminders.sounds.sound",
                             label: viewModel.preferences.adhkarReminderSound.title,
                             action: viewModel.presentAdhkarSoundPicker
                         )
@@ -87,7 +87,7 @@ struct RemindersScreen: View {
     var adhkarIosTimePicker: some View {
         Group {
             HStack {
-                Text(L10n.Settings.Reminders.MorningEvening.morningLabel)
+                Text("settings.reminders.morning-evening.morning-label")
                     .fixedSize(horizontal: false, vertical: true)
                     .systemFont(.body)
                     .foregroundStyle(.text)
@@ -95,7 +95,7 @@ struct RemindersScreen: View {
                 Spacer()
                 
                 DatePicker(
-                    L10n.Settings.Reminders.MorningEvening.morningLabel,
+                    "settings.reminders.morning-evening.morning-label",
                     selection: $viewModel.preferences.morningNotificationTime,
                     in: viewModel.morningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
@@ -106,7 +106,7 @@ struct RemindersScreen: View {
             Divider()
             
             HStack {
-                Text(L10n.Settings.Reminders.MorningEvening.eveningLabel)
+                Text("settings.reminders.morning-evening.evening-label")
                     .fixedSize(horizontal: false, vertical: true)
                     .systemFont(.body)
                     .foregroundStyle(.text)
@@ -114,7 +114,7 @@ struct RemindersScreen: View {
                 Spacer()
                 
                 DatePicker(
-                    L10n.Settings.Reminders.MorningEvening.eveningLabel,
+                    "settings.reminders.morning-evening.evening-label",
                     selection: $viewModel.preferences.eveningNotificationTime,
                     in: viewModel.eveningNotificationDateRange,
                     displayedComponents: [.hourAndMinute]
@@ -126,9 +126,9 @@ struct RemindersScreen: View {
     
     var adhkarMacTimePicker: some View {
         Group {
-            PickerView(label: L10n.Settings.Reminders.MorningEvening.morningLabel, titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: adhkarMacMorningTimePicker)
+            PickerView(label: "settings.reminders.morning-evening.morning-label", titleDisplayMode: .inline, subtitle: viewModel.morningTime, destination: adhkarMacMorningTimePicker)
             
-            PickerView(label: L10n.Settings.Reminders.MorningEvening.eveningLabel, titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: adhkarMacEveningTimePicker)
+            PickerView(label: "settings.reminders.morning-evening.evening-label", titleDisplayMode: .inline, subtitle: viewModel.eveningTime, destination: adhkarMacEveningTimePicker)
         }
     }
         
@@ -155,11 +155,11 @@ struct RemindersScreen: View {
     // MARK: - Jumua Reminders Section
     var jumuaReminderSection: some View {
         VStack(spacing: 0) {
-            HeaderView(text: L10n.Settings.Reminders.Jumua.label)
+            HeaderView(text: "settings.reminders.jumua.label")
             
             VStack {
                 Toggle(
-                    L10n.Settings.Reminders.Jumua.switchLabel,
+                    "settings.reminders.jumua.switch-label",
                     isOn: $viewModel.preferences.enableJumuaReminder
                 )
                 
@@ -172,7 +172,7 @@ struct RemindersScreen: View {
                     
                     if viewModel.notificationsDisabledViewModel.isAccessGranted {
                         NavigationButton(
-                            title: L10n.Settings.Reminders.Sounds.sound,
+                            title: "settings.reminders.sounds.sound",
                             label: viewModel.preferences.jumuahDuaReminderSound.title,
                             action: viewModel.presentJumuaSoundPicker
                         )
@@ -194,7 +194,7 @@ struct RemindersScreen: View {
     
     var jumuaMacTimePicker: some View {
         PickerView(
-            label: L10n.Settings.Reminders.Jumua.label,
+            label: "settings.reminders.jumua.label",
             titleDisplayMode: .inline,
             subtitle: viewModel.jumuaReminderTime,
             destination: jumuaMacEveningTimePicker
@@ -213,7 +213,7 @@ struct RemindersScreen: View {
     
     var jumuaIosTimePicker: some View {
         HStack {
-            Text(L10n.Settings.Reminders.time)
+            Text("settings.reminders.time")
                 .fixedSize(horizontal: false, vertical: true)
                 .systemFont(.body)
                 .foregroundStyle(.text)

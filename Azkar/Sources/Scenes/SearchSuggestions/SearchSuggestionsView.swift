@@ -69,7 +69,7 @@ struct SearchSuggestionsView: View {
             ForEachIndexed(viewModel.suggestedAzkar) { _, position, zikr in
                 let text = zikr.title ?? zikr.translation ?? zikr.text
                 NavigationButton(
-                    title: text.prefix(50) + "...",
+                    title: LocalizedStringKey(text.prefix(50) + "..."),
                     applyVerticalPadding: false,
                     action: {
                         viewModel.navigateToZikr(zikr.id)

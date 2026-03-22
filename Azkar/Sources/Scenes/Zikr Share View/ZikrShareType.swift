@@ -10,9 +10,9 @@ enum ZikrShareType: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .text:
-            return L10n.Share.text
+            return String(localized: "share.text")
         case .image:
-            return L10n.Share.image
+            return String(localized: "share.image")
         }
     }
 

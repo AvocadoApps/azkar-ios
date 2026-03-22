@@ -17,7 +17,7 @@ struct CollapsableSection: View, Equatable {
     
     @Environment(\.colorTheme) var colorTheme
     
-    var title: String?
+    var title: LocalizedStringKey?
     let text: String
     let highlightPattern: String?
     let isArabicText: Bool
@@ -72,7 +72,7 @@ struct CollapsableSection: View, Equatable {
     let zikr = Zikr.placeholder()
     
     CollapsableSection(
-        title: zikr.title ?? "Zikr",
+        title: LocalizedStringKey(zikr.title ?? "Zikr"),
         text: zikr.translation ?? "",
         highlightPattern: "Zikr",
         isArabicText: false,

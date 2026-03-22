@@ -135,7 +135,7 @@ extension SettingsCoordinator {
             appVersion: {
                 let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
                 let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
-                return "\(L10n.Common.version) \(version) (\(build))"
+                return "\(String(localized: "common.version")) \(version) (\(build))"
             }(),
             isProUser: subscriptionManager.isProUser()
         ))

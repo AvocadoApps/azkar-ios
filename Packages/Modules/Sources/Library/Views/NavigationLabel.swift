@@ -1,13 +1,12 @@
 import SwiftUI
 
 public struct NavigationLabel: View {
-        
-    let title: String
+    let title: LocalizedStringKey
     let label: String?
     let applyVerticalPadding: Bool
     
     public init(
-        title: String,
+        title: LocalizedStringKey,
         label: String? = nil,
         applyVerticalPadding: Bool = true
     ) {

@@ -52,7 +52,7 @@ extension RootCoordinator {
             pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
             footer: ArticlePDFComposer.Footer(
                 image: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
-                text: L10n.Share.sharedWithAzkar.uppercased(),
+                text: String(localized: "share.shared-with-azkar").uppercased(),
                 link: URL(string: "https://apple.co/41O1pzQ")
             )
         )
@@ -71,7 +71,7 @@ extension RootCoordinator {
             article: article,
             maxHeight: 842,
             logoImage: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
-            logoSubtitle: L10n.Share.sharedWithAzkar
+            logoSubtitle: String(localized: "share.shared-with-azkar")
         )
         .frame(width: 595, height: 842)
         .environment(\.colorScheme, .light)

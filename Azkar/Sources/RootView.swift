@@ -17,7 +17,7 @@ final class RootViewModel: ObservableObject {
     ) {
         self.mainMenuViewModel = mainMenuViewModel
         
-        let appName = L10n.appName
+        let appName = String(localized: "app-name")
         let title = "\(appName)"
         mainMenuViewModel.preferences
             .$enableFunFeatures

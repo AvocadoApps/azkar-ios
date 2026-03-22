@@ -103,7 +103,7 @@ extension ZikrView {
             }),
             header: {
                 CollapsableSectionHeaderView(
-                    title: L10n.Read.translation,
+                    title: "read.translation",
                     isExpanded: viewModel.expandTranslation,
                     isExpandable: true
                 )
@@ -128,7 +128,7 @@ extension ZikrView {
             }),
             header: {
                 CollapsableSectionHeaderView(
-                    title: L10n.Read.transcription,
+                    title: "read.transcription",
                     isExpanded: viewModel.expandTransliteration,
                     isExpandable: true
                 )
@@ -153,7 +153,7 @@ extension ZikrView {
             viewModel.source?.textOrNil.flatMap { text in
                 NavigationLink(destination: hadithView, label: {
                     getInfoStack(
-                        label: L10n.Read.source,
+                        label: String(localized: "read.source"),
                         text: text,
                         underline: viewModel.hadithViewModel != nil
                     )
@@ -181,7 +181,7 @@ extension ZikrView {
 
     func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            self.getCaption(label)
+            getCaption(label)
             Text(getAttributedString(text))
                 .if(underline) { text in
                     text.underline()

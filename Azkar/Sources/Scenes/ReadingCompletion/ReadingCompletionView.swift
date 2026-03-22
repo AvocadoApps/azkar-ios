@@ -35,14 +35,14 @@ struct ReadingCompletionView: View {
                 }
                 .frame(width: 200, height: 200)
                 
-                Text(L10n.ReadingCompletion.title)
+                Text("reading_completion.title")
                     .systemFont(.title, weight: .bold)
                 
-                Text(L10n.ReadingCompletion.subtitle)
+                Text("reading_completion.subtitle")
                     .systemFont(.body)
                     .foregroundColor(.secondary)
             } else {
-                Text(L10n.ReadingCompletion.trackYourProgress)
+                Text("reading_completion.track_your_progress")
                     .systemFont(.body)
                     .foregroundColor(colorTheme.getColor(.secondaryText))
                     .padding(.horizontal)
@@ -52,7 +52,7 @@ struct ReadingCompletionView: View {
                         await markAsCompleted()
                     }
                 }, label: {
-                    Text(L10n.ReadingCompletion.markAsCompleted)
+                    Text("reading_completion.mark_as_completed")
                         .systemFont(.body, weight: .semibold)
                         .padding()
                         .frame(maxWidth: .infinity)

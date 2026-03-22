@@ -4,15 +4,14 @@
 import SwiftUI
 
 public struct NavigationButton: View {
-    
-    let title: String
+    let title: LocalizedStringKey
     let label: String?
     let action: () -> Void
     let applyVerticalPadding: Bool
     @Environment(\.appTheme) var appTheme
     
     public init(
-        title: String,
+        title: LocalizedStringKey,
         label: String? = nil,
         applyVerticalPadding: Bool = true,
         action: @escaping () -> Void

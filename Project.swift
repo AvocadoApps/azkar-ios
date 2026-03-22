@@ -78,7 +78,10 @@ enum AzkarTarget: String, CaseIterable {
                 deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
                 sources: "Azkar/Sources/**",
-                resources: "Azkar/Resources/**",
+                resources: [
+                    "Azkar/Resources/**",
+                    "Azkar/*.lproj/InfoPlist.strings",
+                ],
                 entitlements: "Azkar/Azkar.entitlements",
                 scripts: [
                     .post(path: "./scripts/swiftlint.sh", name: "SwiftLint", basedOnDependencyAnalysis: false)
@@ -154,10 +157,7 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: [
-                    "AzkarWidgets/Sources/**",
-                    "Azkar/Sources/Generated/Strings+Generated.swift",
-                ],
+                sources: "AzkarWidgets/Sources/**",
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",

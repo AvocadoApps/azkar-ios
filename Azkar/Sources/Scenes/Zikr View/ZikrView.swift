@@ -121,7 +121,7 @@ struct ZikrView: View {
                     await viewModel.resetCounter()
                 }
             }, label: {
-                Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
+                Label("common.reset-counter", systemImage: "arrow.counterclockwise")
             })
             
             Button(action: {
@@ -129,7 +129,7 @@ struct ZikrView: View {
                     await viewModel.completeCounter()
                 }
             }, label: {
-                Label(L10n.Common.complete, systemImage: "checkmark")
+                Label("common.complete", systemImage: "checkmark")
             })
         } label: {
             counterText(repeats)
@@ -311,7 +311,7 @@ struct ZikrView: View {
 
     @ViewBuilder var repeatsNumber: some View {
         if viewModel.zikr.repeats > 0, let remainingRepeatsFormatted = viewModel.remainingRepeatsFormatted {
-            getInfoStack(label: L10n.Read.repeats, text: remainingRepeatsFormatted)
+            getInfoStack(label: String(localized: "read.repeats"), text: remainingRepeatsFormatted)
                 .onTapGesture(perform: viewModel.toggleCounterFormat)
                 .padding(.horizontal)
                 .padding(.vertical, 10)
@@ -321,7 +321,7 @@ struct ZikrView: View {
                             await viewModel.resetCounter()
                         }
                     }, label: {
-                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
+                        Label("common.reset-counter", systemImage: "arrow.counterclockwise")
                     })
                 }
                 .animation(.smooth, value: remainingRepeatsFormatted)

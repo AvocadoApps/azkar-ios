@@ -75,9 +75,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         }
         
         if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
-            remainingRepeatsFormatted = L10n.repeatsNumber(zikr.repeats)
+            remainingRepeatsFormatted = String(format: String(localized: "repeats_number"), locale: Locale.current, zikr.repeats)
         } else {
-            remainingRepeatsFormatted = L10n.remainingRepeats(remainingRepeatsNumber)
+            remainingRepeatsFormatted = String(format: String(localized: "remaining-repeats"), locale: Locale.current, remainingRepeatsNumber)
         }
     }
     
@@ -127,7 +127,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         title = zikr.title
         
         if let row {
-            rowNumber = L10n.Common.dhikr(row)
+            rowNumber = String(format: String(localized: "common.dhikr"), locale: Locale.current, String(describing: row))
         }
         
         text = textProcessor.processArabicText(zikr.text)

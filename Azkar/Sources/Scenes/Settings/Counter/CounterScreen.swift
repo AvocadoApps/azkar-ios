@@ -16,7 +16,7 @@ struct CounterView: View {
         .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.Counter.title)
+        .navigationTitle("settings.counter.title")
         .animation(.smooth, value: viewModel.preferences.counterType)
     }
     
@@ -28,7 +28,7 @@ struct CounterView: View {
             
             if viewModel.preferences.counterType == .floatingButton {
                 HStack {
-                    Text(L10n.Settings.Counter.CounterSize.title)
+                    Text("settings.counter.counter-size.title")
                     Spacer()
                     Picker(
                         CounterSize.allCases,
@@ -44,7 +44,7 @@ struct CounterView: View {
                 Divider()
                 
                 HStack {
-                    Text(L10n.Settings.Counter.CounterPosition.title)
+                    Text("settings.counter.counter-position.title")
                     Spacer()
                     Picker(
                         CounterPosition.allCases,
@@ -60,24 +60,24 @@ struct CounterView: View {
                 Divider()
             }
 
-            Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
+            Toggle("settings.counter.counter-ticker", isOn: $viewModel.preferences.enableCounterTicker)
                 .padding(.vertical, 3)
 
             Divider()
             
-            Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)
+            Toggle("settings.counter.counter-haptics", isOn: $viewModel.preferences.enableCounterHapticFeedback)
                 .padding(.vertical, 3)
 
             Divider()
             
             Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
                 HStack {
-                    Text(L10n.Settings.Counter.goToNextDhikr)
+                    Text("settings.counter.go-to-next-dhikr")
 
                     Spacer()
 
                     Templates.Menu {
-                        Text(L10n.Settings.Counter.goToNextDhikrTip)
+                        Text("settings.counter.go-to-next-dhikr-tip")
                             .padding()
                             .cornerRadius(10)
                             .foregroundStyle(.text)
@@ -98,11 +98,11 @@ struct CounterView: View {
     
     private var typePicker: some View {
         HStack {
-            Text(L10n.Settings.Counter.CounterType.title)
+            Text("settings.counter.counter-type.title")
             Spacer()
 
             Templates.Menu {
-                Text(L10n.Settings.Counter.CounterType.info)
+                Text("settings.counter.counter-type.info")
                     .padding()
                     .cornerRadius(10)
             } label: { _ in

@@ -58,7 +58,7 @@ public extension ArabicFont {
     
     static var systemArabic: ArabicFont {
         ArabicFont(
-            name: NSLocalizedString("settings.text.standard-font-name", comment: "Standard font name string."),
+            name: String(localized: "settings.text.standard-font-name"),
             postscriptName: "",
             isStandartPackFont: true
         )

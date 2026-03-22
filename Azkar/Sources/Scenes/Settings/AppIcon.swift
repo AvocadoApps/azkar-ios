@@ -18,7 +18,7 @@ enum AppIconPack: String, CaseIterable, Identifiable, Codable {
 
     var title: String {
         switch self {
-        case .standard: return L10n.IconPack.Standard.title
+        case .standard: return String(localized: "icon_pack.standard.title")
         case .pro: return "PRO"
         }
     }

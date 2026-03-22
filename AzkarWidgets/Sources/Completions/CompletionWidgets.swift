@@ -34,8 +34,8 @@ struct CompletionWidgets: Widget {
             }
         )
         .supportedFamilies([.accessoryCircular])
-        .configurationDisplayName(L10n.Widgets.Completion.title)
-        .description(L10n.Widgets.Completion.description)
+        .configurationDisplayName("widgets.completion.title")
+        .description("widgets.completion.description")
     }
     
 }

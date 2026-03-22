@@ -170,7 +170,7 @@ struct ZikrShareView: View {
                             .frame(width: 25, height: 25)
                             .cornerRadius(6)
                     }
-                    Text(L10n.Share.sharedWithAzkar)
+                    Text("share.shared-with-azkar")
                         .font(Font.system(size: 8, weight: .regular, design: .rounded).smallCaps())
                 }
                 .foregroundStyle(.text)
