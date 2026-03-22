@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
       "state" : {
-        "revision" : "d9302bb5fe60e791eae06ab6504355e921784425",
-        "version" : "4.43.8"
+        "revision" : "abb0d68c3e7ba97b16ab51c38fcaca16b0e358c8",
+        "version" : "5.66.0"
       }
     },
     {
@@ -223,24 +223,6 @@
       "state" : {
         "revision" : "d7fb6517eaff9cdcc105367a43068d6c0a49a5c9",
         "version" : "2.35.0"
-      }
-    },
-    {
-      "identity" : "superscript-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/superwall/Superscript-iOS",
-      "state" : {
-        "revision" : "711866edcb62dbd237c24ed3e5fa39fad0db639f",
-        "version" : "1.0.13"
-      }
-    },
-    {
-      "identity" : "superwall-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/superwall-me/Superwall-iOS",
-      "state" : {
-        "revision" : "280fd1afa38875e7e6342bf646f45be6872176e2",
-        "version" : "4.14.1"
       }
     },
     {

@@ -4,7 +4,6 @@ public enum AzkarSecretKey {
     public static let AZKAR_SUPABASE_API_URL = "AZKAR_SUPABASE_API_URL"
     public static let AZKAR_SUPABASE_API_KEY = "AZKAR_SUPABASE_API_KEY"
     public static let REVENUE_CAT_API_KEY = "REVENUE_CAT_API_KEY"
-    public static let SUPERWALL_API_KEY = "SUPERWALL_API_KEY"
     public static let MIXPANEL_TOKEN = "MIXPANEL_TOKEN"
 }
 

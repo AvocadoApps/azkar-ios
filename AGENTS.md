@@ -217,8 +217,7 @@ Code signing uses Fastlane Match (manual signing). Required secrets are stored i
 | GRDB | SQLite database access |
 | Stinsen | Coordinator-based navigation |
 | Supabase | Backend API |
-| RevenueCat | In-app subscriptions |
-| SuperwallKit | Paywall presentation |
+| RevenueCat + RevenueCatUI | In-app subscriptions and paywalls |
 | Firebase (Analytics + Messaging) | Analytics and push notifications |
 | Mixpanel | Event analytics |
 | Lottie | Animations |

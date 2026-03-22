@@ -5,9 +5,7 @@ import PackageDescription
     import ProjectDescription
 
     let packageSettings = PackageSettings(
-        productTypes: [
-            "SuperwallKit": .staticLibrary,
-        ]
+        productTypes: [:]
     )
 #endif
 
@@ -25,8 +23,8 @@ let package = Package(
         // MARK: Services.
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "12.4.0"),
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.35.0"),
-        .package(url: "https://github.com/RevenueCat/purchases-ios.git", from: "4.43.8"),
-        .package(url: "https://github.com/superwall-me/Superwall-iOS", from: "4.9.0"),
+        .package(url: "https://github.com/RevenueCat/purchases-ios.git", from: "5.66.0"),
+
         .package(url: "https://github.com/mixpanel/mixpanel-swift", from: "5.1.3"),
         
         // MARK: Network.

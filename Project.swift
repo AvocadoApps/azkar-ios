@@ -111,7 +111,7 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "Stinsen"),
                     .external(name: "Supabase"),
                     .external(name: "SwiftUIIntrospect"),
-                    .external(name: "SuperwallKit"),
+                    .external(name: "RevenueCatUI"),
                     .external(name: "ZIPFoundation"),
                     
                     // Firebase

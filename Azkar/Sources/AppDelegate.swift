@@ -15,7 +15,7 @@ import Entities
 import Library
 import FirebaseCore
 import FirebaseMessaging
-import SuperwallKit
+
 import Mixpanel
 import CoreSpotlight
 
@@ -96,8 +96,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         registerUserDefaults()
         ensureValidTransliterationPreference()
         setupRevenueCat()
+        SubscriptionManager.shared.observeSubscriptionStatus()
         setupFirebase()
-        setupSuperwall()
         setupMixpanel(launchOptions: launchOptions)
     }
         
@@ -152,19 +152,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         Messaging.messaging().delegate = notificationsHandler
         AnalyticsReporter.addTarget(FirebaseAnalyticsTarget.shared)
         AnalyticsReporter.addTarget(MixpanelAnalyticsTarget.shared)
-    }
-    
-    private func setupSuperwall() {
-        let options = SuperwallOptions()
-        options.paywalls.shouldPreload = true
-        options.shouldBypassAppTransactionCheck = true
-        let purchaseController = SubscriptionManager.shared
-        Superwall.configure(
-            apiKey: readSecret(AzkarSecretKey.SUPERWALL_API_KEY)!,
-            purchaseController: purchaseController,
-            options: options
-        )
-        purchaseController.syncSubscriptionStatus()
     }
 
     private func setupMixpanel(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
