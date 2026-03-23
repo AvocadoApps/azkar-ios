@@ -1,1 +1,4 @@
-- Yeni Sayaç boyutları
+- Zikirler, makaleler ve hadisler için Spotlight araması
+- Yeni sayaç boyutları
+- Zikir veritabanındaki yazım hataları düzeltildi
+- Transliterasyon türü seçimi düzeltildi

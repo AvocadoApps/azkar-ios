@@ -8,7 +8,7 @@ let kCompilationConditions = "SWIFT_ACTIVE_COMPILATION_CONDITIONS"
 let kDevelopmentTeam = "DEVELOPMENT_TEAM"
 
 let companyName = "Al Jawziyya"
-let teamId = "486STKKP6Y"
+let teamId = "2VFCBFYPFW"
 let projectName = "Azkar"
 let baseDomain = "io.jawziyya"
 

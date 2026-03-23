@@ -7,7 +7,7 @@ Guidelines for AI agents working on the **Azkar** iOS project.
 Azkar is an Islamic adhkar (daily remembrance) app for iOS 15.0+ and macOS 12.0+ (Mac Catalyst). It lets users browse, recite, and track morning/evening adhkar with audio playback, multilingual support (11 languages), home screen widgets, and Spotlight search.
 
 - Bundle ID: `io.jawziyya.azkar-app`
-- Team: Al Jawziyya (`486STKKP6Y`)
+- Team: `2VFCBFYPFW`
 - Current version: 2.9.9
 
 ## Architecture
