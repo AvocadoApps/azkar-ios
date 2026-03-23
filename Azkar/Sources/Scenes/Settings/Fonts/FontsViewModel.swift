@@ -92,16 +92,16 @@ final class FontsViewModel: ObservableObject {
         self.preferences = preferences
         self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
-        preferences
-            .storageChangesPublisher()
-            .receive(on: RunLoop.main)
-            .sink(receiveValue: objectWillChange.send)
-            .store(in: &cancellables)
         if fontsType == .arabic {
             preferredFont = preferences.preferredArabicFont
         } else {
             preferredFont = preferences.preferredTranslationFont
         }
+        preferences
+            .storageChangesPublisher()
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: objectWillChange.send)
+            .store(in: &cancellables)
     }
     
     @MainActor func changeSelectedFont(_ font: AppFontViewModel) async {
