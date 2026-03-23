@@ -16,6 +16,11 @@ enum AzkarEntitlement: String {
 
 final class SubscriptionManager: SubscriptionManagerType {
 
+    private enum PaywallDismissReason {
+        case purchased
+        case restored
+    }
+
     @Preference(Keys.enableProFeatures, defaultValue: false)
     var enableProFeatures: Bool
 
@@ -26,6 +31,7 @@ final class SubscriptionManager: SubscriptionManagerType {
 
     private var paywallSourceScreenName: String?
     private var paywallCompletion: (() -> Void)?
+    private var paywallDismissReason: PaywallDismissReason?
 
     private init() {}
 
@@ -78,6 +84,7 @@ final class SubscriptionManager: SubscriptionManagerType {
 
         self.paywallSourceScreenName = sourceScreenName
         self.paywallCompletion = completion
+        self.paywallDismissReason = nil
 
         let controller = PaywallViewController(
             offeringIdentifier: "monthly_azkar_pro",
@@ -88,6 +95,7 @@ final class SubscriptionManager: SubscriptionManagerType {
 
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let rootVC = scene.windows.first?.rootViewController?.topmostPresentedViewController else {
+            resetPaywallState()
             completion?()
             return
         }
@@ -116,6 +124,11 @@ final class SubscriptionManager: SubscriptionManagerType {
         enableProFeatures = flag
     }
 
+    private func resetPaywallState() {
+        paywallSourceScreenName = nil
+        paywallCompletion = nil
+    }
+
 }
 
 // MARK: - PaywallViewControllerDelegate
@@ -123,6 +136,11 @@ final class SubscriptionManager: SubscriptionManagerType {
 extension SubscriptionManager: PaywallViewControllerDelegate {
 
     func paywallViewController(_ controller: PaywallViewController, didFinishPurchasingWith customerInfo: CustomerInfo) {
+        paywallDismissReason = .purchased
+        setProFeaturesActivated(true)
+        Task { @MainActor [weak self] in
+            self?.updateProStatus(from: customerInfo)
+        }
         AnalyticsReporter.reportEvent("paywall_dismiss", metadata: [
             "reason": "purchased",
             "source": paywallSourceScreenName ?? "unknown",
@@ -130,11 +148,16 @@ extension SubscriptionManager: PaywallViewControllerDelegate {
         ])
         controller.dismiss(animated: true) { [weak self] in
             self?.paywallCompletion?()
-            self?.paywallCompletion = nil
+            self?.resetPaywallState()
         }
     }
 
     func paywallViewController(_ controller: PaywallViewController, didFinishRestoringWith customerInfo: CustomerInfo) {
+        paywallDismissReason = .restored
+        setProFeaturesActivated(true)
+        Task { @MainActor [weak self] in
+            self?.updateProStatus(from: customerInfo)
+        }
         AnalyticsReporter.reportEvent("paywall_dismiss", metadata: [
             "reason": "restored",
             "source": paywallSourceScreenName ?? "unknown",
@@ -142,7 +165,7 @@ extension SubscriptionManager: PaywallViewControllerDelegate {
         ])
         controller.dismiss(animated: true) { [weak self] in
             self?.paywallCompletion?()
-            self?.paywallCompletion = nil
+            self?.resetPaywallState()
         }
     }
 
@@ -154,6 +177,10 @@ extension SubscriptionManager: PaywallViewControllerDelegate {
     }
 
     func paywallViewControllerWasDismissed(_ controller: PaywallViewController) {
+        guard paywallDismissReason == nil else {
+            return
+        }
+
         lastPaywallDeclineDate = Date()
         AnalyticsReporter.reportEvent("paywall_dismiss", metadata: [
             "reason": "declined",
@@ -161,7 +188,7 @@ extension SubscriptionManager: PaywallViewControllerDelegate {
             "entitlement": AzkarEntitlement.ultraUniversal.rawValue,
         ])
         paywallCompletion?()
-        paywallCompletion = nil
+        resetPaywallState()
     }
 
 }

@@ -1,6 +1,7 @@
 // Copyright © 2021 Al Jawziyya. All rights reserved. 
 
 import SwiftUI
+import Combine
 import Entities
 import Library
 
@@ -74,6 +75,7 @@ final class FontsViewModel: ObservableObject {
     private let preferences: Preferences
     private let subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: () -> Void
+    private var cancellables = Set<AnyCancellable>()
     let fontsType: FontsType
     
     init(
@@ -90,6 +92,11 @@ final class FontsViewModel: ObservableObject {
         self.preferences = preferences
         self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
+        preferences
+            .storageChangesPublisher()
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: objectWillChange.send)
+            .store(in: &cancellables)
         if fontsType == .arabic {
             preferredFont = preferences.preferredArabicFont
         } else {
