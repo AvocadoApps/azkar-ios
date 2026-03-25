@@ -154,7 +154,7 @@ platform :ios do
     testflight(
       api_key: get_api_key,
       distribute_external: true,
-      groups: ['Main'],
+      groups: ['Public Beta', 'Azkar Team'],
       changelog: get_changelog_from_git()
     )
   end
