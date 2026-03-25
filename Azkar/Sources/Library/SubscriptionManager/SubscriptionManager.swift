@@ -60,7 +60,7 @@ final class SubscriptionManager: SubscriptionManagerType {
 
     @MainActor
     private func updateProStatus(from customerInfo: CustomerInfo) {
-        let hasActiveEntitlement = customerInfo.entitlements.activeInCurrentEnvironment.isEmpty == false
+        let hasActiveEntitlement = customerInfo.entitlements.active.isEmpty == false
         setProFeaturesActivated(hasActiveEntitlement)
     }
 
@@ -137,7 +137,6 @@ extension SubscriptionManager: PaywallViewControllerDelegate {
 
     func paywallViewController(_ controller: PaywallViewController, didFinishPurchasingWith customerInfo: CustomerInfo) {
         paywallDismissReason = .purchased
-        setProFeaturesActivated(true)
         Task { @MainActor [weak self] in
             self?.updateProStatus(from: customerInfo)
         }
@@ -153,20 +152,32 @@ extension SubscriptionManager: PaywallViewControllerDelegate {
     }
 
     func paywallViewController(_ controller: PaywallViewController, didFinishRestoringWith customerInfo: CustomerInfo) {
-        paywallDismissReason = .restored
-        setProFeaturesActivated(true)
+        let hasActiveEntitlement = customerInfo.entitlements.active.isEmpty == false
+
         Task { @MainActor [weak self] in
             self?.updateProStatus(from: customerInfo)
         }
-        AnalyticsReporter.reportEvent("paywall_dismiss", metadata: [
-            "reason": "restored",
-            "source": paywallSourceScreenName ?? "unknown",
-            "entitlement": AzkarEntitlement.ultraUniversal.rawValue,
-        ])
-        controller.dismiss(animated: true) { [weak self] in
-            self?.paywallCompletion?()
-            self?.resetPaywallState()
+
+        if hasActiveEntitlement {
+            paywallDismissReason = .restored
+            AnalyticsReporter.reportEvent("paywall_dismiss", metadata: [
+                "reason": "restored",
+                "source": paywallSourceScreenName ?? "unknown",
+                "entitlement": AzkarEntitlement.ultraUniversal.rawValue,
+            ])
+            controller.dismiss(animated: true) { [weak self] in
+                self?.paywallCompletion?()
+                self?.resetPaywallState()
+            }
+        } else {
+            AnalyticsReporter.reportEvent("restore_purchases_empty", metadata: [
+                "source": paywallSourceScreenName ?? "unknown",
+            ])
         }
+    }
+
+    func paywallViewController(_ controller: PaywallViewController, didFailRestoringWith error: NSError) {
+        // User cancelled the credentials prompt or restore failed — do nothing, keep paywall open.
     }
 
     func paywallViewController(_ controller: PaywallViewController, didFailPurchasingWith error: NSError) {

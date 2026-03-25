@@ -262,7 +262,10 @@ let project = Project(
             shared: true,
             buildAction: .buildAction(targets: ["Azkar"]),
             runAction: RunAction.runAction(
-                executable: "Azkar"
+                executable: "Azkar",
+                options: .options(
+                    storeKitConfigurationPath: "Azkar/Azkar.storekit"
+                )
             )
         ),
         Scheme.scheme(
@@ -273,5 +276,7 @@ let project = Project(
             runAction: RunAction.runAction(executable: "Azkar")
         )
     ],
-    additionalFiles: []
+    additionalFiles: [
+        "Azkar/Azkar.storekit"
+    ]
 )
