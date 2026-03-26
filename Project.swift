@@ -161,7 +161,6 @@ enum AzkarTarget: String, CaseIterable {
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",
-                    "Azkar/Resources/Localizable.xcstrings",
                 ],
                 entitlements: "AzkarWidgets/AzkarWidgets.entitlements",
                 dependencies: [

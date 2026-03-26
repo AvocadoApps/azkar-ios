@@ -66,14 +66,15 @@ struct ZikrPagesView: View, Equatable {
                 case .zikr(let zikr):
                     ZikrView(
                         viewModel: zikr,
-                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded
+                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded,
+                        counterTapCallback: viewModel.onCounterTapped
                     )
                 case .readingCompletion:
                     ReadingCompletionView(
                         isCompleted: !viewModel.hasRemainingRepeats,
                         markAsCompleted: {
                             await viewModel.markCurrentCategoryAsCompleted()
-                            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
+                            WidgetCenter.reloadAzkarWidgets()
                         }
                     )
                 }

@@ -62,6 +62,8 @@
 		<string>зикр</string>
 		<string>дуа</string>
 	</array>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.reference</string>
 	<key>LSApplicationQueriesSchemes</key>

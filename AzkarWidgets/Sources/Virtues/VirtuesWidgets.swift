@@ -34,11 +34,19 @@ struct VirtuesWidgets: Widget {
                 databaseService: AdhkarSQLiteDatabaseService(language: language)
             )
         ) { entry in
-            VirtueView(fadl: entry.fadl)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if #available(iOS 17, *) {
+                VirtueView(fadl: entry.fadl)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .containerBackground(for: .widget) {
+                        Color(.systemBackground)
+                    }
+            } else {
+                VirtueView(fadl: entry.fadl)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
-        .configurationDisplayName("widgets.virtues.title")
-        .description("widgets.virtues.description")
+        .configurationDisplayName("widget.virtues.title")
+        .description("widget.virtues.description")
     }
     
 }

@@ -18,26 +18,34 @@ struct CompletionWidgets: Widget {
         StaticConfiguration(
             kind: kind,
             provider: CompletionWidgetsTimelineProvider(
-                zikrCounterService: DatabaseZikrCounter(
-                    databasePath: FileManager.default
-                        .appGroupContainerURL
-                        .appendingPathComponent("counter.db")
-                        .absoluteString,
-                    getKey: {
-                        let startOfDay = Calendar.current.startOfDay(for: Date())
-                        return Int(startOfDay.timeIntervalSince1970)
-                    }
-                )
+                zikrCounterService: counterService()
             ),
             content: { entry in
                 CompletionCircleView(completionState: entry.completionState)
             }
         )
         .supportedFamilies([.accessoryCircular])
-        .configurationDisplayName("widgets.completion.title")
-        .description("widgets.completion.description")
+        .configurationDisplayName("widget.completion.title")
+        .description("widget.completion.description")
     }
-    
+
+    private func counterService() -> ZikrCounterType? {
+        guard let databasePath = FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.io.jawziyya.azkar-app")?
+            .appendingPathComponent("counter.db")
+            .path
+        else {
+            return nil
+        }
+
+        return DatabaseZikrCounter(
+            databasePath: databasePath,
+            getKey: {
+                let startOfDay = Calendar.current.startOfDay(for: Date())
+                return Int(startOfDay.timeIntervalSince1970)
+            }
+        )
+    }
 }
 
 @available(iOS 17, *)

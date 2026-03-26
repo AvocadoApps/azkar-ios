@@ -73,9 +73,11 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
             remainingRepeatsFormatted = nil
             return
         }
-        
+
         if !showRemainingCounter || remainingRepeatsNumber == zikr.repeats {
-            remainingRepeatsFormatted = String(format: String(localized: "repeats_number"), locale: Locale.current, zikr.repeats)
+            remainingRepeatsFormatted = String(format: String(localized: "remaining-repeats"), locale: Locale.current, zikr.repeats)
+        } else if remainingRepeatsNumber == 0 {
+            remainingRepeatsFormatted = String(localized: "remaining-repeats.completed")
         } else {
             remainingRepeatsFormatted = String(format: String(localized: "remaining-repeats"), locale: Locale.current, remainingRepeatsNumber)
         }

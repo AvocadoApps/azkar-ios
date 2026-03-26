@@ -6,6 +6,7 @@ import Extensions
 import Library
 import Components
 import WidgetKit
+import Entities
 
 /**
  This view shows contents of Zikr object:
@@ -25,6 +26,7 @@ struct ZikrView: View {
     @Environment(\.colorTheme) var colorTheme
 
     var counterFinishedCallback: Action?
+    var counterTapCallback: Action?
 
     @State var counterFeedbackCompleted = false
     @Namespace var counterButtonAnimationNamespace
@@ -40,11 +42,12 @@ struct ZikrView: View {
     let dividerHeight: CGFloat = 1
 
     func incrementZikrCounter() {
+        counterTapCallback?()
         Task {
             await viewModel.incrementZikrCount()
-            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
+            WidgetCenter.reloadAzkarWidgets()
         }
-        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber,  remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
+        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber, remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             HapticGenerator.performFeedback(.impact(flexibility: .soft))
         }
     }
@@ -119,14 +122,16 @@ struct ZikrView: View {
             Button(action: {
                 Task {
                     await viewModel.resetCounter()
+                    WidgetCenter.reloadAzkarWidgets()
                 }
             }, label: {
                 Label("common.reset-counter", systemImage: "arrow.counterclockwise")
             })
-            
+
             Button(action: {
                 Task {
                     await viewModel.completeCounter()
+                    WidgetCenter.reloadAzkarWidgets()
                 }
             }, label: {
                 Label("common.complete", systemImage: "checkmark")
@@ -151,6 +156,7 @@ struct ZikrView: View {
                 .clipShape(Circle())
                 .padding(.horizontal)
         } primaryAction: {
+            counterTapCallback?()
             Task {
                 await viewModel.incrementZikrCount()
             }
@@ -319,6 +325,7 @@ struct ZikrView: View {
                     Button(action: {
                         Task {
                             await viewModel.resetCounter()
+                            WidgetCenter.reloadAzkarWidgets()
                         }
                     }, label: {
                         Label("common.reset-counter", systemImage: "arrow.counterclockwise")

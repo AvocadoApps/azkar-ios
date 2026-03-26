@@ -5,11 +5,28 @@ import WidgetKit
 import SwiftUI
 
 @main
-struct AzkarWidgetsBundle: WidgetBundle {
+struct AzkarWidgetsLauncher {
+    static func main() {
+        if #available(iOSApplicationExtension 16.2, *) {
+            AzkarWidgetsBundleModern.main()
+        } else {
+            AzkarWidgetsBundleLegacy.main()
+        }
+    }
+}
+
+struct AzkarWidgetsBundleLegacy: WidgetBundle {
     var body: some Widget {
         VirtuesWidgets()
-        if #available(iOSApplicationExtension 16.1, *) {
-            CompletionWidgets()
-        }
+    }
+}
+
+@available(iOSApplicationExtension 16.2, *)
+struct AzkarWidgetsBundleModern: WidgetBundle {
+    var body: some Widget {
+        VirtuesWidgets()
+        CompletionWidgets()
+        CategoryQuickAccessWidget()
+        AzkarReadingLiveActivity()
     }
 }

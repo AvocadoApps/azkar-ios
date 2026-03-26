@@ -4,10 +4,10 @@ import AzkarServices
 struct CompletionWidgetsTimelineProvider: TimelineProvider {
     typealias Entry = CompletionWidgetsEntry
 
-    let zikrCounterService: ZikrCounterType
+    let zikrCounterService: ZikrCounterType?
     
     init(
-        zikrCounterService: ZikrCounterType
+        zikrCounterService: ZikrCounterType?
     ) {
         self.zikrCounterService = zikrCounterService
     }
@@ -17,6 +17,10 @@ struct CompletionWidgetsTimelineProvider: TimelineProvider {
     }
 
     private func getCompletionState() async -> CompletionState {
+        guard let zikrCounterService else {
+            return .none
+        }
+
         let isMorningCompleted = await zikrCounterService.isCategoryCompleted(.morning)
         let isEveningCompleted = await zikrCounterService.isCategoryCompleted(.evening)
         let isNightCompleted = await zikrCounterService.isCategoryCompleted(.night)

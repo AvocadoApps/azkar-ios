@@ -19,4 +19,15 @@ public enum ZikrCategory: String, Codable, Equatable, CaseIterable, Identifiable
         case .hundredDua: return "list.bullet"
         }
     }
+
+    public var widgetImageName: String {
+        switch self {
+        case .morning: return "categories/morning"
+        case .evening: return "categories/full-moon"
+        case .night: return "categories/night"
+        case .afterSalah: return "categories/after-salah"
+        case .other: return "categories/important-adhkar"
+        case .hundredDua: return "categories/hundred-dua"
+        }
+    }
 }

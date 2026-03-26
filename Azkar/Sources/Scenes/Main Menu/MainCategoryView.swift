@@ -9,6 +9,17 @@ struct MainCategoryView: View {
     
     @State private var isCompleted = false
     @EnvironmentObject var counter: ZikrCounter
+
+    private var checkmarkColor: Color {
+        switch category {
+        case .morning:
+            return .orange
+        case .evening:
+            return .blue
+        default:
+            return .secondary
+        }
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
@@ -24,7 +35,7 @@ struct MainCategoryView: View {
                 
                 if isCompleted {
                     Image(systemName: "checkmark")
-                        .foregroundStyle(.secondaryText)
+                        .foregroundStyle(checkmarkColor)
                         .font(.caption)
                 }
             }

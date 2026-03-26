@@ -10,6 +10,21 @@ struct MainMenuSmallGroup: View {
     @State private var isCompleted = false
     @EnvironmentObject var counter: ZikrCounter
 
+    private var checkmarkColor: Color {
+        guard let category = (item as? AzkarMenuItem)?.category else {
+            return .secondary
+        }
+
+        switch category {
+        case .morning:
+            return .orange
+        case .evening:
+            return .blue
+        default:
+            return .secondary
+        }
+    }
+
 	var body: some View {
 		HStack {
             image
@@ -53,7 +68,7 @@ struct MainMenuSmallGroup: View {
             
             if isCompleted {
                 Image(systemName: "checkmark")
-                    .foregroundStyle(.secondaryText)
+                    .foregroundStyle(checkmarkColor)
                     .font(.caption2)
             }
         }

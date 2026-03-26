@@ -55,6 +55,7 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
     private var cancellables = Set<AnyCancellable>()
+    private var currentCategoryContext: ZikrCategory?
     
     private var childCoordinators: [any Identifiable] = []
     
@@ -116,50 +117,11 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
         
         deeplinker
             .$route
-            .handleEvents(receiveOutput: { [unowned self] route in
-                guard route != nil else {
-                    return
-                }
-                popToRoot()
-            })
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .delay(for: 0.5, scheduler: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] route in
-                guard let route else {
-                    return
-                }
-
-                switch route {
-
-                case .home:
-                    break
-
-                case .settings(let section):
-                    self.trigger(.settings(section))
-                    
-                case .azkar(let category):
-                    self.trigger(.category(category))
-
-                case .zikr(let id):
-                    self.trigger(.goToZikr(id))
-
-                case .article(let id):
-                    Task {
-                        guard let article = try? await self.articlesService?.getArticle(id, updatedAfter: nil) else {
-                            return
-                        }
-                        await MainActor.run {
-                            self.trigger(.article(article))
-                        }
-                    }
-
-                case .hadith(let id):
-                    guard let hadith = try? self.databaseService.getHadith(id) else {
-                        return
-                    }
-                    self.trigger(.hadith(hadith))
-
-                }
+                self.deeplinker.route = nil
+                self.handleDeepLink(route)
             })
             .store(in: &cancellables)
     }
@@ -207,7 +169,64 @@ final class RootCoordinator: NSObject, RouteTrigger, NavigationCoordinatable {
 
 private extension RootCoordinator {
 
+    func handleDeepLink(_ route: Deeplinker.Route) {
+        switch route {
+        case .home:
+            popToRoot()
+
+        case .settings(let section):
+            selectedZikrPageIndex.send(0)
+            popToRoot().route(to: \.settings, section)
+
+        case .azkar(let category):
+            guard currentCategoryContext != category else {
+                return
+            }
+            selectedZikrPageIndex.send(0)
+            if category == .other {
+                popToRoot().route(to: \.azkarList, category)
+            } else {
+                popToRoot().route(to: \.zikrCategory, category)
+            }
+
+        case .zikr(let id):
+            guard let zikr = try? databaseService.getZikr(id, language: preferences.contentLanguage) else {
+                return
+            }
+            let hadith = try? zikr.hadith.flatMap { id in
+                try databaseService.getHadith(id)
+            }
+            let viewModel = ZikrViewModel(
+                zikr: zikr,
+                isNested: true,
+                hadith: hadith,
+                preferences: preferences,
+                player: player
+            )
+            popToRoot().route(to: \.zikr, viewModel)
+
+        case .article(let id):
+            Task {
+                guard let article = try? await articlesService?.getArticle(id, updatedAfter: nil) else {
+                    return
+                }
+                await MainActor.run {
+                    self.popToRoot().route(to: \.articleView, article)
+                    self.articlesService?.sendAnalyticsEvent(.view, articleId: article.id)
+                }
+            }
+
+        case .hadith(let id):
+            guard let hadith = try? databaseService.getHadith(id) else {
+                return
+            }
+            popToRoot().route(to: \.hadithView, hadith)
+        }
+    }
+
     func handleSelection(_ section: RootSection) {
+        updateCurrentCategoryContext(for: section)
+
         
         let rootViewController = UINavigationController()
         
@@ -308,6 +327,33 @@ private extension RootCoordinator {
         case .zikrCollectionsOnboarding:
             route(to: \.zikrCollectionsOnboarding)
 
+        }
+    }
+
+    func updateCurrentCategoryContext(for section: RootSection) {
+        switch section {
+        case .category(let category):
+            currentCategoryContext = category
+
+        case .zikrPages(let viewModel):
+            currentCategoryContext = viewModel.category == .other ? nil : viewModel.category
+
+        case .goToPage, .shareOptions:
+            break
+
+        case .zikr(_, let index):
+            if index != nil, UIDevice.current.isIpadInterface {
+                break
+            }
+            currentCategoryContext = nil
+
+        case .article,
+             .hadith,
+             .searchResult,
+             .goToZikr,
+             .settings,
+             .zikrCollectionsOnboarding:
+            currentCategoryContext = nil
         }
     }
 
