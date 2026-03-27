@@ -174,7 +174,7 @@ struct ExtraTextSettingsScreen: View {
 #Preview {
     NavigationView {
         ExtraTextSettingsScreen(
-            viewModel: TextSettingsViewModel(router: .empty)
+            viewModel: TextSettingsViewModel(navigator: EmptySettingsNavigator())
         )
     }
 }

@@ -2,13 +2,15 @@ import Foundation
 import Library
 
 /// Base view model for settings child sections.
+@MainActor
 class SettingsSectionViewModel: PreferencesDependantViewModel {
-    let router: UnownedRouteTrigger<SettingsRoute>
+    let navigator: any SettingsNavigationRouting
+
     init(
         preferences: Preferences = .shared,
-        router: UnownedRouteTrigger<SettingsRoute>
+        navigator: any SettingsNavigationRouting
     ) {
-        self.router = router
+        self.navigator = navigator
         super.init(preferences: preferences)
     }
 }

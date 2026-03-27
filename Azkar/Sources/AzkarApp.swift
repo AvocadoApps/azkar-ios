@@ -5,7 +5,6 @@ import SwiftUI
 import Library
 import Entities
 import AudioPlayer
-import Stinsen
 import StoreKit
 import CoreSpotlight
 
@@ -19,29 +18,30 @@ struct AzkarApp: App {
     
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+        applyWindowBackground(colorTheme: preferences.colorTheme)
     }
         
     var body: some Scene {
         WindowGroup {
-            NavigationViewCoordinator(
-                RootCoordinator(
-                    preferences: Preferences.shared,
-                    deeplinker: deepLinker,
-                    player: Player(player: AudioPlayer())
-                )
+            AppFlowView(
+                preferences: Preferences.shared,
+                deeplinker: deepLinker,
+                player: Player(player: AudioPlayer())
             )
-            .view()
             .task { await presentPaywall() }
             .connectAppTheme()
             .connectCustomFonts()
             .attachEnvironmentOverrides(onChange: { _ in
                 setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+                applyWindowBackground(colorTheme: preferences.colorTheme)
             })
             .onReceive(preferences.$appTheme) { newTheme in
                 setNavigationBarFont(theme: newTheme, colorTheme: preferences.colorTheme)
+                applyWindowBackground(colorTheme: preferences.colorTheme)
             }
             .onReceive(preferences.$colorTheme) { colorTheme in
                 setNavigationBarFont(theme: preferences.appTheme, colorTheme: colorTheme)
+                applyWindowBackground(colorTheme: colorTheme)
             }
             .onReceive(preferences.$theme) { theme in
                 let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
@@ -56,7 +56,7 @@ struct AzkarApp: App {
                 case .evening: category = .evening
                 case .jumua: category = .hundredDua
                 }
-                self.deepLinker.route = .azkar(category)
+                self.deepLinker.open(.azkar(category))
             }
             .onOpenURL { url in
                 handleIncomingURL(url)
@@ -71,7 +71,7 @@ struct AzkarApp: App {
         guard let deepLink = AppDeepLink(url: url) else {
             return
         }
-        deepLinker.route = deepLink.route
+        deepLinker.open(deepLink.route)
     }
 
     private func handleSearchActivity(_ userActivity: NSUserActivity) {
@@ -81,11 +81,25 @@ struct AzkarApp: App {
         else {
             return
         }
-        deepLinker.route = deepLink.route
+        deepLinker.open(deepLink.route)
     }
     
     private func getColor(_ type: ColorType, theme: ColorTheme) -> Color {
         return Color.getColor(type.rawValue, theme: theme)
+    }
+
+    private func applyWindowBackground(colorTheme: ColorTheme) {
+        let backgroundColor = UIColor(getColor(.background, theme: colorTheme))
+
+        guard let scenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> else {
+            return
+        }
+
+        scenes.forEach { scene in
+            scene.windows.forEach { window in
+                window.backgroundColor = backgroundColor
+            }
+        }
     }
     
     private func setNavigationBarFont(theme: AppTheme, colorTheme: ColorTheme) {

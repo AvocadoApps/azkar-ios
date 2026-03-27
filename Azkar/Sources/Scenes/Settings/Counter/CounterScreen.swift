@@ -128,7 +128,7 @@ struct CounterView: View {
 #Preview {
     CounterView(
         viewModel: CounterViewModel(
-            router: .empty
+            navigator: EmptySettingsNavigator()
         )
     )
 }

@@ -3,52 +3,30 @@ import SwiftUI
 import Library
 import ArticleReader
 import Entities
+import AzkarServices
 import PDFKit
 
-extension RootCoordinator {
+final class ArticleShareActionHandler {
 
-    func makeArticleView(_ article: Article) -> some View {
-        return ArticleScreen(
-            viewModel: ArticleViewModel(
-                article: article,
-                analyticsStream: { [unowned self] in
-                    guard let articlesService = self.articlesService else {
-                        return .never
-                    }
-                    return await articlesService.observeAnalyticsNumbers(articleId: article.id)
-                },
-                updateAnalytics: { [unowned self] (numbers: ArticleAnalytics) in
-                    self.articlesService?
-                        .updateAnalyticsNumbers(
-                            for: article.id,
-                            views: numbers.viewsCount,
-                            shares: numbers.sharesCount
-                        )
-                },
-                fetchArticle: { [unowned self] in
-                    try? await self.articlesService?.getArticle(article.id, updatedAfter: article.updatedAt)
-                }
-            ),
-            onShareButtonTap: { [unowned self] in
-                self.shareArticle(article)
-            }
-        )
+    private let preferences: Preferences
+    private let articlesService: ArticlesServiceType
+    private let mailPresenter = FeedbackMailPresenter()
+
+    init(preferences: Preferences, articlesService: ArticlesServiceType) {
+        self.preferences = preferences
+        self.articlesService = articlesService
     }
 
-    private func shareArticle(_ article: Article) {
+    func share(_ article: Article) {
         assert(Thread.isMainThread)
-        guard
-            let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-            let window = scene.windows.first,
-            let rootViewController = window.rootViewController?.topmostPresentedViewController
-        else {
+        guard let rootViewController = topViewController() else {
             return
         }
 
         let composer = ArticlePDFComposer(
             article: article,
-            titleFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 45)!,
-            textFont: UIFont(name: self.preferences.preferredTranslationFont.postscriptName, size: 25)!,
+            titleFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 45)!,
+            textFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 25)!,
             pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
             footer: ArticlePDFComposer.Footer(
                 image: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
@@ -59,6 +37,7 @@ extension RootCoordinator {
 
         let fileName = "\(article.title).pdf"
         let tempFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+
         do {
             let data = try composer.renderPDF()
             try? FileManager.default.removeItem(at: tempFilePath)
@@ -87,10 +66,12 @@ extension RootCoordinator {
         else {
             return
         }
+
         pdfDocument.insert(pdfPage, at: 0)
         guard let data = pdfDocument.dataRepresentation() else {
             return
         }
+
         do {
             try? FileManager.default.removeItem(at: tempFilePath)
             try data.write(to: tempFilePath)
@@ -100,19 +81,33 @@ extension RootCoordinator {
 
         let activityController = UIActivityViewController(
             activityItems: [tempFilePath],
-            applicationActivities: [ZikrFeedbackActivity(prepareAction: { [unowned self] in
-                self.presentMailComposer(from: rootViewController)
+            applicationActivities: [ZikrFeedbackActivity(prepareAction: {
+                self.mailPresenter.present(from: rootViewController)
             })]
         )
         activityController.excludedActivityTypes = [
             .init(rawValue: "com.apple.reminders.sharingextension")
         ]
-        activityController.completionWithItemsHandler = { [unowned self] (_, completed, _, _) in
-            viewController.dismiss()
+        activityController.completionWithItemsHandler = { [articlesService] _, completed, _, _ in
+            viewController.dismiss(animated: true)
             if completed {
-                self.articlesService?.sendAnalyticsEvent(.share, articleId: article.id)
+                articlesService.sendAnalyticsEvent(.share, articleId: article.id)
             }
         }
         rootViewController.present(activityController, animated: true)
+    }
+}
+
+private extension ArticleShareActionHandler {
+
+    func topViewController() -> UIViewController? {
+        guard
+            let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+            let window = scene.windows.first
+        else {
+            return nil
+        }
+
+        return window.rootViewController?.topmostPresentedViewController
     }
 }

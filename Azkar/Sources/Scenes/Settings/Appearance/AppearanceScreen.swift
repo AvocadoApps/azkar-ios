@@ -77,7 +77,7 @@ struct AppearanceScreen: View {
     NavigationView {
         AppearanceScreen(
             viewModel: AppearanceViewModel(
-                router: .empty
+                navigator: EmptySettingsNavigator()
             )
         )
     }

@@ -12,7 +12,6 @@ struct TextSettingsScreen: View {
     
     @ObservedObject var viewModel: TextSettingsViewModel
     @Environment(\.appTheme) var appTheme
-    @EnvironmentObject var settingsRouter: SettingsCoordinator.Router
 
     var body: some View {
         ScrollView {
@@ -41,7 +40,7 @@ struct TextSettingsScreen: View {
                 Spacer()
                 Button(
                     action: {
-                        settingsRouter.route(to: \.zikrCollectionsOnboarding)
+                        viewModel.presentZikrCollectionsOnboarding()
                     },
                     label: {
                         Image(systemName: "info.circle")
@@ -163,7 +162,7 @@ struct TextSettingsScreen: View {
     NavigationView {
         TextSettingsScreen(
             viewModel: TextSettingsViewModel(
-                router: .empty
+                navigator: EmptySettingsNavigator()
             )
         )
     }

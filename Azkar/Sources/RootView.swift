@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 import Library
 
+@MainActor
 final class RootViewModel: ObservableObject {
     var mainMenuViewModel: MainMenuViewModel
     private var cancellables = Set<AnyCancellable>()

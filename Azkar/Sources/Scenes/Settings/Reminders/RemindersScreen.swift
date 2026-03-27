@@ -238,7 +238,7 @@ struct RemindersScreen: View {
 #Preview("RemindersScreen") {
     RemindersScreen(
         viewModel: RemindersViewModel(
-            router: .empty
+            navigator: EmptySettingsNavigator()
         )
     )
 }

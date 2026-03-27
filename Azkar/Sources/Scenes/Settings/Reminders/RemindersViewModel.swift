@@ -2,10 +2,11 @@ import SwiftUI
 import Combine
 import Library
 
+@MainActor
 final class RemindersViewModel: ObservableObject {
     
     // MARK: - Common properties
-    let router: UnownedRouteTrigger<SettingsRoute>
+    let navigator: any SettingsNavigationRouting
     var preferences: Preferences
     lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
     private var cancellables = Set<AnyCancellable>()
@@ -21,10 +22,10 @@ final class RemindersViewModel: ObservableObject {
     init(
         preferences: Preferences = .shared,
         subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
-        router: UnownedRouteTrigger<SettingsRoute>
+        navigator: any SettingsNavigationRouting
     ) {
         self.preferences = preferences
-        self.router = router
+        self.navigator = navigator
         
         // Adhkar reminders initialization
         let formatter = DateFormatter()
@@ -55,13 +56,13 @@ final class RemindersViewModel: ObservableObject {
     // MARK: - Common methods
     
     func navigateToNotificationsList() {
-        router.trigger(.notificationsList)
+        navigator.show(.notificationsList)
     }
     
     // MARK: - Adhkar Reminders methods
     
     func presentAdhkarSoundPicker() {
-        router.trigger(.soundPicker(.init(sound: preferences.adhkarReminderSound, type: .adhkar)))
+        navigator.show(.soundPicker(.init(sound: preferences.adhkarReminderSound, type: .adhkar)))
     }
     
     var morningNotificationDateRange: ClosedRange<Date> {
@@ -115,7 +116,7 @@ final class RemindersViewModel: ObservableObject {
     }
     
     func presentJumuaSoundPicker() {
-        router.trigger(.soundPicker(.init(sound: preferences.jumuahDuaReminderSound, type: .jumua)))
+        navigator.show(.soundPicker(.init(sound: preferences.jumuahDuaReminderSound, type: .jumua)))
     }
     
     var jumuaNotificationDateRange: ClosedRange<Date> {

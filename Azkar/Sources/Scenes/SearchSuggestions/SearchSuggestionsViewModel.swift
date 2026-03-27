@@ -4,13 +4,14 @@ import Entities
 import Library
 import DatabaseInteractors
 
+@MainActor
 final class SearchSuggestionsViewModel: ObservableObject {
     
     @Published var presentSuggestions = false
     @Published var suggestedQueries: [String] = []
     @Published var suggestedAzkar: [Zikr] = []
     
-    private let router: UnownedRouteTrigger<RootSection>
+    private let navigator: any AppNavigationRouting
     private let azkarDatabase: AzkarDatabase
     private let preferencesDatabase: PreferencesDatabase
     private let preferences: Preferences
@@ -20,12 +21,12 @@ final class SearchSuggestionsViewModel: ObservableObject {
         azkarDatabase: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,
         preferences: Preferences = .shared,
-        router: UnownedRouteTrigger<RootSection>
+        navigator: any AppNavigationRouting
     ) {
         self.azkarDatabase = azkarDatabase
         self.preferencesDatabase = preferencesDatabase
         self.preferences = preferences
-        self.router = router
+        self.navigator = navigator
         
         Task {
             await loadSuggestions()
@@ -41,7 +42,7 @@ final class SearchSuggestionsViewModel: ObservableObject {
             searchQuery: Empty().eraseToAnyPublisher(),
             azkarDatabase: AdhkarSQLiteDatabaseService(language: Language.english),
             preferencesDatabase: MockPreferencesDatabase(),
-            router: .empty
+            navigator: EmptyAppNavigator()
         )
     }
     
@@ -66,7 +67,7 @@ final class SearchSuggestionsViewModel: ObservableObject {
     }
     
     func navigateToZikr(_ zikr: Zikr.ID) {
-        router.trigger(.goToZikr(zikr))
+        navigator.showRecentZikr(id: zikr)
     }
     
     func removeRecentQueries(at indexSet: IndexSet) async {

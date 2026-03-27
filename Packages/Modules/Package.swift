@@ -29,7 +29,6 @@ let package = Package(
         .package(url: "https://github.com/supabase-community/supabase-swift", from: "2.35.0"),
                 
         // MARK: Utilities.
-        .package(url: "https://github.com/rundfunk47/stinsen", from: "2.0.13"),
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
         .package(url: "https://github.com/kean/Nuke", from: "12.8.0"),
         .package(url: "https://github.com/onmyway133/RoughSwift", from: "2.0.0"),

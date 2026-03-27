@@ -9,6 +9,7 @@ import AzkarServices
 
 typealias SearchToken = ZikrCategory
 
+@MainActor
 final class MainMenuViewModel: ObservableObject {
 
     @Published var searchQuery = ""
@@ -17,7 +18,7 @@ final class MainMenuViewModel: ObservableObject {
     
     private let searchQueryPublisher = CurrentValueSubject<String, Never>("")
 
-    let router: UnownedRouteTrigger<RootSection>
+    let navigator: any AppNavigationRouting
     let azkarDatabase: AzkarDatabase
     let preferencesDatabase: PreferencesDatabase
     
@@ -32,7 +33,7 @@ final class MainMenuViewModel: ObservableObject {
         searchQuery: $searchQuery.removeDuplicates().eraseToAnyPublisher(),
         azkarDatabase: azkarDatabase,
         preferencesDatabase: preferencesDatabase,
-        router: router
+        navigator: navigator
     )
 
     let currentYear: String
@@ -64,7 +65,7 @@ final class MainMenuViewModel: ObservableObject {
     init(
         databaseService: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,
-        router: UnownedRouteTrigger<RootSection>,
+        navigator: any AppNavigationRouting,
         preferences: Preferences,
         player: Player,
         articlesService: ArticlesServiceType,
@@ -72,7 +73,7 @@ final class MainMenuViewModel: ObservableObject {
     ) {
         self.azkarDatabase = databaseService
         self.preferencesDatabase = preferencesDatabase
-        self.router = router
+        self.navigator = navigator
         self.preferences = preferences
         self.player = player
         self.articlesService = articlesService
@@ -190,7 +191,7 @@ final class MainMenuViewModel: ObservableObject {
         
         if !didDisplayZikrCollectionsOnboarding, !InstallationDateChecker.isRecentlyInstalled(days: 3) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                router.trigger(.zikrCollectionsOnboarding)
+                navigator.showZikrCollectionsOnboarding()
                 self.didDisplayZikrCollectionsOnboarding = true
             }
         }
@@ -219,27 +220,27 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func navigateToArticle(_ article: Article) {
-        router.trigger(.article(article))
+        navigator.showArticle(article)
     }
     
     func naviateToSearchResult(_ searchResult: SearchResultZikr) {
-        router.trigger(.searchResult(result: searchResult, searchQuery: searchQuery))
+        navigator.showSearchResult(searchResult, query: searchQuery)
     }
 
     func navigateToZikr(_ zikr: Zikr) {
-        router.trigger(.zikr(zikr))
+        navigator.showZikr(zikr)
     }
 
     func navigateToCategory(_ category: ZikrCategory) {
-        router.trigger(.category(category))
+        navigator.showCategory(category)
     }
 
     func navigateToSettings() {
-        router.trigger(.settings())
+        navigator.showSettings(initialDestination: nil, presentationStyle: .push)
     }
 
     func navigateToIconPacksList() {
-        router.trigger(.settings(.appearance))
+        navigator.showSettings(initialDestination: .appearance, presentationStyle: .push)
     }
     
     func hideAd(_ ad: Ad, permanently: Bool = false) {
@@ -275,7 +276,7 @@ extension MainMenuViewModel {
         MainMenuViewModel(
             databaseService: AzkarDatabase(language: Language.getSystemLanguage()),
             preferencesDatabase: MockPreferencesDatabase(),
-            router: .empty,
+            navigator: EmptyAppNavigator(),
             preferences: Preferences.shared,
             player: .test,
             articlesService: DemoArticlesService(),

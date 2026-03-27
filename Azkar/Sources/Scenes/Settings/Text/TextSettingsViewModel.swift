@@ -48,9 +48,13 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
             fontsType: fontsType,
             service: FontsService(),
             subscribeScreenTrigger: { [unowned self] in
-                self.router.trigger(.subscribe(sourceScreen: FontsView.viewName))
+                self.navigator.presentSubscription(sourceScreen: FontsView.viewName)
             }
         )
+    }
+
+    func presentZikrCollectionsOnboarding() {
+        navigator.presentZikrCollectionsOnboarding()
     }
     
     func setContentLanguage(_ language: Language) {

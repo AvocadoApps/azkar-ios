@@ -7,7 +7,8 @@ import Entities
 import ActivityKit
 #endif
 
-final class ZikrPagesViewModel: ObservableObject, Equatable {
+@MainActor
+final class ZikrPagesViewModel: ObservableObject {
     
     enum PageType: Hashable, Identifiable {
         var id: String {
@@ -21,11 +22,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         case readingCompletion
     }
 
-    static func == (lhs: ZikrPagesViewModel, rhs: ZikrPagesViewModel) -> Bool {
-        lhs.category == rhs.category && lhs.title == rhs.title
-    }
-    
-    let router: UnownedRouteTrigger<RootSection>
+    let navigator: any AppNavigationRouting
     let category: ZikrCategory
     let title: String
     let azkar: [ZikrViewModel]
@@ -49,7 +46,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
     private var totalRepeatsInCategory: Int { azkar.reduce(0) { $0 + $1.zikr.repeats } }
 
     init(
-        router: UnownedRouteTrigger<RootSection>,
+        navigator: any AppNavigationRouting,
         category: ZikrCategory,
         title: String,
         azkar: [ZikrViewModel],
@@ -58,7 +55,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         selectedPagePublisher: AnyPublisher<Int, Never>,
         initialPage: Int
     ) {
-        self.router = router
+        self.navigator = navigator
         self.category = category
         self.title = title
         self.preferences = preferences
@@ -221,7 +218,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             await zikrCounter.resetCounterForCategory(category)
         }
         
-        @Sendable func setHasRemainingRepeats(_ flag: Bool) {
+        func setHasRemainingRepeats(_ flag: Bool) {
             withAnimation(.smooth) {
                 self.hasRemainingRepeats = flag
             }
@@ -229,9 +226,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         
         // Check if category is already marked as completed
         let isCategoryCompleted = await zikrCounter.isCategoryCompleted(category)
-        await MainActor.run {
-            setHasRemainingRepeats(!isCategoryCompleted)
-        }
+        setHasRemainingRepeats(!isCategoryCompleted)
 
         guard !isCategoryCompleted else {
             return
@@ -264,22 +259,14 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
 
     func navigateToZikr(_ vm: ZikrViewModel, index: Int) {
         if UIDevice.current.isIpadInterface {
-            router.trigger(.zikr(vm.zikr, index: index))
+            navigator.goToPage(index)
         } else {
-            router.trigger(RootSection.zikrPages(ZikrPagesViewModel(
-                router: router,
-                category: category,
-                title: title,
-                azkar: azkar,
-                preferences: preferences,
-                selectedPagePublisher: selectedPage.eraseToAnyPublisher(),
-                initialPage: index
-            )))
+            navigator.showCategoryReader(category: category, initialPage: index)
         }
     }
     
     func navigateToTextSettings() {
-        router.trigger(.settings(.text, presentModally: true))
+        navigator.showSettings(initialDestination: .text, presentationStyle: .sheet)
     }
 
     func goToNextZikrIfNeeded() {
@@ -287,12 +274,12 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         guard preferences.enableGoToNextZikrOnCounterFinished, newIndex < pages.count else {
             return
         }
-        router.trigger(.goToPage(newIndex))
+        navigator.goToPage(newIndex)
     }
     
     static var placeholder: ZikrPagesViewModel {
         AzkarListViewModel(
-            router: .empty,
+            navigator: EmptyAppNavigator(),
             category: .other,
             title: ZikrCategory.morning.title,
             azkar: [.demo()],
@@ -307,7 +294,7 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
             return
         }
         let zikr = azkar[page].zikr
-        router.trigger(.shareOptions(zikr))
+        navigator.showShareOptions(for: zikr)
     }
         
     @MainActor func markCurrentCategoryAsCompleted() async {
@@ -318,10 +305,6 @@ final class ZikrPagesViewModel: ObservableObject, Equatable {
         }
         hasRemainingRepeats = false
         endLiveActivity(completed: true)
-    }
-
-    deinit {
-        endLiveActivity(completed: !hasRemainingRepeats)
     }
 
 }

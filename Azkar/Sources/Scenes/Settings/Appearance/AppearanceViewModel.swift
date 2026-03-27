@@ -24,15 +24,15 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     var appIconPackListViewModel: AppIconPackListViewModel {
         AppIconPackListViewModel(
             preferences: preferences,
-            subscribeScreenTrigger: { [unowned router] in
-                router.trigger(.subscribe(sourceScreen: AppIconPackListView.viewName))
+            subscribeScreenTrigger: { [unowned navigator] in
+                navigator.presentSubscription(sourceScreen: AppIconPackListView.viewName)
             }
         )
     }
     
     var colorSchemeViewModel: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: preferences) { [unowned router] in
-            router.trigger(.subscribe(sourceScreen: ColorSchemesView.viewName))
+        ColorSchemesViewModel(preferences: preferences) { [unowned navigator] in
+            navigator.presentSubscription(sourceScreen: ColorSchemesView.viewName)
         }
     }
     
