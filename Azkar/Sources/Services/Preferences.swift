@@ -173,6 +173,9 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
         userDefaults: .appGroup
     )
     var contentLanguage: Language
+
+    @Preference(Keys.hasCompletedFirstLaunch, defaultValue: false)
+    var hasCompletedFirstLaunch: Bool
     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard

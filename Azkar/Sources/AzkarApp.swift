@@ -10,6 +10,8 @@ import CoreSpotlight
 
 @main
 struct AzkarApp: App {
+
+    private static var hasHandledLaunchPaywall = false
     
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
     
@@ -198,6 +200,16 @@ struct AzkarApp: App {
     }
     
     private func presentPaywall() async {
+        guard Self.hasHandledLaunchPaywall == false else {
+            return
+        }
+        Self.hasHandledLaunchPaywall = true
+
+        if preferences.hasCompletedFirstLaunch == false {
+            preferences.hasCompletedFirstLaunch = true
+            return
+        }
+
         guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
             return
         }
