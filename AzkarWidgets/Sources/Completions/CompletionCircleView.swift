@@ -52,7 +52,7 @@ struct CompletionCircleView: View {
                 .rotationEffect(.degrees(-90))
             
             // Icon that changes based on completion state
-            Image(systemName: "moon.stars.fill")
+            Image("app-icon-minimal")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .padding(imagePadding)
