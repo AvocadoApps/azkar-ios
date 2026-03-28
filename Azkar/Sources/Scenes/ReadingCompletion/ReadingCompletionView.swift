@@ -3,17 +3,23 @@ import Components
 
 struct ReadingCompletionView: View {
     let isCompleted: Bool
+    let hasUncompletedAzkar: Bool
     @Environment(\.colorTheme) var colorTheme
     let markAsCompleted: () async -> Void
-    
+    let goToFirstUncompleted: () -> Void
+
     @State var isAnimating = false
-    
+
     init(
         isCompleted: Bool,
-        markAsCompleted: @escaping () async -> Void
+        hasUncompletedAzkar: Bool,
+        markAsCompleted: @escaping () async -> Void,
+        goToFirstUncompleted: @escaping () -> Void
     ) {
         self.isCompleted = isCompleted
+        self.hasUncompletedAzkar = hasUncompletedAzkar
         self.markAsCompleted = markAsCompleted
+        self.goToFirstUncompleted = goToFirstUncompleted
     }
     
     var body: some View {
@@ -62,6 +68,10 @@ struct ReadingCompletionView: View {
                         .padding(.horizontal)
                 })
                 .padding(.top, 8)
+
+                if hasUncompletedAzkar {
+                    goToUncompletedButton
+                }
             }
         }
         .padding(30)
@@ -74,14 +84,26 @@ struct ReadingCompletionView: View {
         }
     }
     
+    private var goToUncompletedButton: some View {
+        Button(action: goToFirstUncompleted) {
+            Text("reading_completion.go_to_uncompleted")
+                .systemFont(.body, weight: .semibold)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(colorTheme.getColor(.contentBackground))
+                .foregroundColor(colorTheme.getColor(.accent))
+                .cornerRadius(12)
+                .padding(.horizontal)
+        }
+    }
 }
 
 struct ReadingCompletionView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ReadingCompletionView(isCompleted: false, markAsCompleted: {})
+            ReadingCompletionView(isCompleted: false, hasUncompletedAzkar: true, markAsCompleted: {}, goToFirstUncompleted: {})
                 .previewDisplayName("Not Completed")
-            ReadingCompletionView(isCompleted: true, markAsCompleted: {})
+            ReadingCompletionView(isCompleted: true, hasUncompletedAzkar: false, markAsCompleted: {}, goToFirstUncompleted: {})
                 .previewDisplayName("Completed")
         }
         .previewLayout(.sizeThatFits)

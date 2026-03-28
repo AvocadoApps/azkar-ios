@@ -72,10 +72,12 @@ struct ZikrPagesView: View, Equatable {
                 case .readingCompletion:
                     ReadingCompletionView(
                         isCompleted: !viewModel.hasRemainingRepeats,
+                        hasUncompletedAzkar: viewModel.hasUncompletedAzkar,
                         markAsCompleted: {
                             await viewModel.markCurrentCategoryAsCompleted()
                             WidgetCenter.reloadAzkarWidgets()
-                        }
+                        },
+                        goToFirstUncompleted: viewModel.goToFirstUncompletedZikr
                     )
                 }
             }

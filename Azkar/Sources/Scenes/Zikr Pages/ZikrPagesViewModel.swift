@@ -38,6 +38,10 @@ final class ZikrPagesViewModel: ObservableObject {
 
     @Published var isCategoryCompleted = false
 
+    var hasUncompletedAzkar: Bool {
+        azkar.contains { $0.remainingRepeatsNumber != 0 }
+    }
+
     private var cancellables = Set<AnyCancellable>()
     private var liveActivityUpdateTask: Task<Void, Never>?
     private var liveActivitySessionID: UUID?
@@ -269,9 +273,32 @@ final class ZikrPagesViewModel: ObservableObject {
         navigator.showSettings(initialDestination: .text, presentationStyle: .sheet)
     }
 
+    func goToFirstUncompletedZikr() {
+        guard let index = pages.firstIndex(where: {
+            if case .zikr(let vm) = $0, vm.remainingRepeatsNumber != 0 {
+                return true
+            }
+            return false
+        }) else {
+            return
+        }
+        page = index
+    }
+
     func goToNextZikrIfNeeded() {
-        let newIndex = page + 1
-        guard preferences.enableGoToNextZikrOnCounterFinished, newIndex < pages.count else {
+        guard preferences.enableGoToNextZikrOnCounterFinished else {
+            return
+        }
+        // Find the next uncompleted zikr, skipping any that are already done.
+        var newIndex = page + 1
+        while newIndex < pages.count {
+            if case .zikr(let vm) = pages[newIndex], vm.remainingRepeatsNumber == 0 {
+                newIndex += 1
+            } else {
+                break
+            }
+        }
+        guard newIndex < pages.count else {
             return
         }
         navigator.goToPage(newIndex)
