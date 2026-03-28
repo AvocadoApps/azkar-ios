@@ -24,6 +24,7 @@ struct CollapsableSection: View, Equatable {
     @Binding var isExpanded: Bool
     let font: AppFont
     var lineSpacing: CGFloat
+    var accessibilityLanguage: String?
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
     var tintColor: Color {
         colorTheme.getColor(.accent)
@@ -52,7 +53,8 @@ struct CollapsableSection: View, Equatable {
                         highlightPattern: highlightPattern,
                         isArabicText: isArabicText,
                         font: font,
-                        lineSpacing: lineSpacing
+                        lineSpacing: lineSpacing,
+                        accessibilityLanguage: accessibilityLanguage
                     )
                     .clipped()
                     .transition(.move(edge: .top).combined(with: .opacity))

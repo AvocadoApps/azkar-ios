@@ -20,11 +20,22 @@ struct MainCategoryView: View {
             return .secondary
         }
     }
+
+    private var accessibilityLabel: String {
+        isCompleted
+            ? String(
+                format: String(localized: "accessibility.common.item-completed"),
+                locale: Locale.current,
+                category.title
+            )
+            : category.title
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             imageView
                 .frame(width: 50, height: 50)
+                .accessibilityHidden(true)
 
             HStack {
                 Text(category.title)
@@ -37,10 +48,14 @@ struct MainCategoryView: View {
                     Image(systemName: "checkmark")
                         .foregroundStyle(checkmarkColor)
                         .font(.caption)
+                        .accessibilityHidden(true)
                 }
             }
         }
         .padding(15)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAddTraits(.isButton)
         .task {
             isCompleted = await counter.isCategoryCompleted(category)
         }

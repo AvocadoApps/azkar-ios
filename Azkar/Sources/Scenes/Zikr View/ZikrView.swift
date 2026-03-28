@@ -120,19 +120,13 @@ struct ZikrView: View {
     func counterButton(_ repeats: String) -> some View {
         Menu {
             Button(action: {
-                Task {
-                    await viewModel.resetCounter()
-                    WidgetCenter.reloadAzkarWidgets()
-                }
+                resetCounter()
             }, label: {
                 Label("common.reset-counter", systemImage: "arrow.counterclockwise")
             })
 
             Button(action: {
-                Task {
-                    await viewModel.completeCounter()
-                    WidgetCenter.reloadAzkarWidgets()
-                }
+                completeCounter()
             }, label: {
                 Label("common.complete", systemImage: "checkmark")
             })
@@ -156,10 +150,7 @@ struct ZikrView: View {
                 .clipShape(Circle())
                 .padding(.horizontal)
         } primaryAction: {
-            counterTapCallback?()
-            Task {
-                await viewModel.incrementZikrCount()
-            }
+            incrementZikrCounter()
         }
         .frame(
             width: viewModel.preferences.counterSize.value,
@@ -168,6 +159,15 @@ struct ZikrView: View {
         .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
         .padding(.horizontal)
         .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
+        .accessibilityLabel(counterAccessibilityLabel)
+        .accessibilityValue(counterAccessibilityValue(repeats))
+        .accessibilityHint(Text("accessibility.zikr.counter-increment-hint"))
+        .accessibilityAction(named: Text("common.reset-counter")) {
+            resetCounter()
+        }
+        .accessibilityAction(named: Text("common.complete")) {
+            completeCounter()
+        }
     }
 
     private func getContent() -> some View {
@@ -302,6 +302,14 @@ struct ZikrView: View {
                     }
                     .padding()
                     .buttonStyle(.plain)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(lineAccessibilityLabel(
+                        index: idx,
+                        arabicText: text,
+                        translation: translation,
+                        transliteration: transliteration
+                    ))
+                    .accessibilityHint(Text("accessibility.zikr.play-line-hint"))
                     
                     Divider()
                 }
@@ -323,15 +331,23 @@ struct ZikrView: View {
                 .padding(.vertical, 10)
                 .contextMenu {
                     Button(action: {
-                        Task {
-                            await viewModel.resetCounter()
-                            WidgetCenter.reloadAzkarWidgets()
-                        }
+                        resetCounter()
                     }, label: {
                         Label("common.reset-counter", systemImage: "arrow.counterclockwise")
                     })
                 }
                 .animation(.smooth, value: remainingRepeatsFormatted)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(counterAccessibilityLabel)
+                .accessibilityValue(counterAccessibilityValue(remainingRepeatsFormatted))
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint(Text("accessibility.zikr.counter-format-hint"))
+                .accessibilityAction {
+                    viewModel.toggleCounterFormat()
+                }
+                .accessibilityAction(named: Text("common.reset-counter")) {
+                    resetCounter()
+                }
         }
     }
 
@@ -367,4 +383,57 @@ private struct ZikrViewPreview: View {
 #Preview("Ink") {
     ZikrViewPreview(theme: .reader)
         .environment(\.zikrReadingMode, .lineByLine)
+}
+
+private extension ZikrView {
+    var counterAccessibilityLabel: String {
+        String(localized: "read.repeats")
+    }
+
+    func resetCounter() {
+        Task {
+            await viewModel.resetCounter()
+            WidgetCenter.reloadAzkarWidgets()
+        }
+    }
+
+    func completeCounter() {
+        Task {
+            await viewModel.completeCounter()
+            WidgetCenter.reloadAzkarWidgets()
+        }
+    }
+
+    func counterAccessibilityValue(_ repeats: String) -> String {
+        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber, viewModel.zikr.repeats > 0 {
+            return String(
+                format: String(localized: "accessibility.zikr.remaining-total"),
+                locale: Locale.current,
+                remainingRepeatsNumber,
+                viewModel.zikr.repeats
+            )
+        }
+        return repeats
+    }
+
+    func lineAccessibilityLabel(index: Int, arabicText: String, translation: String?, transliteration: String?) -> String {
+        var parts = [
+            String(
+                format: String(localized: "accessibility.zikr.line-number"),
+                locale: Locale.current,
+                index + 1
+            ),
+            arabicText
+        ]
+
+        if let translation, !translation.isEmpty, viewModel.expandTranslation {
+            parts.append(translation)
+        }
+
+        if let transliteration, !transliteration.isEmpty, viewModel.expandTransliteration {
+            parts.append(transliteration)
+        }
+
+        return parts.joined(separator: ", ")
+    }
 }

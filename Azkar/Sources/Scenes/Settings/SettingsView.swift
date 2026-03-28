@@ -102,6 +102,8 @@ struct SettingsView: View {
             .padding(4)
             .multilineTextAlignment(.leading)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(Text("common.open"))
     }
     
     // MARK: - Appearance

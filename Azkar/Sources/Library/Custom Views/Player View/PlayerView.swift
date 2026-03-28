@@ -18,6 +18,18 @@ struct PlayerView: View, Equatable {
     }
     var progressBarHeight: CGFloat = 1
 
+    private var playPauseLabel: String {
+        viewModel.isPlaying
+            ? String(localized: "accessibility.player.pause-audio")
+            : String(localized: "accessibility.player.play-audio")
+    }
+
+    private var playPauseValue: String {
+        viewModel.isPlaying
+            ? String(localized: "accessibility.player.playing")
+            : String(localized: "accessibility.player.paused")
+    }
+
     var body: some View {
         VStack(spacing: 8) {
             buttonsView
@@ -31,6 +43,8 @@ struct PlayerView: View, Equatable {
             Text(viewModel.timeElapsed)
                 .foregroundStyle(.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
+                .accessibilityLabel(Text("accessibility.player.elapsed-time"))
+                .accessibilityValue(viewModel.timeElapsed)
             Spacer()
             Button(action: {
                 self.viewModel.play()
@@ -40,6 +54,7 @@ struct PlayerView: View, Equatable {
                     .scaledToFit()
                     .frame(width: 30, height: 20)
             })
+            .accessibilityLabel(Text("accessibility.player.restart-audio"))
             Spacer()
             Button(action: {
                 self.viewModel.togglePlayPause()
@@ -49,6 +64,8 @@ struct PlayerView: View, Equatable {
                     .scaledToFit()
                     .frame(width: 30, height: 25)
             })
+            .accessibilityLabel(playPauseLabel)
+            .accessibilityValue(playPauseValue)
             Spacer()
             Button(action: {
                 UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.6)
@@ -61,10 +78,14 @@ struct PlayerView: View, Equatable {
                     .font(Font.system(.body, design: .monospaced))
                     .minimumScaleFactor(0.5)
             })
+            .accessibilityLabel(Text("accessibility.player.playback-speed"))
+            .accessibilityValue(viewModel.speed.label)
             Spacer()
             Text(viewModel.timeRemaining)
                 .foregroundStyle(.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
+                .accessibilityLabel(Text("accessibility.player.remaining-time"))
+                .accessibilityValue(viewModel.timeRemaining)
         }
         .padding(.horizontal)
     }
@@ -72,6 +93,14 @@ struct PlayerView: View, Equatable {
     private var progressBar: some View {
         ProgressBar(value: viewModel.progress, maxValue: 1, backgroundColor: progressBarColor, foregroundStyle: tintColor)
         .frame(height: progressBarHeight)
+        .accessibilityLabel(Text("accessibility.player.playback-progress"))
+        .accessibilityValue(
+            String(
+                format: String(localized: "accessibility.player.progress-percent"),
+                locale: Locale.current,
+                Int(viewModel.progress * 100)
+            )
+        )
     }
 
 }

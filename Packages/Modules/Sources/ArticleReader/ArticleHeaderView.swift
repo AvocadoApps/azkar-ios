@@ -44,6 +44,7 @@ extension Article.ImageType {
 struct ArticleHeaderView: View {
         
     let title: String
+    let language: String?
     var tags: [String]?
     var cover: Article.CoverImage?
     var coverAltText: String?
@@ -100,6 +101,8 @@ struct ArticleHeaderView: View {
                 .dynamicTypeSize(.accessibility5)
                 .lineLimit(lineLimit)
                 .minimumScaleFactor(0.25)
+                .applyAccessibilityLanguage(language)
+                .accessibilityAddTraits(.isHeader)
             
             if #available(iOS 16, *) {
                 ScrollView(.horizontal) {
@@ -240,6 +243,7 @@ struct ArticleHeaderView: View {
 #Preview("Background") {
     ArticleHeaderView(
         title: "Test title",
+        language: nil,
         tags: ["#benefit", "#general", "#info"],
         cover: .init(
             imageType: .link(demoImageURL),
@@ -254,6 +258,7 @@ struct ArticleHeaderView: View {
 #Preview("Standalone Top") {
     ArticleHeaderView(
         title: "Test",
+        language: nil,
         tags: ["#benefit", "#general", "#info"],
         cover: .init(
             imageType: .link(demoImageURL),
@@ -268,6 +273,7 @@ struct ArticleHeaderView: View {
 #Preview("Standalone Under title") {
     ArticleHeaderView(
         title: "Test",
+        language: nil,
         tags: ["#benefit", "#general", "#info"],
         cover: .init(
             imageType: .link(demoImageURL),

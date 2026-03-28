@@ -16,12 +16,14 @@ extension ZikrView {
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
+            .accessibilityAddTraits(.isHeader)
     }
 
     @ViewBuilder
     func getReadingTextView(
         text: [String],
-        isArabicText: Bool
+        isArabicText: Bool,
+        accessibilityLanguage: String? = nil
     ) -> some View {
         let prefs = viewModel.preferences
         let spacing = isArabicText ? prefs.arabicLineAdjustment : prefs.translationLineAdjustment
@@ -31,6 +33,7 @@ extension ZikrView {
                 let label = getReadingTextLine(
                     line,
                     isArabicText: isArabicText,
+                    accessibilityLanguage: accessibilityLanguage,
                     prefs: prefs,
                     spacing: spacing,
                     idx: idx,
@@ -54,6 +57,7 @@ extension ZikrView {
     func getReadingTextLine(
         _ line: String,
         isArabicText: Bool,
+        accessibilityLanguage: String? = nil,
         prefs: Preferences,
         spacing: CGFloat,
         idx: Int,
@@ -64,7 +68,8 @@ extension ZikrView {
             highlightPattern: viewModel.highlightPattern,
             isArabicText: isArabicText,
             font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
-            lineSpacing: prefs.enableLineBreaks ? spacing : 0
+            lineSpacing: prefs.enableLineBreaks ? spacing : 0,
+            accessibilityLanguage: accessibilityLanguage
         )
         .background(
             Group {
@@ -81,7 +86,7 @@ extension ZikrView {
     // MARK: - Text
     var textView: some View {
         VStack(spacing: 10) {
-            getReadingTextView(text: viewModel.text, isArabicText: true)
+            getReadingTextView(text: viewModel.text, isArabicText: true, accessibilityLanguage: "ar")
                 .id(viewModel.textSettingsToken)
                 .padding([.leading, .trailing, .bottom])
 
@@ -109,7 +114,7 @@ extension ZikrView {
                 )
             },
             content: {
-                getReadingTextView(text: text, isArabicText: false)
+                getReadingTextView(text: text, isArabicText: false, accessibilityLanguage: viewModel.zikr.language.id)
             }
         )
         .id(viewModel.textSettingsToken)
@@ -159,6 +164,14 @@ extension ZikrView {
                     )
                     .hoverEffect(HoverEffect.highlight)
                 })
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(String(localized: "read.source"))
+                .accessibilityValue(text)
+                .accessibilityHint(
+                    viewModel.hadithViewModel != nil
+                        ? Text("accessibility.zikr.source-open-hint")
+                        : Text("accessibility.zikr.source-unavailable-hint")
+                )
                 .accessibilityIdentifier("zikr_source_link")
                 .disabled(viewModel.hadithViewModel == nil)
                 .padding(.horizontal)
@@ -211,5 +224,6 @@ extension ZikrView {
             progressBarHeight: dividerHeight
         )
         .equatable()
+        .accessibilityElement(children: .contain)
     }
 }

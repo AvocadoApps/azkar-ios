@@ -1,6 +1,7 @@
 import SwiftUI
 import Library
 import Fakery
+import Extensions
 
 struct ReadingTextView: View {
 
@@ -9,6 +10,7 @@ struct ReadingTextView: View {
     let isArabicText: Bool
     let font: AppFont
     var lineSpacing: CGFloat
+    var accessibilityLanguage: String?
 
     var body: some View {
         Group {
@@ -24,6 +26,7 @@ struct ReadingTextView: View {
         }
         .multilineTextAlignment(isArabicText ? .trailing : .leading)
         .buttonStyle(.plain)
+        .applyAccessibilityLanguage(accessibilityLanguage)
     }
     
 }
@@ -37,6 +40,7 @@ struct ReadingTextView: View {
         highlightPattern: words.components(separatedBy: " ").randomElement(),
         isArabicText: false,
         font: TranslationFont.baskerville,
-        lineSpacing: 1
+        lineSpacing: 1,
+        accessibilityLanguage: nil
     )
 }

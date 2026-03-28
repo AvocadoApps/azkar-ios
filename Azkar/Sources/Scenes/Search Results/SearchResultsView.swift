@@ -75,12 +75,15 @@ struct SearchResultsView: View {
             HStack {
                 if let image = section.image {
                     Image(systemName: image)
+                        .accessibilityHidden(true)
                 }
                 if let title = section.title {
                     Text(title)
                         .systemFont(.title3, modification: .smallCaps)
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .foregroundStyle(.secondaryText)
@@ -95,6 +98,8 @@ struct SearchResultsView: View {
         } label: {
             SearchResultsItemView(result: result)
         }
+        .buttonStyle(.plain)
+        .accessibilityHint(Text("accessibility.common.open-dhikr"))
     }
     
 }

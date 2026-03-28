@@ -40,15 +40,15 @@ struct NextDhikrWidgetIntent: WidgetConfigurationIntent {
 
 @available(iOS 17, *)
 struct IncrementNextDhikrIntent: AppIntent {
-    static var title: LocalizedStringResource = "Increment Dhikr"
-    static var description = IntentDescription("Increment the currently displayed dhikr counter.")
+    static var title: LocalizedStringResource = "widget.next.increment"
+    static var description = IntentDescription("widget.next.increment.description")
     static var openAppWhenRun = false
     static var isDiscoverable = false
 
-    @Parameter(title: "Dhikr ID")
+    @Parameter(title: "widget.next.intent.zikrID")
     var zikrID: Int
 
-    @Parameter(title: "Category")
+    @Parameter(title: "widget.next.intent.category")
     var categoryRawValue: String
 
     init() {}
@@ -331,7 +331,7 @@ struct NextDhikrWidgetItem {
             zikrID: 1,
             category: .morning,
             title: nil,
-            textSnippet: textMode == .original ? "الحمد لله" : "Redacted dhikr text",
+            textSnippet: textMode == .original ? "الحمد لله" : String(localized: "widget.next.placeholder.translation", bundle: .main),
             remainingCount: 0,
             positionInCategory: 1,
             totalInCategory: 10
@@ -380,6 +380,37 @@ private struct NextDhikrCounterWidgetView: View {
 
     @Environment(\.widgetFamily) private var widgetFamily
 
+    private func progressAccessibilityValue(for item: NextDhikrWidgetItem) -> String {
+        String(
+            format: String(localized: "widget.next.progress", bundle: .main),
+            locale: Locale.current,
+            item.positionInCategory,
+            item.totalInCategory
+        )
+    }
+
+    private func remainingAccessibilityValue(for item: NextDhikrWidgetItem) -> String {
+        String(
+            format: String(localized: "widget.next.remaining", bundle: .main),
+            locale: Locale.current,
+            item.remainingCount
+        )
+    }
+
+    private func itemAccessibilityLabel(for item: NextDhikrWidgetItem) -> String {
+        let snippet = item.textSnippet.replacingOccurrences(of: "\n", with: " ")
+        return [
+            categoryName(for: item.category),
+            item.title,
+            snippet,
+            remainingAccessibilityValue(for: item),
+            progressAccessibilityValue(for: item)
+        ]
+        .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        .filter { !$0.isEmpty }
+        .joined(separator: ", ")
+    }
+
     var body: some View {
         switch widgetFamily {
         case .systemSmall:
@@ -422,6 +453,8 @@ private struct NextDhikrCounterWidgetView: View {
                         incrementButton(for: item)
                     }
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(itemAccessibilityLabel(for: item))
                 .padding(.vertical, 16)
                 .padding(.horizontal, 12)
                 .redacted(reason: entry.isPlaceholder ? .placeholder : [])
@@ -447,6 +480,8 @@ private struct NextDhikrCounterWidgetView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(itemAccessibilityLabel(for: item))
+                    .accessibilityHint(Text("widget.next.open"))
 
                     Spacer(minLength: 0)
 
@@ -478,8 +513,9 @@ private struct NextDhikrCounterWidgetView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 30, weight: .semibold))
                 .widgetAccentable()
+                .accessibilityHidden(true)
 
-            Text("Done for today")
+            Text("widget.next.completed")
                 .font(.headline)
                 .lineLimit(1)
                 .minimumScaleFactor(0.55)
@@ -488,6 +524,8 @@ private struct NextDhikrCounterWidgetView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(16)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("widget.next.completed"))
     }
 
     private func incrementButton(for item: NextDhikrWidgetItem) -> some View {
@@ -498,7 +536,8 @@ private struct NextDhikrCounterWidgetView: View {
                 .background(.quaternary, in: Circle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Increment dhikr")
+        .accessibilityLabel(Text("widget.next.increment"))
+        .accessibilityValue(remainingAccessibilityValue(for: item))
     }
 
     private func categoryHeader(for item: NextDhikrWidgetItem) -> some View {
@@ -506,6 +545,7 @@ private struct NextDhikrCounterWidgetView: View {
             Image(systemName: categorySymbol(for: item.category))
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(categoryColor(for: item.category).opacity(0.8))
+                .accessibilityHidden(true)
 
             Text(categoryName(for: item.category))
                 .font(.system(size: 11, weight: .medium))
@@ -538,7 +578,7 @@ private struct NextDhikrCounterWidgetView: View {
         case .other:
             return String(localized: "widget.category.other", bundle: .main)
         case .hundredDua:
-            return "Hundred Dua"
+            return String(localized: "widget.category.hundredDua", bundle: .main)
         }
     }
 

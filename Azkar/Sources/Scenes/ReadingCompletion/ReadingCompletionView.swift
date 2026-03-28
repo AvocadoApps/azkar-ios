@@ -40,9 +40,11 @@ struct ReadingCompletionView: View {
                     }
                 }
                 .frame(width: 200, height: 200)
+                .accessibilityHidden(true)
                 
                 Text("reading_completion.title")
                     .systemFont(.title, weight: .bold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 Text("reading_completion.subtitle")
                     .systemFont(.body)
@@ -68,6 +70,7 @@ struct ReadingCompletionView: View {
                         .padding(.horizontal)
                 })
                 .padding(.top, 8)
+                .accessibilityHint(Text("accessibility.reading-completion.mark-completed-hint"))
 
                 if hasUncompletedAzkar {
                     goToUncompletedButton
@@ -95,6 +98,7 @@ struct ReadingCompletionView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
         }
+        .accessibilityHint(Text("accessibility.reading-completion.go-to-uncompleted-hint"))
     }
 }
 

@@ -9,6 +9,7 @@
 import SwiftUI
 import AudioPlayer
 import Library
+import Extensions
 
 typealias AzkarListViewModel = ZikrPagesViewModel
 
@@ -38,16 +39,20 @@ struct AzkarListView: View {
                 Button {
                     self.viewModel.navigateToZikr(viewModel.azkar[index], index: index)
                 } label: {
+                    let title = viewModel.azkar[index].title ?? index.description
                     HStack {
-                        Text(viewModel.azkar[index].title ?? index.description)
+                        Text(title)
                             .contentShape(Rectangle())
                         Spacer(minLength: 8)
                         Image(systemName: "chevron.right")
+                            .accessibilityHidden(true)
                     }
                     .padding()
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
+                .accessibilityLabel(viewModel.azkar[index].title ?? index.description)
+                .applyAccessibilityLanguage(viewModel.azkar[index].language.id)
             }
         }
     }

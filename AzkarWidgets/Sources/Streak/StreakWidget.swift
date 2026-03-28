@@ -401,6 +401,63 @@ struct StreakWidgetView: View {
 
     private var tier: StreakTier { StreakTier(streakCount: entry.streakCount) }
 
+    private var streakCountAccessibilityText: String {
+        String(
+            format: String(localized: "widget.streak.count", bundle: .main),
+            locale: Locale.current,
+            entry.streakCount
+        )
+    }
+
+    private var enabledCategoryNames: [String] {
+        var result: [String] = []
+        if entry.requiredState.contains(.morning) {
+            result.append(String(localized: "widget.category.morning", bundle: .main))
+        }
+        if entry.requiredState.contains(.evening) {
+            result.append(String(localized: "widget.category.evening", bundle: .main))
+        }
+        if entry.requiredState.contains(.night) {
+            result.append(String(localized: "widget.category.night", bundle: .main))
+        }
+        return result
+    }
+
+    private var trackedCategoriesAccessibilityText: String {
+        enabledCategoryNames.joined(separator: ", ")
+    }
+
+    private var weeklyCompletionSummary: String {
+        entry.weekData.enumerated().map { index, day in
+            let stateText = day.isFullyCompleted
+                ? String(localized: "widget.streak.day.complete", bundle: .main)
+                : String(localized: "widget.streak.day.incomplete", bundle: .main)
+            let todaySuffix = index == entry.weekData.count - 1 ? String(localized: "widget.streak.day.today", bundle: .main) : nil
+            return [
+                shortWeekday(for: day.date),
+                stateText,
+                todaySuffix
+            ]
+            .compactMap { $0 }
+            .joined(separator: ", ")
+        }
+        .joined(separator: "; ")
+    }
+
+    private var widgetAccessibilitySummary: String {
+        [
+            streakCountAccessibilityText,
+            trackedCategoriesAccessibilityText.isEmpty ? nil : String(
+                format: String(localized: "widget.streak.tracked", bundle: .main),
+                locale: Locale.current,
+                trackedCategoriesAccessibilityText
+            ),
+            weeklyCompletionSummary
+        ]
+        .compactMap { $0 }
+        .joined(separator: ". ")
+    }
+
     var body: some View {
         switch widgetFamily {
         case .systemSmall:
@@ -443,6 +500,7 @@ struct StreakWidgetView: View {
                     .font(.system(size: 25, weight: .bold, design: .rounded))
                     .foregroundStyle(tier.iconGradient)
                     .shadow(color: tier.shadowColor, radius: tier.shadowRadius, y: 2)
+                    .accessibilityHidden(true)
 
                 Text("\(entry.streakCount)")
                     .foregroundStyle(tier.numberColor)
@@ -458,6 +516,8 @@ struct StreakWidgetView: View {
 
             Spacer(minLength: 0)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(widgetAccessibilitySummary)
     }
 
     private var weekDotsRow: some View {
@@ -486,6 +546,7 @@ struct StreakWidgetView: View {
         } icon: {
             Image(systemName: tier.iconName)
         }
+        .accessibilityLabel(streakCountAccessibilityText)
     }
 
     // MARK: - Accessory Circular
@@ -494,10 +555,13 @@ struct StreakWidgetView: View {
         VStack(spacing: 1) {
             Image(systemName: tier.iconName)
                 .font(.system(size: 12))
+                .accessibilityHidden(true)
             Text("\(entry.streakCount)")
                 .font(.system(size: 20, weight: tier.numberWeight, design: .rounded))
         }
         .widgetAccentable()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(streakCountAccessibilityText)
     }
 
     // MARK: - Accessory Rectangular
@@ -532,6 +596,7 @@ struct StreakWidgetView: View {
                     Image(systemName: category.symbol)
                         .font(.system(size: 7))
                         .frame(width: 10)
+                        .accessibilityHidden(true)
                     ForEach(Array(entry.weekData.enumerated()), id: \.offset) { _, day in
                         Circle()
                             .fill(day.state.contains(category.flag) ? Color.primary : Color.secondary.opacity(0.3))
@@ -542,6 +607,8 @@ struct StreakWidgetView: View {
             }
         }
         .widgetAccentable()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(widgetAccessibilitySummary)
     }
 
     // MARK: - Medium Widget
@@ -557,6 +624,7 @@ struct StreakWidgetView: View {
                         .font(.system(size: 20))
                         .foregroundStyle(tier.iconGradient)
                         .shadow(color: tier.shadowColor, radius: tier.shadowRadius, y: 2)
+                        .accessibilityHidden(true)
 
                     Text("\(entry.streakCount)")
                         .font(.system(size: 36, weight: tier.numberWeight, design: .rounded))
@@ -575,6 +643,8 @@ struct StreakWidgetView: View {
             Spacer(minLength: 0)
             weekGrid
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(widgetAccessibilitySummary)
     }
 
     private var weekGrid: some View {
@@ -602,6 +672,7 @@ struct StreakWidgetView: View {
                         .font(.system(size: 9))
                         .foregroundStyle(category.color.opacity(0.7))
                         .frame(width: 14)
+                        .accessibilityHidden(true)
 
                     ForEach(Array(entry.weekData.enumerated()), id: \.offset) { index, day in
                         let isCompleted = day.state.contains(category.flag)

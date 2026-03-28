@@ -20,6 +20,8 @@ struct AzkarReadingLiveActivity: Widget {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .padding(.leading, 6)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(context.attributes.categoryName)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     Text(context.state.progressText)
@@ -27,11 +29,15 @@ struct AzkarReadingLiveActivity: Widget {
                         .contentTransition(.numericText())
                         .foregroundStyle(.primary)
                         .padding(.trailing, 6)
+                        .accessibilityLabel(Text("widget.liveActivity.progress"))
+                        .accessibilityValue(context.state.progressText)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack(spacing: 4) {
                         ProgressView(value: context.state.progress)
                             .tint(Color.accentColor)
+                            .accessibilityLabel(Text("widget.liveActivity.progress"))
+                            .accessibilityValue(activityAccessibilitySummary(for: context.state))
 
                         if context.state.isCompleted {
                             Label {
@@ -41,6 +47,8 @@ struct AzkarReadingLiveActivity: Widget {
                             }
                             .font(.caption2)
                             .foregroundStyle(.green)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(Text("widget.liveActivity.completed"))
                         } else {
                             HStack {
                                 Text(context.state.currentZikrTitle)
@@ -62,20 +70,26 @@ struct AzkarReadingLiveActivity: Widget {
                         }
                     }
                     .padding(.horizontal, 6)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(activityAccessibilitySummary(for: context.state))
                 }
             } compactLeading: {
                 Image(systemName: context.attributes.categoryIcon)
                     .font(.caption2)
                     .foregroundStyle(.primary)
+                    .accessibilityLabel(context.attributes.categoryName)
             } compactTrailing: {
                 Text(context.state.progressText)
                     .font(.system(.caption2, design: .rounded, weight: .semibold))
                     .contentTransition(.numericText())
                     .foregroundStyle(.primary)
+                    .accessibilityLabel(Text("widget.liveActivity.progress"))
+                    .accessibilityValue(context.state.progressText)
             } minimal: {
                 Image(systemName: context.attributes.categoryIcon)
                     .font(.caption2)
                     .foregroundStyle(.primary)
+                    .accessibilityLabel(context.attributes.categoryName)
             }
             .widgetURL(URL(string: "azkar://category/\(context.attributes.categoryRawValue)")!)
         }
@@ -94,14 +108,20 @@ struct AzkarReadingLiveActivity: Widget {
                         Image(systemName: context.attributes.categoryIcon)
                     }
                     .font(.subheadline.weight(.semibold))
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(context.attributes.categoryName)
                     Spacer()
                     Text(context.state.progressText)
                         .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .contentTransition(.numericText())
+                        .accessibilityLabel(Text("widget.liveActivity.progress"))
+                        .accessibilityValue(context.state.progressText)
                 }
 
                 ProgressView(value: context.state.progress)
                     .tint(Color.accentColor)
+                    .accessibilityLabel(Text("widget.liveActivity.progress"))
+                    .accessibilityValue(activityAccessibilitySummary(for: context.state))
 
                 HStack {
                     if context.state.isCompleted {
@@ -112,6 +132,8 @@ struct AzkarReadingLiveActivity: Widget {
                         }
                         .font(.caption)
                         .foregroundStyle(.green)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(Text("widget.liveActivity.completed"))
                     } else {
                         Text(context.state.currentZikrTitle)
                             .font(.caption)
@@ -132,6 +154,8 @@ struct AzkarReadingLiveActivity: Widget {
             .padding(.horizontal, 26)
             .padding(.vertical, 16)
         }
+        .accessibilityLabel(lockScreenAccessibilityLabel(for: context))
+        .accessibilityHint(Text("widget.liveActivity.open"))
         .activityBackgroundTint(.clear)
     }
 
@@ -146,6 +170,29 @@ struct AzkarReadingLiveActivity: Widget {
         } else {
             return String(format: String(localized: "widget.liveActivity.remaining-repeats"), locale: Locale.current, state.currentZikrRemainingRepeats)
         }
+    }
+
+    private func activityAccessibilitySummary(for state: AzkarReadingActivityAttributes.ContentState) -> String {
+        if state.isCompleted {
+            return String(localized: "widget.liveActivity.completed")
+        }
+
+        return [
+            state.currentZikrTitle,
+            remainingRepeatsText(for: state),
+            state.progressText
+        ]
+        .filter { !$0.isEmpty }
+        .joined(separator: ", ")
+    }
+
+    private func lockScreenAccessibilityLabel(for context: ActivityViewContext<AzkarReadingActivityAttributes>) -> String {
+        [
+            context.attributes.categoryName,
+            activityAccessibilitySummary(for: context.state)
+        ]
+        .filter { !$0.isEmpty }
+        .joined(separator: ", ")
     }
 }
 

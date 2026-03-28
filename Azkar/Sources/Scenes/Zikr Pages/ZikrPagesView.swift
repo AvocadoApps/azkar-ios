@@ -44,7 +44,9 @@ struct ZikrPagesView: View, Equatable {
                 if page != .readingCompletion {
                     HStack {
                         Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
+                            .accessibilityLabel(Text("common.share"))
                         Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                            .accessibilityLabel(Text("settings.text.title"))
                     }
                 }
             }
@@ -131,6 +133,21 @@ struct ZikrPagesView: View, Equatable {
             .minimumScaleFactor(0.15)
         }
         .glassEffectCompat(.clear, in: RoundedRectangle(cornerRadius: 10))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(format: String(localized: "common.dhikr"), locale: Locale.current, String(index + 1)))
+        .accessibilityValue(pageIndicatorAccessibilityValue(for: viewModel))
+    }
+
+    private func pageIndicatorAccessibilityValue(for viewModel: ZikrViewModel) -> String {
+        guard let remainingRepeatsNumber = viewModel.remainingRepeatsNumber else {
+            return ""
+        }
+
+        if remainingRepeatsNumber == 0 {
+            return String(localized: "remaining-repeats.completed")
+        }
+
+        return String(format: String(localized: "remaining-repeats"), locale: Locale.current, remainingRepeatsNumber)
     }
 
 }

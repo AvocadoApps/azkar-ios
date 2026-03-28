@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftUIX
 import Entities
 import Library
+import Extensions
 
 struct SearchSuggestionsView: View {
     
@@ -52,6 +53,8 @@ struct SearchSuggestionsView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(query)
+                .accessibilityHint(Text("accessibility.search.search-hint"))
                 .padding()
                 .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -75,6 +78,9 @@ struct SearchSuggestionsView: View {
                         viewModel.navigateToZikr(zikr.id)
                     }
                 )
+                .accessibilityLabel(text)
+                .accessibilityHint(Text("accessibility.common.open-dhikr"))
+                .applyAccessibilityLanguage(zikr.language.id)
                 .padding()
                 .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -91,6 +97,7 @@ struct SearchSuggestionsView: View {
         Text(label)
             .foregroundStyle(.secondaryText)
             .systemFont(.title3, modification: .smallCaps)
+            .accessibilityAddTraits(.isHeader)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .background(.background)

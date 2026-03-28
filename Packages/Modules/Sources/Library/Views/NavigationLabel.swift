@@ -29,10 +29,12 @@ public struct NavigationLabel: View {
             }
             Image(systemName: "chevron.right")
                 .foregroundStyle(.secondaryText)
+                .accessibilityHidden(true)
         }
         .contentShape(Rectangle())
         .systemFont(.body)
         .padding(.vertical, applyVerticalPadding ? 8 : 0)
+        .accessibilityElement(children: .combine)
     }
     
 }

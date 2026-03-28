@@ -3,6 +3,7 @@ import NukeUI
 import Entities
 import Library
 import AzkarResources
+import Extensions
 
 public struct ArticleScreen: View {
     
@@ -71,6 +72,8 @@ public struct ArticleScreen: View {
                         .multilineTextAlignment(.leading)
                         .dynamicTypeSize(.accessibility5)
                         .padding(.horizontal)
+                        .applyAccessibilityLanguage(viewModel.language.id)
+                        .accessibilityAddTraits(.isHeader)
                     
                     scrollableContent
                 }
@@ -99,11 +102,13 @@ public struct ArticleScreen: View {
         Button(action: onShareButtonTap, label: {
             Image(systemName: "square.and.arrow.up")
         })
+        .accessibilityLabel(Text("common.share"))
     }
     
     var headerView: some View {
         ArticleHeaderView(
             title: viewModel.title,
+            language: viewModel.language.id,
             tags: viewModel.tags,
             cover: viewModel.coverImage,
             coverAltText: viewModel.coverImageAltText,
@@ -129,6 +134,7 @@ public struct ArticleScreen: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(LocalizedStringKey(viewModel.text))
                 .customFont(.title3)
+                .applyAccessibilityLanguage(viewModel.language.id)
         }
         .frame(maxWidth: .infinity)
     }
