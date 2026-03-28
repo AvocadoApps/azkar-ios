@@ -146,6 +146,21 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
+    @Preference(Keys.pageIndicatorsMode, defaultValue: PageIndicatorsMode.all)
+    var pageIndicatorsMode: PageIndicatorsMode
+
+    @Preference(Keys.pageIndicatorsCategories, defaultValue: Set(ZikrCategory.allCases))
+    var pageIndicatorsCategories: Set<ZikrCategory>
+
+    func showPageIndicators(for category: ZikrCategory) -> Bool {
+        switch pageIndicatorsMode {
+        case .all:
+            return true
+        case .custom:
+            return pageIndicatorsCategories.contains(category)
+        }
+    }
+
     @Preference(Keys.enableLineBreaks, defaultValue: true)
     var enableLineBreaks
     

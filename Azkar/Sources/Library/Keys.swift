@@ -54,6 +54,8 @@ enum Keys {
     static let counterSize = "kCounterSize"
     static let counterPosition = "kCounterPosition"
     static let enableGoToNextZikrOnCounterFinished = "kEnableGoToZikrOnCounterFinished"
+    static let pageIndicatorsMode = "kPageIndicatorsMode"
+    static let pageIndicatorsCategories = "kPageIndicatorsCategories"
     static let azkarCounterLastChangeDate = "kAzkarCounterLastChangeDate"
     
 }

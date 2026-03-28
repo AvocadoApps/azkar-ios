@@ -89,7 +89,7 @@ struct AppFlowView: View {
                     category: category,
                     initialPage: navigator.selectedPage,
                     showsList: true,
-                    showPageIndicators: false,
+                    showPageIndicators: preferences.showPageIndicators(for:category),
                     dependencies: dependencies,
                     navigator: navigator
                 )
@@ -98,7 +98,7 @@ struct AppFlowView: View {
                     category: category,
                     initialPage: navigator.selectedPage,
                     showsList: false,
-                    showPageIndicators: category == .hundredDua,
+                    showPageIndicators: preferences.showPageIndicators(for:category),
                     dependencies: dependencies,
                     navigator: navigator
                 )
@@ -109,7 +109,7 @@ struct AppFlowView: View {
                 category: request.category,
                 initialPage: request.initialPage,
                 showsList: false,
-                showPageIndicators: false,
+                showPageIndicators: preferences.showPageIndicators(for:request.category),
                 dependencies: dependencies,
                 navigator: navigator
             )
