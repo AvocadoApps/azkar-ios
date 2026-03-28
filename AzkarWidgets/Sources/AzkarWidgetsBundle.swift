@@ -27,6 +27,7 @@ struct AzkarWidgetsBundleModern: WidgetBundle {
         VirtuesWidgets()
         CompletionWidgets()
         CategoryQuickAccessWidget()
+        WeeklyStreakWidget()
         AzkarReadingLiveActivity()
     }
 }

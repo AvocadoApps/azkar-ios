@@ -202,6 +202,38 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         }
     }
     
+    public func getCompletionHistory(days: Int) async -> [Int: Set<String>] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let keys = (0..<days).compactMap { offset -> Int? in
+            guard let date = calendar.date(byAdding: .day, value: -offset, to: today) else { return nil }
+            return Int(date.timeIntervalSince1970)
+        }
+
+        guard !keys.isEmpty else { return [:] }
+
+        do {
+            return try await getDatabaseQueue().read { db in
+                let placeholders = keys.map { _ in "?" }.joined(separator: ",")
+                let sql = """
+                    SELECT DISTINCT key, category FROM completion_marks
+                    WHERE key IN (\(placeholders))
+                    AND category IN ('morning', 'evening', 'night')
+                    """
+                let rows = try Row.fetchAll(db, sql: sql, arguments: StatementArguments(keys))
+                var result: [Int: Set<String>] = [:]
+                for row in rows {
+                    let key: Int = row["key"]
+                    let category: String = row["category"]
+                    result[key, default: []].insert(category)
+                }
+                return result
+            }
+        } catch {
+            return [:]
+        }
+    }
+
     public func resetCategoryCompletionMark(_ category: ZikrCategory) async {
         let key = getKey()
         do {
