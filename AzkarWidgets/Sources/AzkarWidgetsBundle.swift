@@ -26,10 +26,11 @@ struct AzkarWidgetsBundleLegacy: WidgetBundle {
 @available(iOSApplicationExtension 17, *)
 struct AzkarWidgetsBundleWithStreak: WidgetBundle {
     var body: some Widget {
+        CategoryQuickAccessWidget()
+        NextDhikrCounterWidget()
+        StreakWidget()
         VirtuesWidgets()
         CompletionWidgets()
-        CategoryQuickAccessWidget()
-        StreakWidget()
         AzkarReadingLiveActivity()
     }
 }
@@ -37,9 +38,9 @@ struct AzkarWidgetsBundleWithStreak: WidgetBundle {
 @available(iOSApplicationExtension 16.2, *)
 struct AzkarWidgetsBundleModern: WidgetBundle {
     var body: some Widget {
+        CategoryQuickAccessWidget()
         VirtuesWidgets()
         CompletionWidgets()
-        CategoryQuickAccessWidget()
         AzkarReadingLiveActivity()
     }
 }

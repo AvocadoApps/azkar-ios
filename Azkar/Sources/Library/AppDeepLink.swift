@@ -1,8 +1,10 @@
 import Foundation
+import Entities
 
 enum AppDeepLink: Equatable {
     case home
     case category(ZikrCategory)
+    case categoryZikr(ZikrCategory, Int)
     case zikr(Int)
     case article(Int)
     case hadith(Int)
@@ -49,6 +51,14 @@ enum AppDeepLink: Equatable {
                 let category = ZikrCategory(rawValue: rawValue)
             else {
                 return nil
+            }
+            if let zikrID = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?
+                .first(where: { $0.name == "zikr" })?
+                .value
+                .flatMap(Int.init), zikrID > 0 {
+                self = .categoryZikr(category, zikrID)
+                return
             }
             self = .category(category)
 
@@ -107,6 +117,8 @@ enum AppDeepLink: Equatable {
             value = "\(Self.scheme)://home"
         case .category(let category):
             value = "\(Self.scheme)://category/\(category.rawValue)"
+        case .categoryZikr(let category, let id):
+            value = "\(Self.scheme)://category/\(category.rawValue)?zikr=\(id)"
         case .zikr(let id):
             value = "\(Self.scheme)://zikr/\(id)"
         case .article(let id):
@@ -123,6 +135,8 @@ enum AppDeepLink: Equatable {
             return Self.homeToken
         case .category(let category):
             return Self.categoryTokenPrefix + category.rawValue
+        case .categoryZikr(let category, let id):
+            return Self.categoryTokenPrefix + category.rawValue + ":zikr:" + String(id)
         case .zikr(let id):
             return Self.zikrTokenPrefix + String(id)
         case .article(let id):
@@ -151,6 +165,8 @@ enum AppDeepLink: Equatable {
             return .home
         case .category(let category):
             return .azkar(category)
+        case .categoryZikr(let category, let id):
+            return .categoryZikr(category, id)
         case .zikr(let id):
             return .zikr(id)
         case .article(let id):
@@ -167,6 +183,13 @@ enum AppDeepLink: Equatable {
 
         if token.hasPrefix(categoryTokenPrefix) {
             let rawValue = String(token.dropFirst(categoryTokenPrefix.count))
+            let components = rawValue.components(separatedBy: ":zikr:")
+            if components.count == 2,
+               let category = ZikrCategory(rawValue: components[0]),
+               let id = Int(components[1]),
+               id > 0 {
+                return .categoryZikr(category, id)
+            }
             guard let category = ZikrCategory(rawValue: rawValue) else {
                 return nil
             }

@@ -15,6 +15,8 @@ struct StreakWidgetIntent: WidgetConfigurationIntent {
     @Parameter(title: "widget.streak.config.includeBedtime", default: false)
     var includeBedtime: Bool
 
+    init() {}
+
     var requiredCategories: Set<String> {
         includeBedtime ? ["morning", "evening", "night"] : ["morning", "evening"]
     }
@@ -120,7 +122,13 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: Intent, in context: Context) async -> Entry {
-        await buildEntry(configuration: configuration)
+        if context.isPreview {
+            return sampleEntry(
+                today: Calendar.current.startOfDay(for: Date()),
+                requiredState: configuration.requiredCompletionState
+            )
+        }
+        return await buildEntry(configuration: configuration)
     }
 
     func timeline(for configuration: Intent, in context: Context) async -> Timeline<Entry> {
@@ -138,18 +146,7 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
         let requiredState = configuration.requiredCompletionState
 
         guard let counter = zikrCounter else {
-            return Entry(
-                date: Date(),
-                streakCount: 0,
-                weekData: (0..<7).reversed().map { offset in
-                    DayCompletion(
-                        date: calendar.date(byAdding: .day, value: -offset, to: today) ?? today,
-                        state: .none,
-                        requiredState: requiredState
-                    )
-                },
-                requiredState: requiredState
-            )
+            return emptyEntry(today: today, requiredState: requiredState)
         }
 
         let history = await counter.getCompletionHistory(days: 7)
@@ -217,6 +214,64 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
         return (0..<7).reversed().map { offset in
             let date = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
             let state: CompletionState = completedDays.contains(offset) ? .all : .none
+            return DayCompletion(date: date, state: state, requiredState: requiredState)
+        }
+    }
+
+    private func sampleEntry(today: Date, requiredState: CompletionState) -> Entry {
+        Entry(
+            date: Date(),
+            streakCount: 4,
+            weekData: sampleWeekPattern(requiredState: requiredState, today: today),
+            requiredState: requiredState
+        )
+    }
+
+    private func emptyEntry(today: Date, requiredState: CompletionState) -> Entry {
+        let calendar = Calendar.current
+        return Entry(
+            date: Date(),
+            streakCount: 0,
+            weekData: (0..<7).reversed().map { offset in
+                DayCompletion(
+                    date: calendar.date(byAdding: .day, value: -offset, to: today) ?? today,
+                    state: .none,
+                    requiredState: requiredState
+                )
+            },
+            requiredState: requiredState
+        )
+    }
+
+    private func sampleWeekPattern(requiredState: CompletionState, today: Date) -> [DayCompletion] {
+        let calendar = Calendar.current
+        let states: [CompletionState]
+
+        if requiredState.contains(.night) {
+            states = [
+                [.morning],
+                [.evening],
+                [.morning, .evening],
+                [.morning, .evening, .night],
+                [.morning, .night],
+                [.morning, .evening, .night],
+                [.morning, .evening, .night],
+            ]
+        } else {
+            states = [
+                [.morning],
+                [.evening],
+                [.morning],
+                [.morning, .evening],
+                [.morning, .evening],
+                [.morning, .evening],
+                [.morning, .evening],
+            ]
+        }
+
+        return states.enumerated().map { index, state in
+            let offset = states.count - 1 - index
+            let date = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
             return DayCompletion(date: date, state: state, requiredState: requiredState)
         }
     }

@@ -125,6 +125,12 @@ scripts/swiftlint.sh
 xcodebuild test -workspace Azkar.xcworkspace -scheme Azkar -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
+### Agent workflow note
+
+- Do not run full `xcodebuild build` for routine UI/layout/widget iteration.
+- Prefer code inspection, Swift previews, and only the lightest necessary validation.
+- Use `xcodebuild test` only when tests are explicitly needed or when validating behavior that cannot be checked safely any other way.
+
 ## Generated Code
 
 `Azkar/Sources/Generated/` contains generated code — **do not edit these files manually**:

@@ -21,6 +21,7 @@ final class Deeplinker {
         case home
         case settings(SettingsDestination)
         case azkar(ZikrCategory)
+        case categoryZikr(ZikrCategory, Int)
         case zikr(Int)
         case article(Int)
         case hadith(Int)

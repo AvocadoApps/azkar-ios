@@ -145,6 +145,13 @@ private extension AppNavigator {
             }
             replaceStackForDeepLink(with: .category(category))
 
+        case .categoryZikr(let category, let id):
+            let azkar = dependencies.azkar(for: category)
+            guard let index = azkar.firstIndex(where: { $0.zikr.id == id }) else {
+                return
+            }
+            replaceStackForDeepLink(with: .categoryReader(.init(category: category, initialPage: index)))
+
         case .zikr(let id):
             guard (try? dependencies.databaseService.getZikr(id, language: dependencies.preferences.contentLanguage)) != nil else {
                 return
@@ -213,6 +220,16 @@ private extension AppNavigator {
             default:
                 return false
             }
+
+        case .categoryZikr(let category, let id):
+            guard case .categoryReader(let request)? = stack.last else {
+                return false
+            }
+            let azkar = dependencies.azkar(for: category)
+            guard azkar.indices.contains(request.initialPage) else {
+                return false
+            }
+            return request.category == category && azkar[request.initialPage].zikr.id == id
 
         case .zikr(let id):
             guard case .standaloneZikr(let request)? = stack.last else {

@@ -129,6 +129,7 @@ private struct CategoryPalette {
     let tint: Color
     let gradientTop: Color
     let gradientBottom: Color
+    let contextualFillOpacity: Double
 
     static func palette(for category: ZikrCategory) -> CategoryPalette {
         switch category {
@@ -136,31 +137,36 @@ private struct CategoryPalette {
             return CategoryPalette(
                 tint: .orange,
                 gradientTop: .orange,
-                gradientBottom: .yellow
+                gradientBottom: .yellow,
+                contextualFillOpacity: 0.2
             )
         case .evening:
             return CategoryPalette(
                 tint: .indigo,
                 gradientTop: .indigo,
-                gradientBottom: .purple
+                gradientBottom: .purple,
+                contextualFillOpacity: 0.12
             )
         case .night:
             return CategoryPalette(
                 tint: .blue,
                 gradientTop: Color(red: 0.15, green: 0.25, blue: 0.45),
-                gradientBottom: .blue
+                gradientBottom: .blue,
+                contextualFillOpacity: 0.2
             )
         case .afterSalah:
             return CategoryPalette(
                 tint: .brown,
                 gradientTop: .brown,
-                gradientBottom: .orange
+                gradientBottom: .orange,
+                contextualFillOpacity: 0.2
             )
         default:
             return CategoryPalette(
                 tint: .gray,
                 gradientTop: .gray,
-                gradientBottom: Color(uiColor: .systemGray3)
+                gradientBottom: Color(uiColor: .systemGray3),
+                contextualFillOpacity: 0.2
             )
         }
     }
@@ -232,8 +238,7 @@ private struct CategoryQuickAccessContentView: View {
                 isContextual: currentCategory == .evening
             )
         }
-        .padding(.horizontal, 4)
-        .padding(.vertical, 2)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     // MARK: - Medium Widget (2x2 Grid)
@@ -261,6 +266,7 @@ private struct CategoryQuickAccessContentView: View {
                     isContextual: currentCategory == categories[1].0
                 )
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack(spacing: 6) {
                 categoryCell(
                     category: categories[2].0,
@@ -273,8 +279,9 @@ private struct CategoryQuickAccessContentView: View {
                     isContextual: currentCategory == categories[3].0
                 )
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .padding(2)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     /// A single cell in the 2x2 grid.
@@ -288,6 +295,8 @@ private struct CategoryQuickAccessContentView: View {
 
         return Link(destination: deepLinkURL(for: category)) {
             VStack(spacing: 3) {
+                Spacer(minLength: 0)
+
                 categoryIcon(for: category, size: 30)
                     .opacity(isCompleted ? 0.45 : 1.0)
                     .shadow(
@@ -308,7 +317,15 @@ private struct CategoryQuickAccessContentView: View {
                         .minimumScaleFactor(0.6)
                 }
                 .foregroundStyle(isCompleted ? .secondary : .primary)
+
+                Spacer(minLength: 0)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(cellFill(palette: palette, isContextual: isContextual, isCompleted: isCompleted))
+            )
+            .contentShape(Rectangle())
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
@@ -349,8 +366,12 @@ private struct CategoryQuickAccessContentView: View {
                 Spacer(minLength: 0)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.horizontal, 2)
-            .padding(.vertical, 4)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(cellFill(palette: palette, isContextual: isContextual, isCompleted: isCompleted))
+            )
+            .contentShape(Rectangle())
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
@@ -374,7 +395,7 @@ private struct CategoryQuickAccessContentView: View {
 
     private func cellFill(palette: CategoryPalette, isContextual: Bool, isCompleted: Bool) -> Color {
         if isContextual && !isCompleted {
-            return palette.tint.opacity(0.2)
+            return palette.tint.opacity(palette.contextualFillOpacity)
         }
         if isCompleted {
             return Color(.systemGray5).opacity(0.5)

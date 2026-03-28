@@ -79,6 +79,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             })
 
         registerUserDefaults()
+        migrateSharedPreferencesIfNeeded()
         ensureValidTransliterationPreference()
         setupRevenueCat()
         SubscriptionManager.shared.observeSubscriptionStatus()
@@ -125,6 +126,22 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         ]
 
         UserDefaults.standard.register(defaults: defaults)
+    }
+
+    private func migrateSharedPreferencesIfNeeded() {
+        migrateDataPreferenceIfNeeded(Keys.zikrCollectionSource)
+    }
+
+    private func migrateDataPreferenceIfNeeded(_ key: String) {
+        guard UserDefaults.appGroup.object(forKey: key) == nil else {
+            return
+        }
+
+        guard let value = UserDefaults.standard.object(forKey: key) as? Data else {
+            return
+        }
+
+        UserDefaults.appGroup.set(value, forKey: key)
     }
     
     private func setupRevenueCat() {
