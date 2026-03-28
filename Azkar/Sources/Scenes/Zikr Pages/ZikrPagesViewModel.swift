@@ -83,6 +83,13 @@ final class ZikrPagesViewModel: ObservableObject {
             }
         }
 
+        // Scroll to first unread zikr when no custom page was provided
+        if initialPage == 0, [.morning, .evening, .night, .afterSalah].contains(category) {
+            Task { [weak self] in
+                await self?.scrollToFirstUnreadZikr()
+            }
+        }
+
         preferences
             .$counterType
             .toVoid()
@@ -271,6 +278,18 @@ final class ZikrPagesViewModel: ObservableObject {
     
     func navigateToTextSettings() {
         navigator.showSettings(initialDestination: .text, presentationStyle: .sheet)
+    }
+
+    private func scrollToFirstUnreadZikr() async {
+        for (index, vm) in azkar.enumerated() {
+            let remaining = await zikrCounter.getRemainingRepeats(for: vm.zikr)
+            if remaining ?? vm.zikr.repeats > 0 {
+                if index != page {
+                    page = index
+                }
+                return
+            }
+        }
     }
 
     func goToFirstUncompletedZikr() {
