@@ -36,25 +36,31 @@ struct AzkarListView: View {
     var list: some View {
         LazyVStack(alignment: HorizontalAlignment.leading, spacing: 8) {
             ForEach(viewModel.azkar.indices, id: \.self) { index in
-                Button {
-                    self.viewModel.navigateToZikr(viewModel.azkar[index], index: index)
-                } label: {
-                    let title = viewModel.azkar[index].title ?? index.description
-                    HStack {
-                        Text(title)
-                            .contentShape(Rectangle())
-                        Spacer(minLength: 8)
-                        Image(systemName: "chevron.right")
-                            .accessibilityHidden(true)
-                    }
-                    .padding()
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(PlainButtonStyle())
-                .accessibilityLabel(viewModel.azkar[index].title ?? index.description)
-                .applyAccessibilityLanguage(viewModel.azkar[index].language.id)
+                rowView(for: index)
             }
         }
+    }
+
+    private func rowView(for index: Int) -> some View {
+        let zikr = viewModel.azkar[index]
+        let title = zikr.title ?? index.description
+
+        return Button {
+            viewModel.navigateToZikr(zikr, index: index)
+        } label: {
+            HStack {
+                Text(title)
+                    .contentShape(Rectangle())
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.right")
+                    .accessibilityHidden(true)
+            }
+            .padding()
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
+        .accessibilityLabel(title)
+        .applyAccessibilityLanguage(zikr.zikr.language.id)
     }
 
 }
