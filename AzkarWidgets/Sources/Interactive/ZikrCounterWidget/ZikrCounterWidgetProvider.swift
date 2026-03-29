@@ -12,6 +12,8 @@ struct ZikrCounterWidgetProvider: AppIntentTimelineProvider {
         ZikrCounterWidgetEntry(
             date: Date(),
             item: ZikrCounterWidgetItem.placeholder(textMode: .original),
+            completionState: .none,
+            showsCategorySuggestions: false,
             isCompletedForToday: false,
             isPlaceholder: false
         )

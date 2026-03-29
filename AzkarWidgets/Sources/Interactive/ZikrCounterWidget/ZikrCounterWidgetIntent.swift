@@ -64,8 +64,43 @@ struct IncrementZikrCounterIntent: AppIntent {
 
         if await dataSource.firstUncompletedZikr(in: category) == nil {
             try? await counter.markCategoryAsCompleted(category)
+            dataSource.showCategorySuggestions()
+        } else {
+            dataSource.activateCategory(category)
         }
 
+        ZikrCounterWidgetReloader.reloadAll()
+        return .result()
+    }
+}
+
+@available(iOS 17, *)
+struct SelectZikrCounterCategoryIntent: AppIntent {
+    static var title: LocalizedStringResource = "widget.next.title"
+    static var description = IntentDescription("widget.next.description")
+    static var openAppWhenRun = false
+    static var isDiscoverable = false
+
+    @Parameter(title: "widget.next.intent.category")
+    var categoryRawValue: String
+
+    init() {}
+
+    init(categoryRawValue: String) {
+        self.categoryRawValue = categoryRawValue
+    }
+
+    func perform() async throws -> some IntentResult {
+        let dataSource = ZikrCounterWidgetDataSource()
+
+        guard
+            let category = ZikrCategory(rawValue: categoryRawValue),
+            await dataSource.firstUncompletedZikr(in: category) != nil
+        else {
+            return .result()
+        }
+
+        dataSource.activateCategory(category)
         ZikrCounterWidgetReloader.reloadAll()
         return .result()
     }

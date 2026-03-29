@@ -6,6 +6,8 @@ import Entities
 struct ZikrCounterWidgetEntry: TimelineEntry {
     let date: Date
     let item: ZikrCounterWidgetItem?
+    let completionState: CompletionState
+    let showsCategorySuggestions: Bool
     let isCompletedForToday: Bool
     let isPlaceholder: Bool
 }
@@ -18,6 +20,7 @@ struct ZikrCounterWidgetItem {
     let textSnippet: String
     let isRightToLeftText: Bool
     let remainingCount: Int
+    let totalRepeats: Int
     let positionInCategory: Int
     let totalInCategory: Int
 
@@ -29,6 +32,7 @@ struct ZikrCounterWidgetItem {
             textSnippet: textMode == .original ? "الحمد لله" : String(localized: "widget.next.placeholder.translation", bundle: .main),
             isRightToLeftText: textMode == .original,
             remainingCount: 0,
+            totalRepeats: 1,
             positionInCategory: 1,
             totalInCategory: 10
         )
@@ -39,6 +43,41 @@ struct ZikrCounterWidgetItem {
     }
 
     var deepLinkURL: URL {
-        URL(string: "azkar://zikr/\(zikrID)")!
+        WidgetCategoryMetadata.deepLinkURL(for: category, zikrID: zikrID)
+    }
+}
+
+@available(iOS 17, *)
+struct ZikrCounterWidgetSelectionState: Codable {
+    let dayKey: Int
+    let activeCategoryRawValue: String?
+    let showsCategorySuggestions: Bool
+
+    var activeCategory: ZikrCategory? {
+        activeCategoryRawValue.flatMap(ZikrCategory.init(rawValue:))
+    }
+
+    static func automatic(dayKey: Int) -> ZikrCounterWidgetSelectionState {
+        ZikrCounterWidgetSelectionState(
+            dayKey: dayKey,
+            activeCategoryRawValue: nil,
+            showsCategorySuggestions: false
+        )
+    }
+
+    static func active(category: ZikrCategory, dayKey: Int) -> ZikrCounterWidgetSelectionState {
+        ZikrCounterWidgetSelectionState(
+            dayKey: dayKey,
+            activeCategoryRawValue: category.rawValue,
+            showsCategorySuggestions: false
+        )
+    }
+
+    static func suggestions(dayKey: Int) -> ZikrCounterWidgetSelectionState {
+        ZikrCounterWidgetSelectionState(
+            dayKey: dayKey,
+            activeCategoryRawValue: nil,
+            showsCategorySuggestions: true
+        )
     }
 }

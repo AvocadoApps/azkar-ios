@@ -6,11 +6,13 @@ import Extensions
 
 @available(iOS 17, *)
 struct ZikrCounterWidgetDataSource {
+    private let supportedCategories: [ZikrCategory] = [.morning, .evening, .night]
+    private let selectionStateKey = "kZikrCounterWidgetSelectionState"
     private let appGroupDefaults = UserDefaults.appGroup
 
     var counterService: DatabaseZikrCounter? {
         guard let databasePath = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.io.jawziyya.azkar-app")?
+            .containerURL(forSecurityApplicationGroupIdentifier: WidgetAppGroup.identifier)?
             .appendingPathComponent("counter.db")
             .path
         else {
@@ -31,26 +33,65 @@ struct ZikrCounterWidgetDataSource {
             return ZikrCounterWidgetEntry(
                 date: Date(),
                 item: ZikrCounterWidgetItem.placeholder(textMode: textMode),
+                completionState: .none,
+                showsCategorySuggestions: false,
                 isCompletedForToday: false,
                 isPlaceholder: true
             )
         }
 
-        guard let morningItem = await resolvePendingItem(for: .morning, textMode: textMode) else {
-            if let eveningItem = await resolvePendingItem(for: .evening, textMode: textMode) {
-                return ZikrCounterWidgetEntry(date: Date(), item: eveningItem, isCompletedForToday: false, isPlaceholder: false)
-            }
-
-            return ZikrCounterWidgetEntry(date: Date(), item: nil, isCompletedForToday: true, isPlaceholder: false)
+        let completionState = await resolveCompletionState()
+        if completionState == .all {
+            return completedEntry(completionState: completionState)
         }
 
-        return ZikrCounterWidgetEntry(date: Date(), item: morningItem, isCompletedForToday: false, isPlaceholder: false)
+        let selectionState = currentSelectionState
+
+        if selectionState.showsCategorySuggestions {
+            return suggestionEntry(completionState: completionState)
+        }
+
+        if let activeCategory = selectionState.activeCategory {
+            if let item = await resolvePendingItem(for: activeCategory, textMode: textMode) {
+                return itemEntry(item, completionState: completionState)
+            }
+
+            return suggestionEntry(completionState: completionState)
+        }
+
+        if let item = await firstPendingItem(in: prioritizedCategories(for: Date()), textMode: textMode) {
+            return itemEntry(item, completionState: completionState)
+        }
+
+        return completedEntry(completionState: completionState)
+    }
+
+    func activateCategory(_ category: ZikrCategory) {
+        persistSelectionState(.active(category: category, dayKey: currentDayKey))
+    }
+
+    func showCategorySuggestions() {
+        persistSelectionState(.suggestions(dayKey: currentDayKey))
+    }
+
+    private func firstPendingItem(in categories: [ZikrCategory], textMode: ZikrCounterTextMode) async -> ZikrCounterWidgetItem? {
+        for category in categories {
+            if let item = await resolvePendingItem(for: category, textMode: textMode) {
+                return item
+            }
+        }
+
+        return nil
     }
 
     func firstUncompletedZikr(in category: ZikrCategory) async -> Zikr? {
         let context = categoryContext(for: category)
         let adhkar = adhkar(for: category, context: context.primaryService, collection: context.collection)
         guard let counterService else {
+            return nil
+        }
+
+        if await counterService.isCategoryCompleted(category) {
             return nil
         }
 
@@ -91,6 +132,10 @@ struct ZikrCounterWidgetDataSource {
             return nil
         }
 
+        if await counterService.isCategoryCompleted(category) {
+            return nil
+        }
+
         for (index, zikr) in categoryAdhkar.enumerated() {
             let remaining = await counterService.getRemainingRepeats(for: zikr) ?? zikr.repeats
             if remaining > 0 {
@@ -102,27 +147,89 @@ struct ZikrCounterWidgetDataSource {
                     textSnippet: displayText(for: displayZikr, textMode: textMode),
                     isRightToLeftText: textMode == .original,
                     remainingCount: remaining,
+                    totalRepeats: zikr.repeats,
                     positionInCategory: index + 1,
                     totalInCategory: categoryAdhkar.count
                 )
             }
         }
 
-        if await counterService.isCategoryCompleted(category) {
-            return nil
-        }
-
         return nil
     }
 
     private func categoryContext(for category: ZikrCategory) -> ZikrCounterCategoryContext {
-        let collection = currentCollectionSource
         switch category {
         case .morning, .evening:
-            return makeContext(language: currentContentLanguage, collection: collection)
+            return makeContext(language: currentContentLanguage, collection: currentCollectionSource)
+        case .night, .afterSalah, .other:
+            return makeContext(language: currentContentLanguage, collection: .azkarRU)
         default:
             return makeContext(language: .arabic, collection: .azkarRU)
         }
+    }
+
+    private func prioritizedCategories(for date: Date) -> [ZikrCategory] {
+        switch contextualCategory(for: date) {
+        case .morning:
+            return [.morning, .evening, .night]
+        case .evening:
+            return [.evening, .morning, .night]
+        case .night:
+            return [.night, .evening, .morning]
+        default:
+            return supportedCategories
+        }
+    }
+
+    private func resolveCompletionState() async -> CompletionState {
+        guard let counterService else {
+            return .none
+        }
+
+        var completionState: CompletionState = []
+        if await counterService.isCategoryCompleted(.morning) {
+            completionState.insert(.morning)
+        }
+        if await counterService.isCategoryCompleted(.evening) {
+            completionState.insert(.evening)
+        }
+        if await counterService.isCategoryCompleted(.night) {
+            completionState.insert(.night)
+        }
+        return completionState
+    }
+
+    private func itemEntry(_ item: ZikrCounterWidgetItem, completionState: CompletionState) -> ZikrCounterWidgetEntry {
+        ZikrCounterWidgetEntry(
+            date: Date(),
+            item: item,
+            completionState: completionState,
+            showsCategorySuggestions: false,
+            isCompletedForToday: false,
+            isPlaceholder: false
+        )
+    }
+
+    private func suggestionEntry(completionState: CompletionState) -> ZikrCounterWidgetEntry {
+        ZikrCounterWidgetEntry(
+            date: Date(),
+            item: nil,
+            completionState: completionState,
+            showsCategorySuggestions: true,
+            isCompletedForToday: false,
+            isPlaceholder: false
+        )
+    }
+
+    private func completedEntry(completionState: CompletionState) -> ZikrCounterWidgetEntry {
+        ZikrCounterWidgetEntry(
+            date: Date(),
+            item: nil,
+            completionState: completionState,
+            showsCategorySuggestions: false,
+            isCompletedForToday: true,
+            isPlaceholder: false
+        )
     }
 
     private func makeContext(language: Language, collection: ZikrCollectionSource) -> ZikrCounterCategoryContext {
@@ -172,6 +279,34 @@ struct ZikrCounterWidgetDataSource {
 
     private var currentCollectionSource: ZikrCollectionSource {
         decodePreference(ZikrCollectionSource.self, key: ZikrCounterWidgetPreferenceKey.zikrCollectionSource) ?? .azkarRU
+    }
+
+    private var currentDayKey: Int {
+        Int(Calendar.current.startOfDay(for: Date()).timeIntervalSince1970)
+    }
+
+    private var currentSelectionState: ZikrCounterWidgetSelectionState {
+        guard
+            let state = decodePreference(ZikrCounterWidgetSelectionState.self, key: selectionStateKey),
+            state.dayKey == currentDayKey
+        else {
+            return .automatic(dayKey: currentDayKey)
+        }
+
+        return state
+    }
+
+    private func persistSelectionState(_ state: ZikrCounterWidgetSelectionState?) {
+        guard let state else {
+            appGroupDefaults.removeObject(forKey: selectionStateKey)
+            return
+        }
+
+        guard let data = try? JSONEncoder().encode(state) else {
+            return
+        }
+
+        appGroupDefaults.set(data, forKey: selectionStateKey)
     }
 
     private func decodePreference<T: Decodable>(_ type: T.Type, key: String) -> T? {
