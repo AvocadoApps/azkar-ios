@@ -47,24 +47,20 @@ struct AppearanceScreen: View {
 
             Divider()
 
-            Toggle(isOn: $viewModel.preferences.enableFunFeatures) {
+            HStack(spacing: 12) {
                 HStack {
                     Text("settings.use_fun_features")
                         .systemFont(.body)
                         .foregroundStyle(.text)
-                    Spacer()
-                    
-                    Templates.Menu {
-                        Text("settings.use_fun_features_tip")
-                            .padding()
-                            .cornerRadius(10)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.use_fun_features_tip")
                 }
-                .padding(.vertical, 8)
+                Spacer()
+
+                Toggle("", isOn: $viewModel.preferences.enableFunFeatures)
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.use_fun_features"))
             }
+            .padding(.vertical, 8)
             .applyThemedToggleStyle()
         }
     }
@@ -140,6 +136,18 @@ struct AppearanceScreen: View {
             .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(borderColor, lineWidth: 1.5))
         }
         .buttonStyle(.plain)
+    }
+
+    private func infoButton(_ text: LocalizedStringKey) -> some View {
+        Templates.Menu {
+            Text(text)
+                .padding()
+                .cornerRadius(10)
+        } label: { _ in
+            Image(systemName: "info.circle")
+                .foregroundStyle(.accent, opacity: 0.75)
+        }
+        .accessibilityLabel(Text("accessibility.common.more-info"))
     }
     
 }

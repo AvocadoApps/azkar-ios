@@ -423,15 +423,15 @@ private extension ZikrView {
                 locale: Locale.current,
                 index + 1
             ),
-            arabicText
+            String(localized: "accessibility.zikr.arabic-text")
         ]
 
         if let translation, !translation.isEmpty, viewModel.expandTranslation {
-            parts.append(translation)
+            parts.append(String(localized: "read.translation"))
         }
 
         if let transliteration, !transliteration.isEmpty, viewModel.expandTransliteration {
-            parts.append(transliteration)
+            parts.append(String(localized: "read.transcription"))
         }
 
         return parts.joined(separator: ", ")

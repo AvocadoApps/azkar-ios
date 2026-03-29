@@ -38,41 +38,33 @@ struct ExtraTextSettingsScreen: View {
             
             Divider()
 
-            Toggle(isOn: $viewModel.preferences.enableLineBreaks) {
+            HStack(spacing: 12) {
                 HStack {
                     Text("settings.breaks.title")
                         .systemFont(.body)
-                    Spacer()
-                    Templates.Menu {
-                        Text("settings.breaks.info")
-                            .padding()
-                            .cornerRadius(10)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.breaks.info")
                 }
-                .padding(.vertical, 8)
+                Spacer()
+                Toggle("", isOn: $viewModel.preferences.enableLineBreaks)
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.breaks.title"))
             }
+            .padding(.vertical, 8)
             
             Divider()
             
-            Toggle(isOn: $viewModel.preferences.useSystemFontSize.animation(.smooth)) {
+            HStack(spacing: 12) {
                 HStack {
                     Text("settings.text.use-system-font-size")
                         .systemFont(.body)
-                    Spacer()
-                    Templates.Menu {
-                        Text("settings.text.use_system_font_size_tip")
-                            .padding()
-                            .cornerRadius(10)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.text.use_system_font_size_tip")
                 }
-                .padding(.vertical, 8)
+                Spacer()
+                Toggle("", isOn: $viewModel.preferences.useSystemFontSize.animation(.smooth))
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.text.use-system-font-size"))
             }
+            .padding(.vertical, 8)
             
             Divider()
 
@@ -105,6 +97,18 @@ struct ExtraTextSettingsScreen: View {
         }
         .pickerStyle(.segmented)
         .padding(.vertical, 8)
+    }
+
+    private func infoButton(_ text: LocalizedStringKey) -> some View {
+        Templates.Menu {
+            Text(text)
+                .padding()
+                .cornerRadius(10)
+        } label: { _ in
+            Image(systemName: "info.circle")
+                .foregroundStyle(.accent, opacity: 0.75)
+        }
+        .accessibilityLabel(Text("accessibility.common.more-info"))
     }
     
     var lineSpacingView: some View {

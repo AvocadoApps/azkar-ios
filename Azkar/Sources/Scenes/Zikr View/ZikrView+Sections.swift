@@ -89,11 +89,14 @@ extension ZikrView {
             getReadingTextView(text: viewModel.text, isArabicText: true, accessibilityLanguage: "ar")
                 .id(viewModel.textSettingsToken)
                 .padding([.leading, .trailing, .bottom])
+                .accessibilityHidden(true)
 
             viewModel.playerViewModel.flatMap { vm in
                 self.playerView(viewModel: vm)
             }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("accessibility.zikr.arabic-text"))
     }
 
     // MARK: - Translation
@@ -119,6 +122,15 @@ extension ZikrView {
         )
         .id(viewModel.textSettingsToken)
         .padding()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("read.translation"))
+        .accessibilityValue(Text(viewModel.expandTranslation ? "accessibility.common.expanded" : "accessibility.common.collapsed"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction {
+            withAnimation(Animation.spring()) {
+                viewModel.preferences.expandTranslation.toggle()
+            }
+        }
     }
 
     // MARK: - Transliteration
@@ -144,6 +156,15 @@ extension ZikrView {
         )
         .id(viewModel.textSettingsToken)
         .padding()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("read.transcription"))
+        .accessibilityValue(Text(viewModel.expandTransliteration ? "accessibility.common.expanded" : "accessibility.common.collapsed"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction {
+            withAnimation(Animation.spring()) {
+                viewModel.preferences.expandTransliteration.toggle()
+            }
+        }
     }
 
     // MARK: - Info

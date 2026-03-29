@@ -70,24 +70,19 @@ struct CounterView: View {
 
             Divider()
 
-            Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
+            HStack(spacing: 12) {
                 HStack {
                     Text("settings.counter.go-to-next-dhikr")
 
-                    Spacer()
-
-                    Templates.Menu {
-                        Text("settings.counter.go-to-next-dhikr-tip")
-                            .padding()
-                            .cornerRadius(10)
-                            .foregroundStyle(.text)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.counter.go-to-next-dhikr-tip")
                 }
-                .padding(.vertical, 3)
+                Spacer()
+
+                Toggle("", isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished)
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.counter.go-to-next-dhikr"))
             }
+            .padding(.vertical, 3)
         }
         .systemFont(.body)
         .foregroundStyle(.text)
@@ -101,14 +96,7 @@ struct CounterView: View {
             Text("settings.counter.counter-type.title")
             Spacer()
 
-            Templates.Menu {
-                Text("settings.counter.counter-type.info")
-                    .padding()
-                    .cornerRadius(10)
-            } label: { _ in
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.accent, opacity: 0.75)
-            }
+            infoButton("settings.counter.counter-type.info")
 
             Picker(
                 CounterType.allCases,
@@ -121,6 +109,19 @@ struct CounterView: View {
             .pickerStyle(.segmented)
         }
         .padding(.vertical, 3)
+    }
+
+    private func infoButton(_ text: LocalizedStringKey) -> some View {
+        Templates.Menu {
+            Text(text)
+                .padding()
+                .cornerRadius(10)
+                .foregroundStyle(.text)
+        } label: { _ in
+            Image(systemName: "info.circle")
+                .foregroundStyle(.accent, opacity: 0.75)
+        }
+        .accessibilityLabel(Text("accessibility.common.more-info"))
     }
     
 }
