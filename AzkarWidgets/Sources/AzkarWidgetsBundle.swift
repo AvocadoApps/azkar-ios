@@ -19,7 +19,7 @@ struct AzkarWidgetsLauncher {
 
 struct AzkarWidgetsBundleLegacy: WidgetBundle {
     var body: some Widget {
-        VirtuesWidgets()
+        VirtuesWidget()
     }
 }
 
@@ -27,10 +27,10 @@ struct AzkarWidgetsBundleLegacy: WidgetBundle {
 struct AzkarWidgetsBundleWithStreak: WidgetBundle {
     var body: some Widget {
         CategoryQuickAccessWidget()
-        NextDhikrCounterWidget()
+        ZikrCounterWidget()
         StreakWidget()
-        VirtuesWidgets()
-        CompletionWidgets()
+        VirtuesWidget()
+        CompletionWidget()
         AzkarReadingLiveActivity()
     }
 }
@@ -39,8 +39,8 @@ struct AzkarWidgetsBundleWithStreak: WidgetBundle {
 struct AzkarWidgetsBundleModern: WidgetBundle {
     var body: some Widget {
         CategoryQuickAccessWidget()
-        VirtuesWidgets()
-        CompletionWidgets()
+        VirtuesWidget()
+        CompletionWidget()
         AzkarReadingLiveActivity()
     }
 }

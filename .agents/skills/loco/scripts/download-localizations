@@ -18,7 +18,7 @@ EXPORT_KEY="${LOCO_EXPORT_KEY:?Set LOCO_EXPORT_KEY in .env or environment}"
 usage() {
   cat <<'EOF'
 Usage:
-  .agents/skills/loco/scripts/download-localizations [--resources-dir "DIR"] [--timeout 60]
+  .agents/skills/loco/scripts/download-localizations [--resources-dir "DIR"] [--namespace "widget."] [--timeout 60]
 
 Downloads .xcstrings catalog from Localise.biz and saves to the specified directory.
 Defaults to Azkar/Resources if --resources-dir is not provided.
@@ -26,6 +26,7 @@ EOF
 }
 
 RESOURCES_DIR="Azkar/Resources"
+PREFIX=""
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -35,6 +36,10 @@ while [ "$#" -gt 0 ]; do
       ;;
     --timeout)
       TIMEOUT="${2:-}"
+      shift 2
+      ;;
+    --namespace)
+      PREFIX="${2:-}"
       shift 2
       ;;
     -h|--help)
@@ -74,5 +79,11 @@ mv "$TMP_RESPONSE" "$TARGET_PATH"
 echo "💾 Saved ${TARGET_PATH}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [ -n "$PREFIX" ]; then
+  echo "🧹 Filtering catalog to prefix ${PREFIX}..."
+  python3 "${SCRIPT_DIR}/filter-xcstrings" "$TARGET_PATH" "$PREFIX"
+fi
+
 echo "🔄 Post-processing plural substitutions..."
 python3 "${SCRIPT_DIR}/postprocess-xcstrings" "$TARGET_PATH"

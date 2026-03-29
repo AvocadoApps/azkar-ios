@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""Filter an .xcstrings catalog down to keys with a matching prefix."""
+
+import json
+import re
+import sys
+
+
+def xcode_json_dumps(data):
+    raw = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False)
+    raw = re.sub(r'(?<=") *: ', " : ", raw)
+    return raw + "\n"
+
+
+def main():
+    if len(sys.argv) != 3:
+        print(f"Usage: {sys.argv[0]} <path-to-xcstrings> <prefix>", file=sys.stderr)
+        sys.exit(1)
+
+    path, prefix = sys.argv[1], sys.argv[2]
+    if not prefix:
+        print("Prefix must not be empty.", file=sys.stderr)
+        sys.exit(1)
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    original_strings = data.get("strings", {})
+    filtered_strings = {
+        key: value
+        for key, value in original_strings.items()
+        if key.startswith(prefix)
+    }
+
+    data["strings"] = filtered_strings
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(xcode_json_dumps(data))
+
+    removed_count = len(original_strings) - len(filtered_strings)
+    print(f"🧹 Kept {len(filtered_strings)} key(s) with prefix '{prefix}'. Removed {removed_count} key(s).")
+
+
+if __name__ == "__main__":
+    main()
