@@ -7,6 +7,9 @@ struct ZikrCounterWidgetView: View {
     let entry: ZikrCounterWidgetEntry
 
     @Environment(\.widgetFamily) private var widgetFamily
+    @Environment(\.widgetRenderingMode) private var widgetRenderingMode
+
+    private var isTinted: Bool { widgetRenderingMode != .fullColor }
 
     var body: some View {
         switch widgetFamily {
@@ -144,8 +147,12 @@ struct ZikrCounterWidgetView: View {
     private func incrementButton(for item: ZikrCounterWidgetItem) -> some View {
         Button(intent: IncrementZikrCounterIntent(zikrID: item.zikrID, categoryRawValue: item.category.rawValue)) {
             counterButtonContent(for: item)
-                .background(Color.accentColor, in: Circle())
-                .foregroundStyle(.white)
+                .foregroundStyle(isTinted ? Color.primary : Color.white)
+                .background {
+                    Circle()
+                        .fill(isTinted ? Color.clear : Color.accentColor)
+                        .strokeBorder(isTinted ? Color.secondary : Color.clear, lineWidth: 1)
+                }
                 .clipShape(Circle())
         }
         .buttonStyle(.plain)
