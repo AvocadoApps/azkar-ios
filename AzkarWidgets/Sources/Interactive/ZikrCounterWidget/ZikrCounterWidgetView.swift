@@ -90,7 +90,7 @@ struct ZikrCounterWidgetView: View {
                 .padding(.horizontal, 11)
                 .widgetURL(item.deepLinkURL)
                 .accessibilityLabel(itemAccessibilityLabel(for: item))
-                .accessibilityHint(Text("widget.next.open"))
+                .accessibilityHint(Text("widget.counter.a11y.open"))
                 .redacted(reason: entry.isPlaceholder ? .placeholder : [])
             }
         }
@@ -128,7 +128,7 @@ struct ZikrCounterWidgetView: View {
                 .widgetAccentable()
                 .accessibilityHidden(true)
 
-            Text("widget.next.completed")
+            Text("widget.counter.completed")
                 .font(.headline)
                 .lineLimit(1)
                 .minimumScaleFactor(0.55)
@@ -138,7 +138,7 @@ struct ZikrCounterWidgetView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(16)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("widget.next.completed"))
+        .accessibilityLabel(Text("widget.counter.completed"))
     }
 
     private func incrementButton(for item: ZikrCounterWidgetItem) -> some View {
@@ -149,7 +149,7 @@ struct ZikrCounterWidgetView: View {
                 .clipShape(Circle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Text("widget.next.increment"))
+        .accessibilityLabel(Text("widget.counter.increment"))
         .accessibilityValue(remainingAccessibilityValue(for: item))
     }
 
@@ -266,7 +266,7 @@ struct ZikrCounterWidgetView: View {
 
     private func progressAccessibilityValue(for item: ZikrCounterWidgetItem) -> String {
         String(
-            format: String(localized: "widget.next.progress", bundle: .main),
+            format: String(localized: "widget.counter.a11y.progress", bundle: .main),
             locale: Locale.current,
             item.positionInCategory,
             item.totalInCategory
@@ -275,7 +275,7 @@ struct ZikrCounterWidgetView: View {
 
     private func remainingAccessibilityValue(for item: ZikrCounterWidgetItem) -> String {
         String(
-            format: String(localized: "widget.next.remaining", bundle: .main),
+            format: String(localized: "widget.counter.a11y.remaining", bundle: .main),
             locale: Locale.current,
             item.remainingCount
         )
@@ -297,7 +297,7 @@ struct ZikrCounterWidgetView: View {
 
     private func categorySuggestionAccessibilityLabel(for category: ZikrCategory, isCompleted: Bool) -> String {
         if isCompleted {
-            let completedText = String(localized: "widget.next.completed", bundle: .main)
+            let completedText = String(localized: "widget.counter.completed", bundle: .main)
             return "\(categoryName(for: category)), \(completedText)"
         }
 

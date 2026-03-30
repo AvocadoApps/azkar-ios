@@ -12,8 +12,8 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
         let requiredState: CompletionState = [.morning, .evening]
         return Entry(
             date: Date(),
-            streakCount: 3,
-            weekData: sampleWeek(completedDays: [0, 1, 2], requiredState: requiredState),
+            streakCount: 5,
+            weekData: sampleWeek(completedDays: [0, 1, 2, 3, 4], requiredState: requiredState),
             requiredState: requiredState
         )
     }
@@ -92,7 +92,7 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
     }
 
     private func sampleEntry(today: Date, requiredState: CompletionState) -> Entry {
-        Entry(date: Date(), streakCount: 4, weekData: sampleWeekPattern(requiredState: requiredState, today: today), requiredState: requiredState)
+        Entry(date: Date(), streakCount: 5, weekData: sampleWeekPattern(requiredState: requiredState, today: today), requiredState: requiredState)
     }
 
     private func emptyEntry(today: Date, requiredState: CompletionState) -> Entry {
@@ -119,9 +119,9 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
             states = [
                 [.morning],
                 [.evening],
-                [.morning, .evening],
                 [.morning, .evening, .night],
-                [.morning, .night],
+                [.morning, .evening, .night],
+                [.morning, .evening, .night],
                 [.morning, .evening, .night],
                 [.morning, .evening, .night],
             ]
@@ -129,7 +129,7 @@ struct StreakWidgetProvider: AppIntentTimelineProvider {
             states = [
                 [.morning],
                 [.evening],
-                [.morning],
+                [.morning, .evening],
                 [.morning, .evening],
                 [.morning, .evening],
                 [.morning, .evening],

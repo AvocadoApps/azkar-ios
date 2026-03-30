@@ -21,8 +21,8 @@ struct ZikrCounterWidget: Widget {
                     Color(.systemBackground)
                 }
         }
-        .configurationDisplayName("widget.next.title")
-        .description("widget.next.galleryDescription")
+        .configurationDisplayName("widget.counter.title")
+        .description("widget.counter.galleryDescription")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

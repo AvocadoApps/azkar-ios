@@ -29,7 +29,7 @@ struct ZikrCounterWidgetItem {
             zikrID: 1,
             category: .morning,
             title: nil,
-            textSnippet: textMode == .original ? "الحمد لله" : String(localized: "widget.next.placeholder.translation", bundle: .main),
+            textSnippet: textMode == .original ? "الحمد لله" : String(localized: "widget.counter.placeholder.translation", bundle: .main),
             isRightToLeftText: textMode == .original,
             remainingCount: 0,
             totalRepeats: 1,

@@ -13,33 +13,33 @@ enum ZikrCounterTextMode: String, AppEnum {
     case original
     case translation
 
-    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "widget.next.config.displayedText")
+    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "widget.counter.config.displayedText")
     static var caseDisplayRepresentations: [ZikrCounterTextMode: DisplayRepresentation] = [
-        .original: "widget.next.config.original",
-        .translation: "widget.next.config.translation",
+        .original: "widget.counter.config.original",
+        .translation: "widget.counter.config.translation",
     ]
 }
 
 @available(iOS 17, *)
 struct ZikrCounterWidgetIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "widget.next.title"
-    static var description = IntentDescription("widget.next.description")
+    static var title: LocalizedStringResource = "widget.counter.title"
+    static var description = IntentDescription("widget.counter.description")
 
-    @Parameter(title: "widget.next.config.displayedText", default: .original)
+    @Parameter(title: "widget.counter.config.displayedText", default: .original)
     var textMode: ZikrCounterTextMode
 }
 
 @available(iOS 17, *)
 struct IncrementZikrCounterIntent: AppIntent {
-    static var title: LocalizedStringResource = "widget.next.increment"
-    static var description = IntentDescription("widget.next.increment.description")
+    static var title: LocalizedStringResource = "widget.counter.increment"
+    static var description = IntentDescription("widget.counter.increment.description")
     static var openAppWhenRun = false
     static var isDiscoverable = false
 
-    @Parameter(title: "widget.next.intent.zikrID")
+    @Parameter(title: "widget.counter.intent.zikrID")
     var zikrID: Int
 
-    @Parameter(title: "widget.next.intent.category")
+    @Parameter(title: "widget.counter.intent.category")
     var categoryRawValue: String
 
     init() {}
@@ -76,12 +76,12 @@ struct IncrementZikrCounterIntent: AppIntent {
 
 @available(iOS 17, *)
 struct SelectZikrCounterCategoryIntent: AppIntent {
-    static var title: LocalizedStringResource = "widget.next.title"
-    static var description = IntentDescription("widget.next.description")
+    static var title: LocalizedStringResource = "widget.counter.title"
+    static var description = IntentDescription("widget.counter.description")
     static var openAppWhenRun = false
     static var isDiscoverable = false
 
-    @Parameter(title: "widget.next.intent.category")
+    @Parameter(title: "widget.counter.intent.category")
     var categoryRawValue: String
 
     init() {}

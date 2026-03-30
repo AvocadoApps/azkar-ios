@@ -54,9 +54,9 @@ struct StreakWidgetView: View {
 
     private var enabledCategories: [(symbol: String, flag: CompletionState, color: Color)] {
         var result: [(symbol: String, flag: CompletionState, color: Color)] = []
-        if entry.requiredState.contains(.morning) { result.append(("sun.max.fill", .morning, .yellow)) }
-        if entry.requiredState.contains(.evening) { result.append(("moon.fill", .evening, .blue)) }
-        if entry.requiredState.contains(.night) { result.append(("bed.double.fill", .night, .blue)) }
+        if entry.requiredState.contains(.morning) { result.append(("sun.max", .morning, .yellow)) }
+        if entry.requiredState.contains(.evening) { result.append(("moon", .evening, .blue)) }
+        if entry.requiredState.contains(.night) { result.append(("bed.double", .night, .blue)) }
         return result
     }
 
@@ -92,16 +92,16 @@ struct StreakWidgetView: View {
         HStack(spacing: 5) {
             ForEach(Array(entry.weekData.enumerated()), id: \.offset) { index, day in
                 let isToday = index == entry.weekData.count - 1
-                Circle()
-                    .fill(day.isFullyCompleted ? Color.green : Color(.systemGray4))
-                    .frame(width: 7, height: 7)
-                    .overlay {
-                        if isToday {
-                            Circle()
-                                .strokeBorder(Color.primary.opacity(0.4), lineWidth: 1)
-                                .frame(width: 11, height: 11)
-                        }
+                Group {
+                    if day.isFullyCompleted {
+                        Circle()
+                            .fill(Color.green)
+                    } else {
+                        Circle()
+                            .strokeBorder(Color(.systemGray3), lineWidth: isToday ? 1.5 : 1)
                     }
+                }
+                .frame(width: 7, height: 7)
             }
         }
     }
@@ -158,10 +158,15 @@ struct StreakWidgetView: View {
                         .frame(width: 10)
                         .accessibilityHidden(true)
                     ForEach(Array(entry.weekData.enumerated()), id: \.offset) { _, day in
-                        Circle()
-                            .fill(day.state.contains(category.flag) ? Color.primary : Color.secondary.opacity(0.3))
-                            .frame(width: 5, height: 5)
-                            .frame(width: 12)
+                        Group {
+                            if day.state.contains(category.flag) {
+                                Circle().fill(Color.primary)
+                            } else {
+                                Circle().strokeBorder(Color.secondary, lineWidth: 0.75)
+                            }
+                        }
+                        .frame(width: 5, height: 5)
+                        .frame(width: 12)
                     }
                 }
             }
@@ -219,7 +224,7 @@ struct StreakWidgetView: View {
                 HStack(spacing: 6) {
                     Image(systemName: category.symbol)
                         .font(.system(size: 9))
-                        .foregroundStyle(category.color.opacity(0.7))
+                        .foregroundStyle(.secondary)
                         .frame(width: 14)
                         .accessibilityHidden(true)
 
@@ -227,16 +232,17 @@ struct StreakWidgetView: View {
                         let isCompleted = day.state.contains(category.flag)
                         let isToday = index == entry.weekData.count - 1
 
-                        Circle()
-                            .fill(isCompleted ? category.color : Color(.systemGray5))
-                            .frame(width: 8, height: 8)
-                            .overlay {
-                                if isToday && !isCompleted {
-                                    Circle()
-                                        .strokeBorder(category.color.opacity(0.3), lineWidth: 0.5)
-                                }
+                        Group {
+                            if isCompleted {
+                                Circle()
+                                    .fill(category.color)
+                            } else {
+                                Circle()
+                                    .strokeBorder(Color(.systemGray3), lineWidth: isToday ? 1.5 : 1)
                             }
-                            .frame(width: 14)
+                        }
+                        .frame(width: 8, height: 8)
+                        .frame(width: 14)
                     }
                 }
             }
