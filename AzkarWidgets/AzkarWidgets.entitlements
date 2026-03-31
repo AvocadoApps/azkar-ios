@@ -9,6 +9,6 @@
 		<string>group.io.jawziyya.azkar-app</string>
 	</array>
 	<key>com.apple.security.network.client</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
