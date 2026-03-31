@@ -5,6 +5,26 @@ import UIKit
 
 #if DEBUG
 private enum ArticlesWidgetPreviewFactory {
+    struct LocalizedText {
+        let russian: String
+        let english: String
+        let arabic: String
+        let turkish: String
+
+        func value(for language: Language) -> String {
+            switch language {
+            case .russian:
+                return russian
+            case .arabic:
+                return arabic
+            case .turkish:
+                return turkish
+            default:
+                return english
+            }
+        }
+    }
+
     struct MockArticle {
         let title: String
         let text: String
@@ -28,75 +48,33 @@ private enum ArticlesWidgetPreviewFactory {
                 coverImageFormat: .titleBackground
             )
             .withAnalytics(views: article.views, shares: article.shares),
-            imageData: makeImageData(color: article.color)
+            imageData: previewImageData() ?? makeImageData(color: article.color)
         )
     }
 
-    static let meaningOfDhikr = MockArticle(
-        title: "Что означает «Поминание Аллаха»?",
-        text: "Поистине, поминание Аллаха Всевышнего — это жизнь и спокойствие сердец, умиротворение и отдых души, это то, что оживляет души и это основа самой жизни. Нет ни успокоения, ни избавления от горечи, кроме как посредством поминания Аллаха.",
-        language: .russian,
-        color: .systemTeal,
-        views: 18420,
-        shares: 910
+    static let placeholderTitle = LocalizedText(
+        russian: "Мольба — лекарство",
+        english: "Supplication Is a Remedy",
+        arabic: "الدعاء دواء",
+        turkish: "Dua bir ilactir"
     )
 
-    static let supplicationRemedy = MockArticle(
-        title: "Мольба — лекарство",
-        text: "Мольба относится к наиболее полезным лекарствам. Она является врагом бедствия, отталкивая его и становясь лекарством от него. Она препятствует его приходу и избавляет от него или же облегчает его, если оно всё-таки постигает человека.",
-        language: .russian,
-        color: .systemOrange,
-        views: 12840,
-        shares: 320
+    static let placeholderText = LocalizedText(
+        russian: "Мольба относится к наиболее полезным лекарствам.",
+        english: "Supplication is among the most beneficial remedies.",
+        arabic: "الدعاء من انفع الادوية.",
+        turkish: "Dua en faydali ilaclardan biridir."
     )
 
-    static let ranksOfDhikr = MockArticle(
-        title: "Степени поминания Аллаха Всевышнего",
-        text: "- Высшей степенью зикра является поминание Аллаха сердцем, которое сопровождается произношением на языке и делами тела.\n- За ним следует поминание в сердце, совмещённое с делами тела.\n- За этим следует поминание сердцем вместе с произнесением на языке.",
-        language: .russian,
-        color: .systemBlue,
-        views: 9630,
-        shares: 250
-    )
-
-    static let fortressOfDhikr = MockArticle(
-        title: "Крепость поминания",
-        text: "Слова Пророка ﷺ: «Я повелеваю вам поминать Аллаха, Свят Он и Велик. Поистине, это подобно человеку, за которым очень быстро гонятся его враги, и этот человек приходит к защищённой крепости и находит там для себя убежище».",
-        language: .russian,
-        color: .systemGreen,
-        views: 54210,
-        shares: 1400
-    )
-
-    static let tenBestNights = MockArticle(
-        title: "10 лучших ночей",
-        text: "Начинаются 10 последних ночей Рамадана, одна из которых — ночь Предопределения, о которой Всевышний Аллах сказал в Коране: «Ночь Предопределения лучше тысячи месяцев». То есть поклонение Аллаху в эту ночь лучше, чем поклонение в течение 1000 месяцев.",
-        language: .russian,
-        color: .systemPurple,
-        views: 980,
-        shares: 42
-    )
-
-    static let supplicationIsRemedy = MockArticle(
-        title: "Supplication Is a Remedy",
-        text: "Supplication (du‘a) is among the most beneficial remedies. It is an enemy of affliction: it repels it, serves as a cure for it, prevents its arrival, removes it, or lessens its impact if it does befall a person.",
-        language: .english,
-        color: .systemIndigo,
-        views: 7340,
-        shares: 185
-    )
-
-    static func mockArticle(
-        title: String,
-        text: String,
-        language: Language = .english,
+    static func placeholder(
+        language: Language,
         views: Int = 0,
         shares: Int = 0,
         color: UIColor
     ) -> MockArticle {
         MockArticle(
-            title: title,
-            text: text,
+            title: placeholderTitle.value(for: language),
+            text: placeholderText.value(for: language),
             language: language,
             color: color,
             views: views,
@@ -136,27 +114,52 @@ private enum ArticlesWidgetPreviewFactory {
 
         return image.jpegData(compressionQuality: 0.9)
     }
+
+    private static func previewImageData() -> Data? {
+        UIImage(named: "article-widget-preview")?.jpegData(compressionQuality: 0.88)
+    }
 }
 
 @available(iOS 17, *)
 #Preview("Small • Short Title", as: .systemSmall) {
     ArticlesWidget()
 } timeline: {
-    ArticlesWidgetPreviewFactory.entry(ArticlesWidgetPreviewFactory.supplicationRemedy)
+    ArticlesWidgetPreviewFactory.entry(
+        ArticlesWidgetPreviewFactory.placeholder(
+            language: .russian,
+            views: 12840,
+            shares: 320,
+            color: .systemOrange
+        )
+    )
 }
 
 @available(iOS 17, *)
 #Preview("Small • Long Title", as: .systemSmall) {
     ArticlesWidget()
 } timeline: {
-    ArticlesWidgetPreviewFactory.entry(ArticlesWidgetPreviewFactory.ranksOfDhikr)
+    ArticlesWidgetPreviewFactory.entry(
+        ArticlesWidgetPreviewFactory.placeholder(
+            language: .arabic,
+            views: 9630,
+            shares: 250,
+            color: .systemBlue
+        )
+    )
 }
 
 @available(iOS 17, *)
 #Preview("Medium • Stats", as: .systemMedium) {
     ArticlesWidget()
 } timeline: {
-    ArticlesWidgetPreviewFactory.entry(ArticlesWidgetPreviewFactory.meaningOfDhikr)
+    ArticlesWidgetPreviewFactory.entry(
+        ArticlesWidgetPreviewFactory.placeholder(
+            language: .russian,
+            views: 18420,
+            shares: 910,
+            color: .systemTeal
+        )
+    )
 }
 
 @available(iOS 17, *)
@@ -164,9 +167,7 @@ private enum ArticlesWidgetPreviewFactory {
     ArticlesWidget()
 } timeline: {
     ArticlesWidgetPreviewFactory.entry(
-        ArticlesWidgetPreviewFactory.mockArticle(
-            title: "Мольбы праведных",
-            text: "Отсутствие самого дуа — страшнее отсутствия ответа на него.",
+        ArticlesWidgetPreviewFactory.placeholder(
             language: .russian,
             color: .systemBlue
         )
@@ -177,14 +178,28 @@ private enum ArticlesWidgetPreviewFactory {
 #Preview("Large • Full Content", as: .systemLarge) {
     ArticlesWidget()
 } timeline: {
-    ArticlesWidgetPreviewFactory.entry(ArticlesWidgetPreviewFactory.fortressOfDhikr)
+    ArticlesWidgetPreviewFactory.entry(
+        ArticlesWidgetPreviewFactory.placeholder(
+            language: .turkish,
+            views: 54210,
+            shares: 1400,
+            color: .systemGreen
+        )
+    )
 }
 
 @available(iOS 17, *)
 #Preview("Large • Long Excerpt", as: .systemLarge) {
     ArticlesWidget()
 } timeline: {
-    ArticlesWidgetPreviewFactory.entry(ArticlesWidgetPreviewFactory.supplicationIsRemedy)
+    ArticlesWidgetPreviewFactory.entry(
+        ArticlesWidgetPreviewFactory.placeholder(
+            language: .english,
+            views: 7340,
+            shares: 185,
+            color: .systemBlue
+        )
+    )
 }
 #endif
 
