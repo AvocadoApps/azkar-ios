@@ -45,11 +45,15 @@ struct ArticlesWidgetView: View {
 
                 HStack(alignment: .bottom) {
                     contentCard(horizontalPadding: 12, verticalPadding: 11) {
-                        titleView(
-                            article.title,
-                            font: .system(size: 15, weight: .bold, design: .serif),
-                            lineLimit: 3
-                        )
+                        VStack(alignment: .leading, spacing: 6) {
+                            titleView(
+                                article.title,
+                                font: .system(size: 15, weight: .bold, design: .serif),
+                                lineLimit: 3
+                            )
+
+                            statsRow(article: article)
+                        }
                     }
 
                     Spacer(minLength: 0)
@@ -173,26 +177,24 @@ struct ArticlesWidgetView: View {
     private func articleAccessibilityLabel(for article: Article) -> String {
         var parts = [article.title]
 
-        if family != .systemSmall {
-            if article.views > 0 {
-                parts.append(
-                    String(
-                        format: String(localized: "widget.articles.a11y.views", bundle: .main),
-                        locale: Locale.current,
-                        article.views.formatted()
-                    )
+        if article.views > 0 {
+            parts.append(
+                String(
+                    format: String(localized: "widget.articles.a11y.views", bundle: .main),
+                    locale: Locale.current,
+                    article.views.formatted()
                 )
-            }
+            )
+        }
 
-            if article.shares > 0 {
-                parts.append(
-                    String(
-                        format: String(localized: "widget.articles.a11y.shares", bundle: .main),
-                        locale: Locale.current,
-                        article.shares.formatted()
-                    )
+        if article.shares > 0 {
+            parts.append(
+                String(
+                    format: String(localized: "widget.articles.a11y.shares", bundle: .main),
+                    locale: Locale.current,
+                    article.shares.formatted()
                 )
-            }
+            )
         }
 
         if family == .systemLarge {
