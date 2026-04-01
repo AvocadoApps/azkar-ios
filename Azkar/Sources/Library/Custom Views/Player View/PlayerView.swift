@@ -39,23 +39,23 @@ struct PlayerView: View, Equatable {
     }
 
     private var buttonsView: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 0) {
             Text(viewModel.timeElapsed)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundStyle(.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
                 .accessibilityLabel(Text("accessibility.player.elapsed-time"))
                 .accessibilityValue(viewModel.timeElapsed)
-            Spacer()
             Button(action: {
                 self.viewModel.play()
             }, label: {
-                Image(systemName: "gobackward")
+                Image(systemName: "backward.end.alt")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 30, height: 20)
+                    .frame(width: 20, height: 20)
             })
+            .frame(maxWidth: .infinity)
             .accessibilityLabel(Text("accessibility.player.restart-audio"))
-            Spacer()
             Button(action: {
                 self.viewModel.togglePlayPause()
             }, label: {
@@ -64,9 +64,9 @@ struct PlayerView: View, Equatable {
                     .scaledToFit()
                     .frame(width: 30, height: 25)
             })
+            .frame(maxWidth: .infinity)
             .accessibilityLabel(playPauseLabel)
             .accessibilityValue(playPauseValue)
-            Spacer()
             Button(action: {
                 UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.6)
                 self.viewModel.toggleSpeed()
@@ -76,12 +76,12 @@ struct PlayerView: View, Equatable {
                     .frame(width: 30, height: 30)
                     .foregroundStyle(tintColor)
                     .font(Font.system(.body, design: .monospaced))
-                    .minimumScaleFactor(0.5)
             })
+            .frame(maxWidth: .infinity)
             .accessibilityLabel(Text("accessibility.player.playback-speed"))
             .accessibilityValue(viewModel.speed.label)
-            Spacer()
             Text(viewModel.timeRemaining)
+                .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundStyle(.tertiaryText)
                 .font(Font.system(.caption, design: .monospaced))
                 .accessibilityLabel(Text("accessibility.player.remaining-time"))
@@ -115,8 +115,5 @@ struct PlayerView_Previews: PreviewProvider {
             player: .test
         ))
         .previewDevice(.init(stringLiteral: "iPhone 11 Pro"))
-        .environment(\.sizeCategory, .accessibilityLarge)
-        .background(.background)
-        .environment(\.colorScheme, .dark)
     }
 }
