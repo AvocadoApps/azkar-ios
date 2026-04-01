@@ -63,10 +63,24 @@ struct AzkarApp: App {
             .onOpenURL { url in
                 handleIncomingURL(url)
             }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                handleControlCenterDeepLink()
+            }
             .onContinueUserActivity(CSSearchableItemActionType) { userActivity in
                 handleSearchActivity(userActivity)
             }
         }
+    }
+
+    private func handleControlCenterDeepLink() {
+        let defaults = UserDefaults(suiteName: "group.io.jawziyya.azkar-app")
+        guard let urlString = defaults?.string(forKey: "controlCenterDeepLink"),
+              let url = URL(string: urlString)
+        else {
+            return
+        }
+        defaults?.removeObject(forKey: "controlCenterDeepLink")
+        handleIncomingURL(url)
     }
 
     private func handleIncomingURL(_ url: URL) {
