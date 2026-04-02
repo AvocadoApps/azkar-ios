@@ -25,9 +25,7 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
         self.dependencies = dependencies
         self.deeplinker = deeplinker
         observeDeepLinks()
-        if let pendingRoute = deeplinker.takePendingRoute() {
-            handleDeepLink(pendingRoute)
-        }
+        handlePendingDeepLinkIfNeeded()
     }
 
     var selectedPagePublisher: AnyPublisher<Int, Never> {
@@ -123,8 +121,16 @@ private extension AppNavigator {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] route in
                 self?.handleDeepLink(route)
+                _ = self?.deeplinker.takePendingRoute()
             }
             .store(in: &cancellables)
+    }
+
+    func handlePendingDeepLinkIfNeeded() {
+        guard let route = deeplinker.takePendingRoute() else {
+            return
+        }
+        handleDeepLink(route)
     }
 
     func handleDeepLink(_ route: Deeplinker.Route) {
