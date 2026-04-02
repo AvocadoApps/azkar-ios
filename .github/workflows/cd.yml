@@ -119,7 +119,5 @@ jobs:
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
 
       - name: Deploy using Fastlane
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-          lane: ${{ steps.lane.outputs.lane }}
-          platform: ${{ steps.lane.outputs.platform }}
+        run: |
+          bundle exec fastlane ${{ steps.lane.outputs.platform }} ${{ steps.lane.outputs.lane }}
