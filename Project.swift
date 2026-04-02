@@ -72,7 +72,7 @@ enum AzkarTarget: String, CaseIterable {
         case .azkarApp:
             return Target.target(
                 name: rawValue,
-                destinations: .iOS,
+                destinations: .iOS.union([.macWithiPadDesign]),
                 product: .app,
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,
@@ -151,7 +151,7 @@ enum AzkarTarget: String, CaseIterable {
         case .azkarWidgets:
             return Target.target(
                 name: "AzkarWidgets",
-                destinations: .iOS,
+                destinations: .iOS.union([.macWithiPadDesign]),
                 product: .appExtension,
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,

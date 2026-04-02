@@ -72,7 +72,7 @@
 		<string>instagram-stories</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<false/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Azkar App requires write-only access to add Dhikr image to Photo Library.</string>
 	<key>UIAppFonts</key>
