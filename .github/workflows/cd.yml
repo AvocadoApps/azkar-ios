@@ -89,6 +89,7 @@ jobs:
         run: |
           gem install bundler
           bundle config set clean true
+          bundle update fastlane
           bundle install
 
       - name: Generate Xcode project

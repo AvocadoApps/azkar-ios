@@ -166,7 +166,13 @@ platform :mac do
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
     bundle_ids = "#{APP_ID},#{WIDGETS_ID}"
-    match_configuration(type: 'appstore', bundle_id: bundle_ids, force: false)
+    match(
+      type: 'appstore',
+      app_identifier: bundle_ids,
+      git_basic_authorization: Base64.strict_encode64(MATCH_GIT_AUTH),
+      api_key: get_api_key,
+      platform: 'catalyst'
+    )
   end
 
   desc 'Build and release Mac Catalyst app'
