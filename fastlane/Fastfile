@@ -171,7 +171,8 @@ platform :mac do
       app_identifier: bundle_ids,
       git_basic_authorization: Base64.strict_encode64(MATCH_GIT_AUTH),
       api_key: get_api_key,
-      platform: 'catalyst'
+      platform: 'catalyst',
+      readonly: false
     )
   end
 
