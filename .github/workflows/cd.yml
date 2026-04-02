@@ -10,6 +10,10 @@ on:
   # Allows manual deployments from the Actions tab
   workflow_dispatch:
     inputs:
+      platform:
+        description: 'Platform (ios or mac)'
+        required: false
+        default: 'ios'
       lane:
         description: 'Fastlane lane to run (e.g. closed_beta)'
         required: false
@@ -96,18 +100,26 @@ jobs:
       - name: Determine lane
         id: lane
         run: |
+          platform="${{ github.event.inputs.platform }}"
+          if [ -z "$platform" ]; then
+            platform="ios"
+          fi
           lane="${{ github.event.inputs.lane }}"
           if [ -z "$lane" ]; then
             lane="closed_beta"
           fi
           if [[ "$GITHUB_REF" == refs/tags/iOS_v* ]]; then
+            platform="ios"
             lane="release"
           elif [[ "$GITHUB_REF" == refs/tags/macOS_v* ]]; then
+            platform="mac"
             lane="app_store_release"
           fi
+          echo "platform=$platform" >> "$GITHUB_OUTPUT"
           echo "lane=$lane" >> "$GITHUB_OUTPUT"
 
       - name: Deploy using Fastlane
         uses: maierj/fastlane-action@v3.1.0
         with:
           lane: ${{ steps.lane.outputs.lane }}
+          platform: ${{ steps.lane.outputs.platform }}
