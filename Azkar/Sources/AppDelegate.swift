@@ -19,12 +19,41 @@ import FirebaseMessaging
 import Mixpanel
 import CoreSpotlight
 
+private let quickActionTypePrefix = "io.jawziyya.azkar-app.quick-action."
+
+@MainActor
+@discardableResult
+private func dispatchQuickActionItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+    let type = shortcutItem.type
+    guard type.hasPrefix(quickActionTypePrefix) else { return false }
+    let categoryRawValue = String(type.dropFirst(quickActionTypePrefix.count))
+    guard let category = ZikrCategory(rawValue: categoryRawValue) else { return false }
+    QuickActionDispatcher.shared.enqueue(.azkar(category))
+    return true
+}
+
 @MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
     let notificationsHandler = NotificationsHandler.shared
     private let spotlightIndexer = SpotlightIndexer.shared
+
+    private func buildShortcutItems() -> [UIApplicationShortcutItem] {
+        ZikrCategory.allCases.map { category in
+            UIApplicationShortcutItem(
+                type: quickActionTypePrefix + category.rawValue,
+                localizedTitle: category.title,
+                localizedSubtitle: nil,
+                icon: UIApplicationShortcutIcon(systemImageName: category.systemImageName)
+            )
+        }
+    }
+
+    @discardableResult
+    fileprivate func handleQuickActionItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+        dispatchQuickActionItem(shortcutItem)
+    }
     
     func application(
         _ application: UIApplication,
@@ -40,6 +69,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
+        application.shortcutItems = buildShortcutItems()
         initialize(launchOptions: launchOptions)
         spotlightIndexer.indexIfNeeded()
         if let launchOptions, let userInfo = launchOptions[.remoteNotification] as? [AnyHashable: Any] {
@@ -50,12 +80,33 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(
         _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let configuration = UISceneConfiguration(
+            name: nil,
+            sessionRole: connectingSceneSession.role
+        )
+        configuration.delegateClass = QuickActionSceneDelegate.self
+        return configuration
+    }
+
+    func application(
+        _ application: UIApplication,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        completionHandler(handleQuickActionItem(shortcutItem))
+    }
+
+    func application(
+        _ application: UIApplication,
         continue userActivity: NSUserActivity,
         restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
     ) -> Bool {
         return false
     }
-    
+
     func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
@@ -181,4 +232,28 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+}
+
+@MainActor
+final class QuickActionSceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        guard let shortcutItem = connectionOptions.shortcutItem else {
+            return
+        }
+        _ = dispatchQuickActionItem(shortcutItem)
+    }
+
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        let wasHandled = dispatchQuickActionItem(shortcutItem)
+        completionHandler(wasHandled)
+    }
 }

@@ -7,6 +7,7 @@ import Entities
 import AudioPlayer
 import StoreKit
 import CoreSpotlight
+import Combine
 
 @main
 struct AzkarApp: App {
@@ -17,6 +18,7 @@ struct AzkarApp: App {
     
     let preferences = Preferences.shared
     let deepLinker = Deeplinker.shared
+    let quickActionDispatcher = QuickActionDispatcher.shared
     
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
@@ -60,10 +62,14 @@ struct AzkarApp: App {
                 }
                 self.deepLinker.open(.azkar(category))
             }
+            .onReceive(quickActionDispatcher.routes) { route in
+                deepLinker.open(route)
+            }
             .onOpenURL { url in
                 handleIncomingURL(url)
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                handlePendingQuickAction()
                 handleControlCenterDeepLink()
             }
             .onContinueUserActivity(CSSearchableItemActionType) { userActivity in
@@ -81,6 +87,13 @@ struct AzkarApp: App {
         }
         defaults?.removeObject(forKey: "controlCenterDeepLink")
         handleIncomingURL(url)
+    }
+
+    private func handlePendingQuickAction() {
+        guard let route = quickActionDispatcher.takePendingRoute() else {
+            return
+        }
+        deepLinker.open(route)
     }
 
     private func handleIncomingURL(_ url: URL) {
