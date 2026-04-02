@@ -165,21 +165,22 @@ platform :mac do
 
   desc 'Synchronizes certificates / profiles and optionally creates new ones.'
   lane :sync_signing do
-    match_configuration
+    bundle_ids = "#{APP_ID},#{WIDGETS_ID}"
+    match_configuration(type: 'appstore', bundle_id: bundle_ids)
   end
 
   desc 'Build and release Mac Catalyst app'
   lane :closed_beta do
     setup_ci
     sync_signing
-    
+
     # Get changelog from git history for TestFlight
     changelog = get_changelog_from_git()
-    
+
     # Increment build number
     increment_build_number_in_plist(
       xcodeproj: project_name,
-      build_number: ENV['GITHUB_RUN_ID'] || (get_build_number_from_plist(xcodeproj: project_name, target: app_name).to_i + 1).to_s,
+      build_number: ENV['GITHUB_RUN_ID'],
       target: app_name
     )
 
@@ -210,11 +211,11 @@ platform :mac do
 
     setup_ci
     sync_signing
-    
+
     # Increment build number
     increment_build_number_in_plist(
       xcodeproj: project_name,
-      build_number: ENV['GITHUB_RUN_ID'] || (get_build_number_from_plist(xcodeproj: project_name, target: app_name).to_i + 1).to_s,
+      build_number: ENV['GITHUB_RUN_ID'],
       target: app_name
     )
 
