@@ -55,6 +55,7 @@ public struct AdBottomSheetView: View {
                             .shadow(radius: 4)
                             .padding()
                     }
+                    .accessibilityLabel(Text("common.cancel"))
                 }
                 
                 VStack(alignment: .leading, spacing: 16) {

@@ -48,6 +48,9 @@ public struct AdButton: View {
                 .glassEffectCompat(.regular.interactive(true), in: RoundedRectangle(cornerRadius: cornerRadius))
         }
         .contentShape(RoundedRectangle(cornerRadius: cornerRadius))
+        .accessibilityAction(named: Text("common.cancel")) {
+            onClose()
+        }
     }
 
     var label: some View {
@@ -131,6 +134,7 @@ public struct AdButton: View {
             .foregroundStyle(effectiveforegroundStyle)
             .padding(presentationType.scale * 5)
             .contentShape(Rectangle())
+            .accessibilityHidden(true)
             .highPriorityGesture(
                 TapGesture()
                     .onEnded(onClose)
