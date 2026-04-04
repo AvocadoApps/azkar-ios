@@ -5,23 +5,21 @@ import ArticleReader
 import Entities
 import AzkarServices
 import PDFKit
+import FactoryKit
 
 final class ArticleShareActionHandler {
 
-    private let preferences: Preferences
-    private let articlesService: ArticlesServiceType
+    @Injected(\.appDependencies) private var dependencies: AppDependencies
     private let mailPresenter = FeedbackMailPresenter()
-
-    init(preferences: Preferences, articlesService: ArticlesServiceType) {
-        self.preferences = preferences
-        self.articlesService = articlesService
-    }
 
     func share(_ article: Article) {
         assert(Thread.isMainThread)
         guard let rootViewController = topViewController() else {
             return
         }
+
+        let preferences = dependencies.preferences
+        let articlesService = dependencies.articlesService
 
         let composer = ArticlePDFComposer(
             article: article,

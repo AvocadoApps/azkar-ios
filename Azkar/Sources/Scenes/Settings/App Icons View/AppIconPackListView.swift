@@ -1,25 +1,20 @@
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 
 final class AppIconPackListViewModel: ObservableObject {
 
-    var preferences: Preferences
-    let subscriptionManager: SubscriptionManagerType
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     let subscribeScreenTrigger: Action
-    @Published var icon: AppIcon
+    @Published var icon: AppIcon = .gold
     
     let iconPacks: [AppIconPack] = AppIconPack.allCases
 
     private var cancellabels = Set<AnyCancellable>()
 
-    init(
-        preferences: Preferences,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
-        subscribeScreenTrigger: @escaping Action
-    ) {
-        self.preferences = preferences
-        self.subscriptionManager = subscriptionManager
+    init(subscribeScreenTrigger: @escaping Action) {
         self.subscribeScreenTrigger = subscribeScreenTrigger
         icon = preferences.appIcon
     }
@@ -155,7 +150,6 @@ struct AppIconPackListView_Previews: PreviewProvider {
     static var previews: some View {
         AppIconPackListView(
             viewModel: AppIconPackListViewModel(
-                preferences: Preferences.shared,
                 subscribeScreenTrigger: {}
             )
         )

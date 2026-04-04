@@ -2,21 +2,18 @@ import SwiftUI
 import UIKit
 import Library
 import Entities
+import FactoryKit
 
 final class ZikrShareActionHandler {
 
-    private let preferences: Preferences
-    private let player: Player
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.player) private var player: Player
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     private let mailPresenter = FeedbackMailPresenter()
 
-    init(preferences: Preferences, player: Player) {
-        self.preferences = preferences
-        self.player = player
-    }
-
     func handle(_ options: ZikrShareOptionsView.ShareOptions, for zikr: Zikr) {
-        if options.containsProItem, SubscriptionManager.shared.isProUser() == false {
-            SubscriptionManager.shared.presentPaywall(
+        if options.containsProItem, subscriptionManager.isProUser() == false {
+            subscriptionManager.presentPaywall(
                 presentationType: .screen(ZikrShareOptionsView.viewName),
                 completion: nil
             )

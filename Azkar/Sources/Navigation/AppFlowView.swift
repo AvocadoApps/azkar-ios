@@ -1,55 +1,23 @@
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 import Entities
 import ArticleReader
 import ZikrCollectionsOnboarding
 
+@MainActor
 struct AppFlowView: View {
 
-    @ObservedObject private var preferences: Preferences
-    private let dependencies: AppDependencies
-    private let articleShareActionHandler: ArticleShareActionHandler
-    private let zikrShareActionHandler: ZikrShareActionHandler
+    @InjectedObject(\.preferences) private var preferences: Preferences
+    @Injected(\.appDependencies) private var dependencies: AppDependencies
+    @Injected(\.articleShareActionHandler) private var articleShareActionHandler: ArticleShareActionHandler
+    @Injected(\.zikrShareActionHandler) private var zikrShareActionHandler: ZikrShareActionHandler
 
-    @StateObject private var navigator: AppNavigator
-    @StateObject private var rootViewModel: RootViewModel
+    @InjectedObject(\.appNavigator) private var navigator: AppNavigator
+    @InjectedObject(\.rootViewModel) private var rootViewModel: RootViewModel
 
-    init(
-        preferences: Preferences,
-        deeplinker: Deeplinker,
-        player: Player
-    ) {
-        _preferences = ObservedObject(wrappedValue: preferences)
-        let dependencies = AppDependencies(preferences: preferences, player: player)
-        let navigator = AppNavigator(
-            dependencies: dependencies,
-            deeplinker: deeplinker
-        )
-        let rootViewModel = RootViewModel(
-            mainMenuViewModel: MainMenuViewModel(
-                databaseService: dependencies.databaseService,
-                preferencesDatabase: dependencies.preferencesDatabase,
-                navigator: navigator,
-                preferences: dependencies.preferences,
-                player: dependencies.player,
-                articlesService: dependencies.articlesService,
-                adsService: dependencies.adsService
-            )
-        )
-        self.dependencies = dependencies
-        articleShareActionHandler = ArticleShareActionHandler(
-            preferences: preferences,
-            articlesService: dependencies.articlesService
-        )
-        zikrShareActionHandler = ZikrShareActionHandler(
-            preferences: preferences,
-            player: player
-        )
-        _navigator = StateObject(
-            wrappedValue: navigator
-        )
-        _rootViewModel = StateObject(wrappedValue: rootViewModel)
+    init() {
     }
 
     var body: some View {
@@ -139,7 +107,6 @@ struct AppFlowView: View {
 
         case .settings(let context):
             SettingsFlowView(
-                preferences: dependencies.preferences,
                 initialDestination: context.initialDestination,
                 embedInNavigation: false
             )
@@ -151,7 +118,6 @@ struct AppFlowView: View {
         switch sheet.destination {
         case .settings(let context):
             SettingsFlowView(
-                preferences: dependencies.preferences,
                 initialDestination: context.initialDestination,
                 embedInNavigation: true
             )

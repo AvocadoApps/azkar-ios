@@ -31,6 +31,7 @@ let package = Package(
         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.10.2"),
         
         // MARK: Utilities.
+        .package(url: "https://github.com/hmlongco/Factory", from: "2.5.3"),
         .package(url: "https://github.com/vadymmarkov/Fakery", from: "5.1.0"),
         .package(url: "https://github.com/bizz84/SwiftyStoreKit", from: "0.16.3"),
         .package(url: "https://github.com/kean/Nuke", from: "12.8.0"),

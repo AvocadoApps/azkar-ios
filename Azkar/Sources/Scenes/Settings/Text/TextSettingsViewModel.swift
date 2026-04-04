@@ -46,7 +46,6 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
         return FontsViewModel(
             sampleText: sampleText,
             fontsType: fontsType,
-            service: FontsService(),
             subscribeScreenTrigger: { [unowned self] in
                 self.navigator.presentSubscription(sourceScreen: FontsView.viewName)
             }

@@ -6,11 +6,8 @@ import Library
 class SettingsSectionViewModel: PreferencesDependantViewModel {
     let navigator: any SettingsNavigationRouting
 
-    init(
-        preferences: Preferences = .shared,
-        navigator: any SettingsNavigationRouting
-    ) {
+    init(navigator: any SettingsNavigationRouting) {
         self.navigator = navigator
-        super.init(preferences: preferences)
+        super.init()
     }
 }

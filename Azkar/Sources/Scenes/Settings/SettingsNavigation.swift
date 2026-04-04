@@ -1,4 +1,5 @@
 import Foundation
+import FactoryKit
 import Entities
 import Library
 
@@ -46,16 +47,10 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
     @Published var stack: [SettingsDestination] = []
     @Published var sheet: SettingsSheet?
 
-    private let preferences: Preferences
-    private let subscriptionManager: SubscriptionManagerType
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
 
-    init(
-        preferences: Preferences = .shared,
-        initialDestination: SettingsDestination? = nil,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create()
-    ) {
-        self.preferences = preferences
-        self.subscriptionManager = subscriptionManager
+    init(initialDestination: SettingsDestination? = nil) {
         if let initialDestination {
             stack = [initialDestination]
         }

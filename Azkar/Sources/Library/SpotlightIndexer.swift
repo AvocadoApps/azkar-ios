@@ -1,6 +1,7 @@
 import UIKit
 import CoreSpotlight
 import UniformTypeIdentifiers
+import FactoryKit
 import Entities
 import DatabaseInteractors
 
@@ -8,6 +9,7 @@ final class SpotlightIndexer {
 
     static let shared = SpotlightIndexer()
 
+    @Injected(\.preferences) private var preferences: Preferences
     private let defaults = UserDefaults.standard
     let searchableIndex = CSSearchableIndex(name: "AzkarMainIndex")
     let domainIdentifier = "io.jawziyya.azkar-app.spotlight"
@@ -25,7 +27,6 @@ final class SpotlightIndexer {
             return
         }
 
-        let preferences = Preferences.shared
         let selectedLanguage = preferences.contentLanguage
         let selectedLanguageDatabase = AzkarDatabase(language: selectedLanguage)
         let language: Language = selectedLanguageDatabase.translationExists(for: selectedLanguage)

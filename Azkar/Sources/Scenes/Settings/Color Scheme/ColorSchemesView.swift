@@ -2,23 +2,18 @@
 
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 
 final class ColorSchemesViewModel: ObservableObject {
-    
-    var preferences: Preferences
-    
+
+    @Injected(\.preferences) var preferences: Preferences
+    @Injected(\.subscriptionManager) var subscriptionManager: SubscriptionManagerType
+
     private var cancellables = Set<AnyCancellable>()
-    let subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: Action
     
-    init(
-        preferences: Preferences,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
-        subscribeScreenTrigger: @escaping Action
-    ) {
-        self.preferences = preferences
-        self.subscriptionManager = subscriptionManager
+    init(subscribeScreenTrigger: @escaping Action) {
         self.subscribeScreenTrigger = subscribeScreenTrigger
         preferences
             .storageChangesPublisher()
@@ -53,10 +48,7 @@ final class ColorSchemesViewModel: ObservableObject {
     }
     
     static var placeholder: ColorSchemesViewModel {
-        ColorSchemesViewModel(
-            preferences: Preferences.shared,
-            subscribeScreenTrigger: {}
-        )
+        ColorSchemesViewModel(subscribeScreenTrigger: {})
     }
     
     func isThemeProtected(_ theme: AppTheme) -> Bool {

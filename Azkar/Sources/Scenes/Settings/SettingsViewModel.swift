@@ -11,16 +11,16 @@ import Combine
 import UIKit
 import UserNotifications
 import Entities
+import FactoryKit
 import Library
 
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    
-    private let notificationsHandler: NotificationsHandler
-    
-    private let formatter: DateFormatter
 
-    var preferences: Preferences
+    @Injected(\.notificationsHandler) private var notificationsHandler: NotificationsHandler
+    @Injected(\.preferences) var preferences: Preferences
+
+    private let formatter: DateFormatter
     
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
@@ -29,13 +29,7 @@ final class SettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let navigator: any SettingsNavigationRouting
 
-    init(
-        preferences: Preferences,
-        notificationsHandler: NotificationsHandler = .shared,
-        navigator: any SettingsNavigationRouting
-    ) {
-        self.preferences = preferences
-        self.notificationsHandler = notificationsHandler
+    init(navigator: any SettingsNavigationRouting) {
         self.navigator = navigator
 
         let formatter = DateFormatter()

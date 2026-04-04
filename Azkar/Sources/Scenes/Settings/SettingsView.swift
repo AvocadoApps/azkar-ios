@@ -165,7 +165,6 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView(
                 viewModel: SettingsViewModel(
-                    preferences: Preferences.shared,
                     navigator: EmptySettingsNavigator()
                 )
             )

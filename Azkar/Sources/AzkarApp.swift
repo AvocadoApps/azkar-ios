@@ -2,36 +2,34 @@
 // All Rights Reserved.
 
 import SwiftUI
+import FactoryKit
 import Library
 import Entities
-import AudioPlayer
 import StoreKit
 import CoreSpotlight
 import Combine
 
+@MainActor
 @main
 struct AzkarApp: App {
 
     private static var hasHandledLaunchPaywall = false
-    
+
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
-    
-    let preferences = Preferences.shared
-    let deepLinker = Deeplinker.shared
-    let quickActionDispatcher = QuickActionDispatcher.shared
-    
+
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.deeplinker) private var deepLinker: Deeplinker
+    @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
         applyWindowBackground(colorTheme: preferences.colorTheme)
     }
-        
+
     var body: some Scene {
         WindowGroup {
-            AppFlowView(
-                preferences: Preferences.shared,
-                deeplinker: deepLinker,
-                player: Player(player: AudioPlayer())
-            )
+            AppFlowView()
             .task { await presentPaywall() }
             .connectAppTheme()
             .connectCustomFonts()
@@ -237,10 +235,10 @@ struct AzkarApp: App {
             return
         }
 
-        guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
+        guard subscriptionManager.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
             return
         }
-        SubscriptionManager.shared.presentPaywall(
+        subscriptionManager.presentPaywall(
             presentationType: .appLaunch,
             completion: {
                 requestAppReview()

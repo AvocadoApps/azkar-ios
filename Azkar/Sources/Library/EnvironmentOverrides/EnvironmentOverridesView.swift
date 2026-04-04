@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 import Extensions
+import FactoryKit
 import Library
 
 extension ContentSizeCategory: @retroactive Comparable {}
@@ -22,19 +23,18 @@ extension EnvironmentValues {
 }
 
 extension View {
-    func attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel = .init(preferences: Preferences.shared), onChange: ((EnvironmentValues.Diff) -> Void)? = nil) -> some View {
+    func attachEnvironmentOverrides(viewModel: EnvironmentOverridesViewModel = .init(), onChange: ((EnvironmentValues.Diff) -> Void)? = nil) -> some View {
         modifier(EnvironmentOverridesModifier(viewModel: viewModel, onChange: onChange))
     }
 }
 
 final class EnvironmentOverridesViewModel: ObservableObject {
-    @Published var preferences: Preferences
+    @Injected(\.preferences) var preferences: Preferences
     var objectWillChange = PassthroughSubject<Void, Never>()
 
     private var cancellabels = Set<AnyCancellable>()
 
-    init(preferences: Preferences) {
-        self.preferences = preferences
+    init() {
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)

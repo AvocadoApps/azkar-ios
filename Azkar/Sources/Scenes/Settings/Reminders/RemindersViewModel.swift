@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 
 @MainActor
@@ -7,7 +8,7 @@ final class RemindersViewModel: ObservableObject {
     
     // MARK: - Common properties
     let navigator: any SettingsNavigationRouting
-    var preferences: Preferences
+    @Injected(\.preferences) var preferences: Preferences
     lazy var notificationsDisabledViewModel: NotificationsDisabledViewModel = .init(observationType: .soundAccess, didChangeCallback: objectWillChange.send)
     private var cancellables = Set<AnyCancellable>()
     
@@ -19,12 +20,7 @@ final class RemindersViewModel: ObservableObject {
     
     // MARK: - Initialization
     
-    init(
-        preferences: Preferences = .shared,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
-        navigator: any SettingsNavigationRouting
-    ) {
-        self.preferences = preferences
+    init(navigator: any SettingsNavigationRouting) {
         self.navigator = navigator
         
         // Adhkar reminders initialization

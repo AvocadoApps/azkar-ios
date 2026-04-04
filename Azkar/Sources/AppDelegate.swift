@@ -10,6 +10,7 @@ import UIKit
 import AudioPlayer
 import UserNotifications
 import SwiftUI
+import FactoryKit
 import RevenueCat
 import Entities
 import Library
@@ -28,7 +29,7 @@ private func dispatchQuickActionItem(_ shortcutItem: UIApplicationShortcutItem) 
     guard type.hasPrefix(quickActionTypePrefix) else { return false }
     let categoryRawValue = String(type.dropFirst(quickActionTypePrefix.count))
     guard let category = ZikrCategory(rawValue: categoryRawValue) else { return false }
-    QuickActionDispatcher.shared.enqueue(.azkar(category))
+    Container.shared.quickActionDispatcher().enqueue(.azkar(category))
     return true
 }
 
@@ -36,7 +37,7 @@ private func dispatchQuickActionItem(_ shortcutItem: UIApplicationShortcutItem) 
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
-    let notificationsHandler = NotificationsHandler.shared
+    @Injected(\.notificationsHandler) var notificationsHandler: NotificationsHandler
     private let spotlightIndexer = SpotlightIndexer.shared
 
     private func buildShortcutItems() -> [UIApplicationShortcutItem] {
@@ -123,7 +124,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             .getNotificationsAuthorizationStatus(completion: { status in
                 switch status {
                 case .notDetermined:
-                    NotificationsHandler.shared.requestNotificationsPermission { _ in }
+                    self.notificationsHandler.requestNotificationsPermission { _ in }
                 default:
                     break
                 }
@@ -216,7 +217,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func ensureValidTransliterationPreference() {
-        let preferences = Preferences.shared
+        let preferences = Container.shared.preferences()
         let availableTypes: [ZikrTransliterationType]
         switch preferences.contentLanguage {
         case .arabic, .english, .georgian, .turkish:

@@ -125,7 +125,7 @@ extension ZikrShareOptionsView {
                 zikr: zikr,
                 isNested: true,
                 hadith: nil,
-                preferences: Preferences.shared,
+                preferences: preferences,
                 player: .test
             ),
             includeTitle: includeTitle,

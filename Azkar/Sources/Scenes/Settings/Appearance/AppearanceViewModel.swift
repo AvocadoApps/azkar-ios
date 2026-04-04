@@ -23,7 +23,6 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     
     var appIconPackListViewModel: AppIconPackListViewModel {
         AppIconPackListViewModel(
-            preferences: preferences,
             subscribeScreenTrigger: { [unowned navigator] in
                 navigator.presentSubscription(sourceScreen: AppIconPackListView.viewName)
             }
@@ -31,7 +30,7 @@ final class AppearanceViewModel: SettingsSectionViewModel {
     }
     
     var colorSchemeViewModel: ColorSchemesViewModel {
-        ColorSchemesViewModel(preferences: preferences) { [unowned navigator] in
+        ColorSchemesViewModel { [unowned navigator] in
             navigator.presentSubscription(sourceScreen: ColorSchemesView.viewName)
         }
     }
