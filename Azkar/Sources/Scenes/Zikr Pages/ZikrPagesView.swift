@@ -40,8 +40,7 @@ struct ZikrPagesView: View, Equatable {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigation) {
-                let page = viewModel.pages[viewModel.page]
-                if page != .readingCompletion {
+                if let page = viewModel.pages[safe: viewModel.page], page != .readingCompletion {
                     HStack {
                         Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
                             .accessibilityLabel(Text("common.share"))
