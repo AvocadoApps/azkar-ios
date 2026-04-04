@@ -101,8 +101,9 @@ extension AudioPlayer {
 
         case .routeChanged:
             //In some route changes, the player pause automatically
-            //TODO: there should be a check if state == playing
-            if let currentItemTimebase = player?.currentItem?.timebase, CMTimebaseGetRate(currentItemTimebase) == 0 {
+            if state.isPlaying,
+                let currentItemTimebase = player?.currentItem?.timebase,
+                CMTimebaseGetRate(currentItemTimebase) == 0 {
                 state = .paused
             }
 
