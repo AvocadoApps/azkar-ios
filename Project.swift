@@ -77,7 +77,7 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
-                sources: "Azkar/Sources/**",
+                sources: ["Azkar/Sources/**", "Shared/Sources/**"],
                 resources: [
                     "Azkar/Resources/**",
                     "Azkar/*.lproj/InfoPlist.strings",
@@ -156,7 +156,7 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: "AzkarWidgets/Sources/**",
+                sources: ["AzkarWidgets/Sources/**", "Shared/Sources/**"],
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",
