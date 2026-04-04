@@ -83,13 +83,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         configurationForConnecting connectingSceneSession: UISceneSession,
         options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
-        if let shortcutItem = options.shortcutItem {
-            dispatchQuickActionItem(shortcutItem)
-        }
-        return UISceneConfiguration(
+        let configuration = UISceneConfiguration(
             name: nil,
             sessionRole: connectingSceneSession.role
         )
+        configuration.delegateClass = QuickActionSceneDelegate.self
+        return configuration
     }
 
     func application(
@@ -235,3 +234,26 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
 }
 
+@MainActor
+final class QuickActionSceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        guard let shortcutItem = connectionOptions.shortcutItem else {
+            return
+        }
+        _ = dispatchQuickActionItem(shortcutItem)
+    }
+
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        let wasHandled = dispatchQuickActionItem(shortcutItem)
+        completionHandler(wasHandled)
+    }
+}
