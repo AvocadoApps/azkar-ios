@@ -110,6 +110,7 @@ struct MainMenuView: View {
                 Button(action: viewModel.navigateToSettings) {
                     Image(systemName: "gear")
                 }
+                .accessibilityLabel(Text("settings.title"))
             }
         }
         .background(
