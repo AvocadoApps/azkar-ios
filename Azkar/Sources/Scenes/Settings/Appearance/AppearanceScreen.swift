@@ -15,7 +15,7 @@ struct AppearanceScreen: View {
             }
             .applyContainerStyle()
         }
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.appearance.title")
         .onAppear {

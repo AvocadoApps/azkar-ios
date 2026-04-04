@@ -25,7 +25,7 @@ struct TextSettingsScreen: View {
             }
         }
         .applyThemedToggleStyle()
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.text.title")
         .onAppear {

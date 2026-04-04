@@ -104,7 +104,7 @@ struct MainMenuView: View {
                 }
             }
         }
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: viewModel.navigateToSettings) {

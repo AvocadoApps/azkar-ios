@@ -76,7 +76,7 @@ struct AppIconPackListView: View {
                 Color.clear.frame(height: 20)
             }
         }
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
     }
 

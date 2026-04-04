@@ -31,7 +31,7 @@ struct ReminderSoundPickerView: View {
             }
         }
         .environment(\.horizontalSizeClass, .regular)
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.reminders.sounds.sound")
         .onAppear {

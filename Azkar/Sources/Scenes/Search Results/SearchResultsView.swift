@@ -10,7 +10,7 @@ struct SearchResultsView: View {
 
     var body: some View {
         content
-            .customScrollContentBackground()
+            .scrollContentBackground(.hidden)
             .background(.background, ignoreSafeArea: .all)
             .onAppear {
                 AnalyticsReporter.reportScreen("AzkarSearch", className: viewName)

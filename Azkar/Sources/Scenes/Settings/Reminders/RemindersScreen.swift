@@ -15,7 +15,7 @@ struct RemindersScreen: View {
         }
         .foregroundStyle(.text)
         .applyThemedToggleStyle()
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.reminders.title")
         .onAppear {

@@ -43,7 +43,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.title")
         .onAppear {

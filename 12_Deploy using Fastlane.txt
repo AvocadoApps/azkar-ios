@@ -1,0 +1,605 @@
+﻿2026-04-02T11:07:55.7117240Z ##[group]Run bundle exec fastlane mac closed_beta
+2026-04-02T11:07:55.7117720Z [36;1mbundle exec fastlane mac closed_beta[0m
+2026-04-02T11:07:55.7185140Z shell: /bin/bash -e {0}
+2026-04-02T11:07:55.7185880Z env:
+2026-04-02T11:07:55.7186650Z   APPLE_ID: ***
+2026-04-02T11:07:55.7187370Z   APP_ID: ***
+2026-04-02T11:07:55.7188360Z   WIDGETS_ID: ***
+2026-04-02T11:07:55.7189030Z   APP_APPLE_ID: ***
+2026-04-02T11:07:55.7191900Z   AUTH_KEY_CONTENT: ***
+2026-04-02T11:07:55.7192570Z   AUTH_KEY_ID: ***
+2026-04-02T11:07:55.7193340Z   AUTH_KEY_ISSUER_ID: ***
+2026-04-02T11:07:55.7194870Z   MATCH_GIT_AUTH: ***
+2026-04-02T11:07:55.7195750Z   MATCH_GIT_URL: ***
+2026-04-02T11:07:55.7196540Z   ITC_TEAM_ID: ***
+2026-04-02T11:07:55.7197180Z   TEAM_ID: ***
+2026-04-02T11:07:55.7197810Z   TEMP_KEYCHAIN_USER: ***
+2026-04-02T11:07:55.7198520Z   TEMP_KEYCHAIN_PASSWORD: ***
+2026-04-02T11:07:55.7199220Z   MATCH_PASSWORD: ***
+2026-04-02T11:07:55.7200170Z   PROVISIONING_PROFILE_SPECIFIER: ***
+2026-04-02T11:07:55.7201180Z   AZKAR_SUPABASE_API_URL: ***
+2026-04-02T11:07:55.7204160Z   AZKAR_SUPABASE_API_KEY: ***
+2026-04-02T11:07:55.7204990Z   REVENUE_CAT_API_KEY: ***
+2026-04-02T11:07:55.7205890Z   SUPERWALL_API_KEY: ***
+2026-04-02T11:07:55.7206660Z   MIXPANEL_TOKEN: ***
+2026-04-02T11:07:55.7207310Z   MISE_LOG_LEVEL: info
+2026-04-02T11:07:55.7208130Z   GITHUB_TOKEN: ***
+2026-04-02T11:07:55.7209000Z   MISE_TRUSTED_CONFIG_PATHS: /Users/runner/work/azkar-ios/azkar-ios
+2026-04-02T11:07:55.7209940Z   MISE_YES: 1
+2026-04-02T11:07:55.7210850Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_26.3.app
+2026-04-02T11:07:55.7215590Z   PATH: /Users/runner/.local/share/mise/shims:/Users/runner/.local/share/mise/bin:/Users/runner/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/runner/.cargo/bin:/usr/local/opt/curl/bin:/usr/local/bin:/usr/local/sbin:/Users/runner/bin:/Users/runner/.yarn/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/Library/Frameworks/Python.framework/Versions/Current/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/bin:/bin:/usr/sbin:/sbin:/Users/runner/.dotnet/tools
+2026-04-02T11:07:55.7220180Z ##[endgroup]
+2026-04-02T11:07:57.7598900Z +-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:07:57.7604900Z |                                                                                                                                                                                                         [32mUsed plugins[0m                                                                                                                                                                                                          |
+2026-04-02T11:07:57.7611030Z +----------------------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:07:57.7617240Z | Plugin                     | Version | Action                                                                                                                                                                                                                                                                                                                                                                                 |
+2026-04-02T11:07:57.7623050Z +----------------------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:07:57.7631550Z | fastlane-plugin-versioning | 0.5.2   | ci_build_number, get_app_store_version_number, get_build_number_from_plist, get_build_number_from_xcodeproj, get_info_plist_path, get_version_number_from_git_branch, get_version_number_from_plist, get_version_number_from_xcodeproj, increment_build_number_in_plist, increment_build_number_in_xcodeproj, increment_version_number_in_plist, increment_version_number_in_xcodeproj |
+2026-04-02T11:07:57.7634000Z +----------------------------+---------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:07:57.7634970Z 
+2026-04-02T11:07:57.9120050Z [11:07:57]: Sending anonymous analytics information
+2026-04-02T11:07:57.9121370Z [11:07:57]: Learn more at https://docs.fastlane.tools/#metrics
+2026-04-02T11:07:57.9122460Z [11:07:57]: No personal or sensitive data is sent.
+2026-04-02T11:07:57.9123610Z [11:07:57]: You can disable this by adding `opt_out_usage` at the top of your Fastfile
+2026-04-02T11:07:57.9250610Z [11:07:57]: [32m------------------------------[0m
+2026-04-02T11:07:57.9252450Z [11:07:57]: [32m--- Step: default_platform ---[0m
+2026-04-02T11:07:57.9253030Z [11:07:57]: [32m------------------------------[0m
+2026-04-02T11:07:57.9253770Z [11:07:57]: [32mDriving the lane 'mac closed_beta' 🚀[0m
+2026-04-02T11:07:57.9255340Z [11:07:57]: [32m----------------------[0m
+2026-04-02T11:07:57.9255940Z [11:07:57]: [32m--- Step: setup_ci ---[0m
+2026-04-02T11:07:57.9256420Z [11:07:57]: [32m----------------------[0m
+2026-04-02T11:07:57.9256820Z [11:07:57]: Creating temporary keychain: "fastlane_tmp_keychain".
+2026-04-02T11:07:58.0676500Z [11:07:58]: [36m$ security list-keychains -d user[0m
+2026-04-02T11:07:58.0885070Z [11:07:58]: ▸ [35m"/Users/runner/Library/Keychains/fastlane_tmp_keychain-db"[0m
+2026-04-02T11:07:58.0899250Z [11:07:58]: [33mFound keychain '/Users/runner/Library/Keychains/fastlane_tmp_keychain-db' in list-keychains, adding to search list skipped[0m
+2026-04-02T11:07:58.0899970Z [11:07:58]: Enabling match readonly mode.
+2026-04-02T11:07:58.0900760Z [11:07:58]: [32m---------------------------------------------[0m
+2026-04-02T11:07:58.0901250Z [11:07:58]: [32m--- Step: Switch to mac sync_signing lane ---[0m
+2026-04-02T11:07:58.0901730Z [11:07:58]: [32m---------------------------------------------[0m
+2026-04-02T11:07:58.0902170Z [11:07:58]: Cruising over to lane 'mac sync_signing' 🚖
+2026-04-02T11:07:58.0902620Z [11:07:58]: [32m---------------------------------------[0m
+2026-04-02T11:07:58.0903090Z [11:07:58]: [32m--- Step: app_store_connect_api_key ---[0m
+2026-04-02T11:07:58.0903580Z [11:07:58]: [32m---------------------------------------[0m
+2026-04-02T11:07:58.2522140Z [11:07:58]: [32m-------------------[0m
+2026-04-02T11:07:58.2523020Z [11:07:58]: [32m--- Step: match ---[0m
+2026-04-02T11:07:58.2523560Z [11:07:58]: [32m-------------------[0m
+2026-04-02T11:07:58.2525930Z 
+2026-04-02T11:07:58.2542830Z +-----------------------------------------------------------------------------------------------------+
+2026-04-02T11:07:58.2544010Z |                                      [32mSummary for match 2.232.2[0m                                      |
+2026-04-02T11:07:58.2544720Z +----------------------------------------+------------------------------------------------------------+
+2026-04-02T11:07:58.2545400Z | type                                   | appstore                                                   |
+2026-04-02T11:07:58.2546650Z | app_identifier                         | ["***", "***"] |
+2026-04-02T11:07:58.2547160Z | git_basic_authorization                | ********                                                   |
+2026-04-02T11:07:58.2547660Z | api_key                                | ********                                                   |
+2026-04-02T11:07:58.2548160Z | platform                               | catalyst                                                   |
+2026-04-02T11:07:58.2548670Z | readonly                               | false                                                      |
+2026-04-02T11:07:58.2549230Z | generate_apple_certs                   | true                                                       |
+2026-04-02T11:07:58.2549790Z | skip_provisioning_profiles             | false                                                      |
+2026-04-02T11:07:58.2550450Z | username                               | ***                                        |
+2026-04-02T11:07:58.2550970Z | team_id                                | ***                                                 |
+2026-04-02T11:07:58.2551480Z | storage_mode                           | git                                                        |
+2026-04-02T11:07:58.2552040Z | git_url                                | ***                |
+2026-04-02T11:07:58.2552490Z | git_branch                             | master                                                     |
+2026-04-02T11:07:58.2553020Z | shallow_clone                          | false                                                      |
+2026-04-02T11:07:58.2553650Z | clone_branch_directly                  | false                                                      |
+2026-04-02T11:07:58.2554240Z | skip_google_cloud_account_confirmation | false                                                      |
+2026-04-02T11:07:58.2554830Z | s3_skip_encryption                     | false                                                      |
+2026-04-02T11:07:58.2555370Z | gitlab_host                            | https://gitlab.com                                         |
+2026-04-02T11:07:58.2555910Z | keychain_name                          | fastlane_tmp_keychain                                      |
+2026-04-02T11:07:58.2556440Z | force                                  | false                                                      |
+2026-04-02T11:07:58.2556990Z | force_for_new_devices                  | false                                                      |
+2026-04-02T11:07:58.2557570Z | include_mac_in_profiles                | false                                                      |
+2026-04-02T11:07:58.2558330Z | include_all_certificates               | false                                                      |
+2026-04-02T11:07:58.2558880Z | force_for_new_certificates             | false                                                      |
+2026-04-02T11:07:58.2559440Z | skip_confirmation                      | false                                                      |
+2026-04-02T11:07:58.2559990Z | safe_remove_certs                      | false                                                      |
+2026-04-02T11:07:58.2560510Z | skip_docs                              | false                                                      |
+2026-04-02T11:07:58.2561050Z | derive_catalyst_app_identifier         | false                                                      |
+2026-04-02T11:07:58.2561610Z | fail_on_name_taken                     | false                                                      |
+2026-04-02T11:07:58.2562160Z | skip_certificate_matching              | false                                                      |
+2026-04-02T11:07:58.2563020Z | skip_set_partition_list                | false                                                      |
+2026-04-02T11:07:58.2563690Z | force_legacy_encryption                | false                                                      |
+2026-04-02T11:07:58.2564230Z | verbose                                | false                                                      |
+2026-04-02T11:07:58.2564980Z +----------------------------------------+------------------------------------------------------------+
+2026-04-02T11:07:58.2565310Z 
+2026-04-02T11:07:58.2565460Z [11:07:58]: Cloning remote git repo...
+2026-04-02T11:07:58.2565940Z [11:07:58]: If cloning the repo takes too long, you can use the `clone_branch_directly` option in match.
+2026-04-02T11:07:59.3797650Z [11:07:59]: Checking out branch master...
+2026-04-02T11:07:59.4295380Z [11:07:59]: [32m🔓  Successfully decrypted certificates repo[0m
+2026-04-02T11:07:59.4297130Z [11:07:59]: Verifying that the certificate and profile are still valid on the Dev Portal...
+2026-04-02T11:07:59.4297790Z [11:07:59]: Creating authorization token for App Store Connect API
+2026-04-02T11:07:59.8804530Z [11:07:59]: Installing certificate...
+2026-04-02T11:08:01.7544560Z [11:08:01]: [31mThere are no local code signing identities found.
+2026-04-02T11:08:01.7548790Z You can run `security find-identity -v -p codesigning /Users/runner/Library/Keychains/fastlane_tmp_keychain-db` to get this output.
+2026-04-02T11:08:01.7550410Z This Stack Overflow thread has more information: https://stackoverflow.com/q/35390072/774.
+2026-04-02T11:08:01.7551720Z (Check in Keychain Access for an expired WWDR certificate: https://stackoverflow.com/a/35409835/774 has more info.)[0m
+2026-04-02T11:08:01.8582980Z [11:08:01]: Setting key partition list... (this can take a minute if there are a lot of keys installed)
+2026-04-02T11:08:01.8839320Z [11:08:01]: [31msecurity: SecItemCopyMatching: The specified item could not be found in the keychain.[0m
+2026-04-02T11:08:01.9798300Z [11:08:01]: Setting key partition list... (this can take a minute if there are a lot of keys installed)
+2026-04-02T11:08:02.0059740Z 
+2026-04-02T11:08:02.0066010Z +-----------------------------------------------------------------------+
+2026-04-02T11:08:02.0163210Z |                         [32mInstalled Certificate[0m                         |
+2026-04-02T11:08:02.0176910Z +-------------------+---------------------------------------------------+
+2026-04-02T11:08:02.0180660Z | User ID           | ***                                        |
+2026-04-02T11:08:02.0181630Z | Common Name       | Apple Distribution: Abdurahim Jauzee (***) |
+2026-04-02T11:08:02.0182240Z | Organisation Unit | ***                                        |
+2026-04-02T11:08:02.0182800Z | Organisation      | Abdurahim Jauzee                                  |
+2026-04-02T11:08:02.0183370Z | Country           | US                                                |
+2026-04-02T11:08:02.0183930Z | Start Datetime    | 2026-03-23 19:04:31 UTC                           |
+2026-04-02T11:08:02.0184780Z | End Datetime      | 2027-03-23 19:04:30 UTC                           |
+2026-04-02T11:08:02.0185270Z +-------------------+---------------------------------------------------+
+2026-04-02T11:08:02.0185550Z 
+2026-04-02T11:08:03.0828190Z [11:08:03]: [34m[1mUsing deprecated option: '--template_name' (Removed since May 2025 on App Store Connect API OpenAPI v3.8.0 - Learn more: https://docs.fastlane.tools/actions/match/#managed-capabilities)[0m
+2026-04-02T11:08:03.0834000Z 
+2026-04-02T11:08:03.0851150Z +-------------------------------------------------------------------------------------+
+2026-04-02T11:08:03.0853020Z |                              [32mSummary for sigh 2.232.2[0m                               |
+2026-04-02T11:08:03.0854540Z +-------------------------------------+-----------------------------------------------+
+2026-04-02T11:08:03.0856190Z | app_identifier                      | ***                         |
+2026-04-02T11:08:03.0857710Z | username                            | ***                           |
+2026-04-02T11:08:03.0859180Z | force                               | false                                         |
+2026-04-02T11:08:03.0860570Z | cert_id                             | 264DV996N8                                    |
+2026-04-02T11:08:03.0863450Z | provisioning_name                   | *** catalyst |
+2026-04-02T11:08:03.0864860Z | ignore_profiles_with_different_name | true                                          |
+2026-04-02T11:08:03.0866310Z | api_key                             | ********                                      |
+2026-04-02T11:08:03.0869520Z | team_id                             | ***                                    |
+2026-04-02T11:08:03.0870910Z | fail_on_name_taken                  | false                                         |
+2026-04-02T11:08:03.0872340Z | include_all_certificates            | false                                         |
+2026-04-02T11:08:03.0873910Z | include_mac_in_profiles             | false                                         |
+2026-04-02T11:08:03.0875300Z | platform                            | catalyst                                      |
+2026-04-02T11:08:03.0876590Z | adhoc                               | false                                         |
+2026-04-02T11:08:03.0877900Z | developer_id                        | false                                         |
+2026-04-02T11:08:03.0879260Z | development                         | false                                         |
+2026-04-02T11:08:03.0880560Z | skip_install                        | false                                         |
+2026-04-02T11:08:03.0881960Z | skip_fetch_profiles                 | false                                         |
+2026-04-02T11:08:03.0883390Z | skip_certificate_verification       | false                                         |
+2026-04-02T11:08:03.0962170Z | readonly                            | false                                         |
+2026-04-02T11:08:03.0963220Z +-------------------------------------+-----------------------------------------------+
+2026-04-02T11:08:03.0963700Z 
+2026-04-02T11:08:03.0963900Z [11:08:03]: Creating authorization token for App Store Connect API
+2026-04-02T11:08:03.0964260Z [11:08:03]: Fetching profiles...
+2026-04-02T11:08:03.0964540Z [11:08:03]: Verifying certificates...
+2026-04-02T11:08:03.0965340Z [11:08:03]: [33mNo existing profiles found, that match the certificates you have installed locally! Creating a new provisioning profile for you[0m
+2026-04-02T11:08:03.8022730Z [11:08:03]: [33mCreating new provisioning profile for '***' with name '*** catalyst' for 'catalyst' platform[0m
+2026-04-02T11:08:04.9848320Z [11:08:04]: [33mDownloading provisioning profile...[0m
+2026-04-02T11:08:04.9850470Z [11:08:04]: [32mSuccessfully downloaded provisioning profile...[0m
+2026-04-02T11:08:05.0690490Z [11:08:05]: Installing provisioning profile...
+2026-04-02T11:08:05.1356780Z [32m/var/folders/tb/y368xp_x10s3ty1b_mtl5mxr0000gn/T/d20260402-12149-d8tvbg/profiles/appstore/AppStore_***_catalyst.provisionprofile[0m
+2026-04-02T11:08:05.1709500Z [11:08:05]: Installing provisioning profile...
+2026-04-02T11:08:05.2353670Z [11:08:05]: [34m[1mUsing deprecated option: '--template_name' (Removed since May 2025 on App Store Connect API OpenAPI v3.8.0 - Learn more: https://docs.fastlane.tools/actions/match/#managed-capabilities)[0m
+2026-04-02T11:08:05.2375030Z 
+2026-04-02T11:08:05.2490980Z +---------------------------------------------------------------------------------------------+
+2026-04-02T11:08:05.2491920Z |                                  [32mSummary for sigh 2.232.2[0m                                   |
+2026-04-02T11:08:05.2492440Z +-------------------------------------+-------------------------------------------------------+
+2026-04-02T11:08:05.2493040Z | app_identifier                      | ***                         |
+2026-04-02T11:08:05.2493500Z | username                            | ***                                   |
+2026-04-02T11:08:05.2493940Z | force                               | false                                                 |
+2026-04-02T11:08:05.2494390Z | cert_id                             | 264DV996N8                                            |
+2026-04-02T11:08:05.2494900Z | provisioning_name                   | *** catalyst |
+2026-04-02T11:08:05.2495920Z | ignore_profiles_with_different_name | true                                                  |
+2026-04-02T11:08:05.2496410Z | api_key                             | ********                                              |
+2026-04-02T11:08:05.2496850Z | team_id                             | ***                                            |
+2026-04-02T11:08:05.2497290Z | fail_on_name_taken                  | false                                                 |
+2026-04-02T11:08:05.2497780Z | include_all_certificates            | false                                                 |
+2026-04-02T11:08:05.2498290Z | include_mac_in_profiles             | false                                                 |
+2026-04-02T11:08:05.2498770Z | platform                            | catalyst                                              |
+2026-04-02T11:08:05.2499220Z | adhoc                               | false                                                 |
+2026-04-02T11:08:05.2499660Z | developer_id                        | false                                                 |
+2026-04-02T11:08:05.2500120Z | development                         | false                                                 |
+2026-04-02T11:08:05.2500580Z | skip_install                        | false                                                 |
+2026-04-02T11:08:05.2501050Z | skip_fetch_profiles                 | false                                                 |
+2026-04-02T11:08:05.2501560Z | skip_certificate_verification       | false                                                 |
+2026-04-02T11:08:05.2502050Z | readonly                            | false                                                 |
+2026-04-02T11:08:05.2502530Z +-------------------------------------+-------------------------------------------------------+
+2026-04-02T11:08:05.2502820Z 
+2026-04-02T11:08:05.2504630Z [11:08:05]: Creating authorization token for App Store Connect API
+2026-04-02T11:08:05.2547250Z [11:08:05]: Fetching profiles...
+2026-04-02T11:08:05.2548210Z [11:08:05]: Verifying certificates...
+2026-04-02T11:08:05.2550280Z [11:08:05]: [33mNo existing profiles found, that match the certificates you have installed locally! Creating a new provisioning profile for you[0m
+2026-04-02T11:08:05.9710460Z [11:08:05]: [33mCreating new provisioning profile for '***' with name '*** catalyst' for 'catalyst' platform[0m
+2026-04-02T11:08:07.0364360Z [11:08:07]: [33mDownloading provisioning profile...[0m
+2026-04-02T11:08:07.0390340Z [11:08:07]: [32mSuccessfully downloaded provisioning profile...[0m
+2026-04-02T11:08:07.1003860Z [11:08:07]: Installing provisioning profile...
+2026-04-02T11:08:07.1822550Z [32m/var/folders/tb/y368xp_x10s3ty1b_mtl5mxr0000gn/T/d20260402-12149-d8tvbg/profiles/appstore/AppStore_***_catalyst.provisionprofile[0m
+2026-04-02T11:08:07.2159080Z [11:08:07]: Installing provisioning profile...
+2026-04-02T11:08:07.3089020Z [11:08:07]: [32m🔒  Successfully encrypted certificates repo[0m
+2026-04-02T11:08:07.3093920Z [11:08:07]: Pushing changes to remote git repo...
+2026-04-02T11:08:08.2717500Z [11:08:08]: Finished uploading files to Git Repo [***]
+2026-04-02T11:08:08.2871010Z 
+2026-04-02T11:08:08.2876570Z +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2877910Z |                                                                                          [32mInstalled Provisioning Profile[0m                                                                                          |
+2026-04-02T11:08:08.2878890Z +---------------------+---------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2879910Z | Parameter           | Environment Variable                                          | Value                                                                                                                      |
+2026-04-02T11:08:08.2881320Z +---------------------+---------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2882380Z | App Identifier      |                                                               | ***                                                                                                      |
+2026-04-02T11:08:08.2883160Z | Type                |                                                               | appstore                                                                                                                   |
+2026-04-02T11:08:08.2883960Z | Platform            |                                                               | catalyst                                                                                                                   |
+2026-04-02T11:08:08.2884930Z | Profile UUID        | sigh_***_appstore_catalyst                  | 6c34b807-45cf-4864-ba69-c838fcad8ec4                                                                                       |
+2026-04-02T11:08:08.2886730Z | Profile Name        | sigh_***_appstore_catalyst_profile-name     | *** catalyst                                                                              |
+2026-04-02T11:08:08.2898940Z | Profile Path        | sigh_***_appstore_catalyst_profile-path     | /Users/runner/Library/Developer/Xcode/UserData/Provisioning Profiles/6c34b807-45cf-4864-ba69-c838fcad8ec4.provisionprofile |
+2026-04-02T11:08:08.2900590Z | Development Team ID | sigh_***_appstore_catalyst_team-id          | ***                                                                                                                 |
+2026-04-02T11:08:08.2902000Z | Certificate Name    | sigh_***_appstore_catalyst_certificate-name | Apple Distribution: Abdurahim Jauzee (***)                                                                          |
+2026-04-02T11:08:08.2903310Z +---------------------+---------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2903970Z 
+2026-04-02T11:08:08.2904060Z 
+2026-04-02T11:08:08.2904780Z +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2906180Z |                                                                                              [32mInstalled Provisioning Profile[0m                                                                                              |
+2026-04-02T11:08:08.2907850Z +---------------------+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2908980Z | Parameter           | Environment Variable                                                  | Value                                                                                                                      |
+2026-04-02T11:08:08.2910090Z +---------------------+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2911210Z | App Identifier      |                                                                       | ***                                                                                              |
+2026-04-02T11:08:08.2912130Z | Type                |                                                                       | appstore                                                                                                                   |
+2026-04-02T11:08:08.2913400Z | Platform            |                                                                       | catalyst                                                                                                                   |
+2026-04-02T11:08:08.2914560Z | Profile UUID        | sigh_***_appstore_catalyst                  | df1a8f59-08c1-4f01-9d2c-5d7128cb0638                                                                                       |
+2026-04-02T11:08:08.2915870Z | Profile Name        | sigh_***_appstore_catalyst_profile-name     | *** catalyst                                                                      |
+2026-04-02T11:08:08.2917150Z | Profile Path        | sigh_***_appstore_catalyst_profile-path     | /Users/runner/Library/Developer/Xcode/UserData/Provisioning Profiles/df1a8f59-08c1-4f01-9d2c-5d7128cb0638.provisionprofile |
+2026-04-02T11:08:08.2919340Z | Development Team ID | sigh_***_appstore_catalyst_team-id          | ***                                                                                                                 |
+2026-04-02T11:08:08.2921060Z | Certificate Name    | sigh_***_appstore_catalyst_certificate-name | Apple Distribution: Abdurahim Jauzee (***)                                                                          |
+2026-04-02T11:08:08.2922870Z +---------------------+-----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:08.2923640Z 
+2026-04-02T11:08:08.2926400Z [11:08:08]: [32m[32mAll required keys, certificates and provisioning profiles are installed 🙌[0m
+2026-04-02T11:08:08.2932480Z [11:08:08]: Setting Provisioning Profile type to 'app-store'
+2026-04-02T11:08:08.2933170Z [11:08:08]: Cruising back to lane 'mac closed_beta' 🚘
+2026-04-02T11:08:08.2933870Z [11:08:08]: [32m----------------------------------------[0m
+2026-04-02T11:08:08.2934510Z [11:08:08]: [32m--- Step: changelog_from_git_commits ---[0m
+2026-04-02T11:08:08.2935120Z [11:08:08]: [32m----------------------------------------[0m
+2026-04-02T11:08:08.2935770Z [11:08:08]: [32mCollecting the last 10 Git commits[0m
+2026-04-02T11:08:08.3287330Z 
+2026-04-02T11:08:08.3288360Z - Override setup_ci readonly mode for mac match
+2026-04-02T11:08:08.3289450Z - Update Gemfile.lock with fastlane 2.232.2
+2026-04-02T11:08:08.3290450Z - Use catalyst platform for Mac match and bump fastlane
+2026-04-02T11:08:08.3291490Z - Fix mac match signing to use readonly mode
+2026-04-02T11:08:08.3292640Z - Fix CD workflow to use direct fastlane command instead of action
+2026-04-02T11:08:08.3294380Z - Add platform input to CD workflow for Mac support
+2026-04-02T11:08:08.3295460Z - Fix mac platform signing and build number to match iOS
+2026-04-02T11:08:08.3296690Z - Enable Mac Catalyst support for Azkar app and widgets
+2026-04-02T11:08:08.3298200Z - Refine article widget preview assets
+2026-04-02T11:08:08.3298810Z - Add Claude loco skill link
+2026-04-02T11:08:08.3299050Z 
+2026-04-02T11:08:08.3299460Z [11:08:08]: [32m---------------------------------------------[0m
+2026-04-02T11:08:08.3299920Z [11:08:08]: [32m--- Step: increment_build_number_in_plist ---[0m
+2026-04-02T11:08:08.3300480Z [11:08:08]: [32m---------------------------------------------[0m
+2026-04-02T11:08:08.4264480Z [11:08:08]: [33mwill continue and update the info plist key. this will replace the existing value.[0m
+2026-04-02T11:08:08.4455340Z [11:08:08]: [32m-----------------------[0m
+2026-04-02T11:08:08.4475500Z [11:08:08]: [32m--- Step: build_app ---[0m
+2026-04-02T11:08:08.4476370Z [11:08:08]: [32m-----------------------[0m
+2026-04-02T11:08:08.5206780Z [11:08:08]: [33mResolving Swift Package Manager dependencies...[0m
+2026-04-02T11:08:08.5209270Z [11:08:08]: [36m$ xcodebuild -resolvePackageDependencies -workspace Azkar.xcworkspace -scheme Azkar -destination generic/platform\=macOS,variant\=Mac\ Catalyst[0m
+2026-04-02T11:08:11.6989070Z [11:08:11]: ▸ [35mCommand line invocation:[0m
+2026-04-02T11:08:11.7324840Z [11:08:11]: ▸ [35m    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild -resolvePackageDependencies -workspace Azkar.xcworkspace -scheme Azkar -destination "generic/platform=macOS,variant=Mac Catalyst"[0m
+2026-04-02T11:08:17.2924180Z [11:08:17]: ▸ [35mresolved source packages: [0m
+2026-04-02T11:08:17.3026880Z [11:08:17]: [36m$ xcodebuild -showBuildSettings -workspace Azkar.xcworkspace -scheme Azkar -destination generic/platform\=macOS,variant\=Mac\ Catalyst 2>&1[0m
+2026-04-02T11:08:20.3311090Z [11:08:20]: [33mCommand timed out after 3 seconds on try 1 of 4, trying again with a 6 second timeout...[0m
+2026-04-02T11:08:23.4856590Z [11:08:23]: Detected provisioning profile mapping: {:"***"=>"*** catalyst", :"***"=>"*** catalyst"}
+2026-04-02T11:08:24.0999350Z 
+2026-04-02T11:08:24.1009880Z +-------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:24.1011200Z |                                                    [32mSummary for gym 2.232.2[0m                                                    |
+2026-04-02T11:08:24.1012140Z +-------------------------------------------------------------------+-----------------------------------------------------------+
+2026-04-02T11:08:24.1012980Z | workspace                                                         | Azkar.xcworkspace                                         |
+2026-04-02T11:08:24.1013790Z | scheme                                                            | Azkar                                                     |
+2026-04-02T11:08:24.1014600Z | destination                                                       | generic/platform=macOS,variant=Mac Catalyst               |
+2026-04-02T11:08:24.1015480Z | skip_codesigning                                                  | false                                                     |
+2026-04-02T11:08:24.1016250Z | export_method                                                     | app-store                                                 |
+2026-04-02T11:08:24.1017340Z | export_options.provisioningProfiles.***         | *** catalyst             |
+2026-04-02T11:08:24.1018320Z | export_options.provisioningProfiles.*** | *** catalyst     |
+2026-04-02T11:08:24.1019100Z | clean                                                             | false                                                     |
+2026-04-02T11:08:24.1019920Z | output_directory                                                  | .                                                         |
+2026-04-02T11:08:24.1055760Z | output_name                                                       | App                                                       |
+2026-04-02T11:08:24.1057380Z | silent                                                            | false                                                     |
+2026-04-02T11:08:24.1064690Z | skip_package_ipa                                                  | false                                                     |
+2026-04-02T11:08:24.1083160Z | skip_package_pkg                                                  | false                                                     |
+2026-04-02T11:08:24.1089160Z | build_path                                                        | /Users/runner/Library/Developer/Xcode/Archives/2026-04-02 |
+2026-04-02T11:08:24.1094080Z | result_bundle                                                     | false                                                     |
+2026-04-02T11:08:24.1096990Z | buildlog_path                                                     | ~/Library/Logs/gym                                        |
+2026-04-02T11:08:24.1098780Z | xcodebuild_formatter                                              | xcbeautify                                                |
+2026-04-02T11:08:24.1107700Z | build_timing_summary                                              | false                                                     |
+2026-04-02T11:08:24.1109230Z | skip_profile_detection                                            | false                                                     |
+2026-04-02T11:08:24.1110550Z | xcodebuild_command                                                | xcodebuild                                                |
+2026-04-02T11:08:24.1112230Z | skip_package_dependencies_resolution                              | false                                                     |
+2026-04-02T11:08:24.1112950Z | disable_package_automatic_updates                                 | false                                                     |
+2026-04-02T11:08:24.1113660Z | skip_package_repository_fetches                                   | false                                                     |
+2026-04-02T11:08:24.1115400Z | use_system_scm                                                    | false                                                     |
+2026-04-02T11:08:24.1116080Z | generate_appstore_info                                            | false                                                     |
+2026-04-02T11:08:24.1117410Z | xcode_path                                                        | /Applications/Xcode_26.3.app                              |
+2026-04-02T11:08:24.1119310Z +-------------------------------------------------------------------+-----------------------------------------------------------+
+2026-04-02T11:08:24.1119790Z 
+2026-04-02T11:08:24.1121150Z [11:08:24]: [36m$ set -o pipefail && xcodebuild -workspace Azkar.xcworkspace -scheme Azkar -destination 'generic/platform=macOS,variant=Mac Catalyst' -archivePath /Users/runner/Library/Developer/Xcode/Archives/2026-04-02/App\ 2026-04-02\ 11.08.24.xcarchive archive | tee /Users/runner/Library/Logs/gym/App-Azkar.log | xcbeautify[0m
+2026-04-02T11:08:24.1658000Z [11:08:24]: ▸ [35m----- xcbeautify -----[0m
+2026-04-02T11:08:24.1658910Z [11:08:24]: ▸ [35mVersion: 3.1.4[0m
+2026-04-02T11:08:24.1659700Z [11:08:24]: ▸ [35m----------------------[0m
+2026-04-02T11:08:26.0120130Z [11:08:26]: ▸ [35m2026-04-02 11:08:26.011 xcodebuild[12898:29569] Writing error result bundle to /var/folders/tb/y368xp_x10s3ty1b_mtl5mxr0000gn/T/ResultBundle_2026-02-04_11-08-0026.xcresult[0m
+2026-04-02T11:08:26.1340620Z [11:08:26]: ▸ [35mxcodebuild: error: Unable to find a destination matching the provided destination specifier:[0m
+2026-04-02T11:08:26.1342440Z [11:08:26]: ▸ [35m		{ generic:1, platform:macOS, variant:Mac Catalyst }[0m
+2026-04-02T11:08:26.1343490Z [11:08:26]: ▸ [35m	Available destinations for the "Azkar" scheme:[0m
+2026-04-02T11:08:26.1344550Z [11:08:26]: ▸ [35m		{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:c5e94f251fbbea0fece6bb9f76ffbbca678b4c88, name:My Mac }[0m
+2026-04-02T11:08:26.1346030Z [11:08:26]: ▸ [35m		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }[0m
+2026-04-02T11:08:26.1349570Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }[0m
+2026-04-02T11:08:26.1351070Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:CEE59045-6413-4054-AC28-75FF330904EB, OS:18.5, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1352230Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:CEE59045-6413-4054-AC28-75FF330904EB, OS:18.5, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1353300Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:421C2127-2243-4138-A3AA-2ACBB5FFB889, OS:18.6, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1354440Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:421C2127-2243-4138-A3AA-2ACBB5FFB889, OS:18.6, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1355770Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:9C5C5271-BAE3-488C-B2CD-ABC73381E8AD, OS:26.0.1, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1357310Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:9C5C5271-BAE3-488C-B2CD-ABC73381E8AD, OS:26.0.1, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1358960Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:D9F96AD7-3F8F-49B3-A876-ED328A2C35F0, OS:26.1, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1360140Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:D9F96AD7-3F8F-49B3-A876-ED328A2C35F0, OS:26.1, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1361180Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:0CFFEEED-B1FF-4A64-B749-9C150E0C0AF6, OS:26.2, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1362260Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:0CFFEEED-B1FF-4A64-B749-9C150E0C0AF6, OS:26.2, name:iPad (10th generation) }[0m
+2026-04-02T11:08:26.1363360Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:DD8FE0CA-9FB9-454A-AF7D-CC729EAF55F1, OS:18.5, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1364370Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:DD8FE0CA-9FB9-454A-AF7D-CC729EAF55F1, OS:18.5, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1365400Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:19DC1070-53A5-41C9-90F1-3CDCC06CBB86, OS:18.6, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1366450Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:19DC1070-53A5-41C9-90F1-3CDCC06CBB86, OS:18.6, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1367510Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:C65FE2A7-2982-4BAF-A9F6-BAA4AFB6758A, OS:26.0.1, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1368510Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:C65FE2A7-2982-4BAF-A9F6-BAA4AFB6758A, OS:26.0.1, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1369640Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:9C78B278-9F16-4E18-B86F-20EF0DC9F6BB, OS:26.1, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1371230Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:9C78B278-9F16-4E18-B86F-20EF0DC9F6BB, OS:26.1, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1373800Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:7D58FB6C-23D6-4ABC-9F44-9BE55D36EF17, OS:26.2, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1375260Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:7D58FB6C-23D6-4ABC-9F44-9BE55D36EF17, OS:26.2, name:iPad (A16) }[0m
+2026-04-02T11:08:26.1376940Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:AA0AD28F-05D4-4062-A214-4DC781524F23, OS:18.5, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1381910Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:AA0AD28F-05D4-4062-A214-4DC781524F23, OS:18.5, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1387410Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:BC7E68A8-D029-4109-8E6F-FD28018C44D9, OS:18.6, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1388810Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:BC7E68A8-D029-4109-8E6F-FD28018C44D9, OS:18.6, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1390120Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:5E38DFC4-DC00-4D78-BEF3-6C2974B50565, OS:26.0.1, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1391200Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:5E38DFC4-DC00-4D78-BEF3-6C2974B50565, OS:26.0.1, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1392260Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:D65A2F03-8812-4FF4-BA44-CD2CD1F40DD1, OS:26.1, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1393420Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:D65A2F03-8812-4FF4-BA44-CD2CD1F40DD1, OS:26.1, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1394490Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:604502B2-5320-4E28-8F6E-994A8A7A66E6, OS:26.2, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1395570Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:604502B2-5320-4E28-8F6E-994A8A7A66E6, OS:26.2, name:iPad Air 11-inch (M2) }[0m
+2026-04-02T11:08:26.1397010Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:D2C68B40-848F-4E04-A372-309B77CDFAE8, OS:18.5, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1398260Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:D2C68B40-848F-4E04-A372-309B77CDFAE8, OS:18.5, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1399350Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:AB189D7C-419C-4079-B2D3-BED526E7D63E, OS:18.6, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1400430Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:AB189D7C-419C-4079-B2D3-BED526E7D63E, OS:18.6, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1401510Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:14CCED75-7287-4D5A-A87E-125CA1F6BB48, OS:26.0.1, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1403710Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:14CCED75-7287-4D5A-A87E-125CA1F6BB48, OS:26.0.1, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1406770Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:06F17B7B-F490-4D71-9A8A-301F1FED3CF4, OS:26.1, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1410490Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:06F17B7B-F490-4D71-9A8A-301F1FED3CF4, OS:26.1, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1414790Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:1AE4843B-594A-4BE3-9FAA-8D9EBD251AB7, OS:26.2, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1416310Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:1AE4843B-594A-4BE3-9FAA-8D9EBD251AB7, OS:26.2, name:iPad Air 11-inch (M3) }[0m
+2026-04-02T11:08:26.1417500Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:9654BB10-BFBB-4CB2-B91C-BEBC108E5DBC, OS:18.5, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1419010Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:9654BB10-BFBB-4CB2-B91C-BEBC108E5DBC, OS:18.5, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1423770Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:BAD87C62-DC83-42FC-AAFF-676DCC4E2094, OS:18.6, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1426350Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:BAD87C62-DC83-42FC-AAFF-676DCC4E2094, OS:18.6, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1431670Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:98BA4C11-63CC-4F71-B036-DD3760531401, OS:26.0.1, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1434240Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:98BA4C11-63CC-4F71-B036-DD3760531401, OS:26.0.1, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1437760Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:1A612AAE-997B-4A27-AC0C-E5A09F81D1F1, OS:26.1, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1439240Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:1A612AAE-997B-4A27-AC0C-E5A09F81D1F1, OS:26.1, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1443430Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:05030C79-4CB4-453F-95BD-94F02EC50EE9, OS:26.2, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1449290Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:05030C79-4CB4-453F-95BD-94F02EC50EE9, OS:26.2, name:iPad Air 13-inch (M2) }[0m
+2026-04-02T11:08:26.1455360Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F5C40A72-1C9A-41A9-8DBC-290B3FCDABFA, OS:18.5, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1456710Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F5C40A72-1C9A-41A9-8DBC-290B3FCDABFA, OS:18.5, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1458290Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:6258BFC2-51E2-4D8B-BA67-C9732A2FB26B, OS:18.6, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1459480Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:6258BFC2-51E2-4D8B-BA67-C9732A2FB26B, OS:18.6, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1461140Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:49806440-B036-448A-B9F9-D45494DB0EB4, OS:26.0.1, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1462410Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:49806440-B036-448A-B9F9-D45494DB0EB4, OS:26.0.1, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1463480Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:5A48EDEA-CAFA-498D-9C12-A15D1DEB636F, OS:26.1, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1464510Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:5A48EDEA-CAFA-498D-9C12-A15D1DEB636F, OS:26.1, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1465520Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F7EB793C-0629-408B-9F70-1FC6A8FDBEBC, OS:26.2, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1466500Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F7EB793C-0629-408B-9F70-1FC6A8FDBEBC, OS:26.2, name:iPad Air 13-inch (M3) }[0m
+2026-04-02T11:08:26.1467510Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:0A2F67D2-BFDF-4C15-850D-F0CA239F3095, OS:18.5, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1468460Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:0A2F67D2-BFDF-4C15-850D-F0CA239F3095, OS:18.5, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1469450Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:32C1C328-4A19-4303-AE38-60C82C669211, OS:18.6, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1470400Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:32C1C328-4A19-4303-AE38-60C82C669211, OS:18.6, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1478320Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F0FA65B6-18F1-4431-A24A-F0C2A6B457BF, OS:26.0.1, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1479920Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F0FA65B6-18F1-4431-A24A-F0C2A6B457BF, OS:26.0.1, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1481090Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F42C351B-7FBC-460F-8271-2C563856DC04, OS:26.1, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1482430Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F42C351B-7FBC-460F-8271-2C563856DC04, OS:26.1, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1483460Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:47285C0D-BBA7-401C-874E-7613ACCC80A9, OS:26.2, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1484630Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:47285C0D-BBA7-401C-874E-7613ACCC80A9, OS:26.2, name:iPad Pro 11-inch (M4) }[0m
+2026-04-02T11:08:26.1486140Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:4029C818-3201-43EF-9E7C-CE3872F1ACC0, OS:26.0.1, name:iPad Pro 11-inch (M5) }[0m
+2026-04-02T11:08:26.1487140Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:4029C818-3201-43EF-9E7C-CE3872F1ACC0, OS:26.0.1, name:iPad Pro 11-inch (M5) }[0m
+2026-04-02T11:08:26.1488590Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:39CE5F23-3873-43E5-B8BD-B9999D460EF9, OS:26.1, name:iPad Pro 11-inch (M5) }[0m
+2026-04-02T11:08:26.1489580Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:39CE5F23-3873-43E5-B8BD-B9999D460EF9, OS:26.1, name:iPad Pro 11-inch (M5) }[0m
+2026-04-02T11:08:26.1490660Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:545E5290-1024-43CD-BE0B-FB90F3F2A67C, OS:26.2, name:iPad Pro 11-inch (M5) }[0m
+2026-04-02T11:08:26.1491660Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:545E5290-1024-43CD-BE0B-FB90F3F2A67C, OS:26.2, name:iPad Pro 11-inch (M5) }[0m
+2026-04-02T11:08:26.1492720Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:8330F608-BBD5-4B8F-B5F4-18BC980587BE, OS:18.5, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1493800Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:8330F608-BBD5-4B8F-B5F4-18BC980587BE, OS:18.5, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1495260Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:1B59DCD4-FF0F-4858-898B-6B0014F43C32, OS:18.6, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1496280Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:1B59DCD4-FF0F-4858-898B-6B0014F43C32, OS:18.6, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1497670Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:EA3AFA88-4A2A-472D-B050-34ED6AA39A86, OS:26.0.1, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1498700Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:EA3AFA88-4A2A-472D-B050-34ED6AA39A86, OS:26.0.1, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1499770Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:A1290F1B-605C-45B1-AC51-C80EB04BEE36, OS:26.1, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1500700Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:A1290F1B-605C-45B1-AC51-C80EB04BEE36, OS:26.1, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1501670Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:7B624B20-A742-403D-BD1B-34822920E96C, OS:26.2, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1510680Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:7B624B20-A742-403D-BD1B-34822920E96C, OS:26.2, name:iPad Pro 13-inch (M4) }[0m
+2026-04-02T11:08:26.1511870Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:1EB37781-5856-425E-B853-AFE16C0CCFB6, OS:26.0.1, name:iPad Pro 13-inch (M5) }[0m
+2026-04-02T11:08:26.1513980Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:1EB37781-5856-425E-B853-AFE16C0CCFB6, OS:26.0.1, name:iPad Pro 13-inch (M5) }[0m
+2026-04-02T11:08:26.1517050Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:25F30348-8F97-46C0-9563-BBC982CD3520, OS:26.1, name:iPad Pro 13-inch (M5) }[0m
+2026-04-02T11:08:26.1519630Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:25F30348-8F97-46C0-9563-BBC982CD3520, OS:26.1, name:iPad Pro 13-inch (M5) }[0m
+2026-04-02T11:08:26.1522120Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:BB2DF7B0-DBC1-4735-A2E7-48165E2680D7, OS:26.2, name:iPad Pro 13-inch (M5) }[0m
+2026-04-02T11:08:26.1524670Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:BB2DF7B0-DBC1-4735-A2E7-48165E2680D7, OS:26.2, name:iPad Pro 13-inch (M5) }[0m
+2026-04-02T11:08:26.1527460Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F5683CEC-1143-411B-A6A8-9F5ECCE31569, OS:18.5, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1530960Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F5683CEC-1143-411B-A6A8-9F5ECCE31569, OS:18.5, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1532810Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:6437D280-1DF3-4F57-A937-CE98263AF109, OS:18.6, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1533960Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:6437D280-1DF3-4F57-A937-CE98263AF109, OS:18.6, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1555150Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:5B5AC9FB-27A7-4ACE-A0F3-C95717FFA34D, OS:26.0.1, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1556190Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:5B5AC9FB-27A7-4ACE-A0F3-C95717FFA34D, OS:26.0.1, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1557130Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:3DDE3F7B-72B6-49E8-8D89-23319EC64240, OS:26.1, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1558080Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:3DDE3F7B-72B6-49E8-8D89-23319EC64240, OS:26.1, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1559020Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:B5C37486-469F-4F48-A892-7F72660910EB, OS:26.2, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1559930Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:B5C37486-469F-4F48-A892-7F72660910EB, OS:26.2, name:iPad mini (A17 Pro) }[0m
+2026-04-02T11:08:26.1561420Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:098E481B-AC6A-4BD5-89F2-02F6BFDD24DD, OS:18.5, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1562270Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:098E481B-AC6A-4BD5-89F2-02F6BFDD24DD, OS:18.5, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1563080Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:A1592A58-03FE-4DF9-AAB4-D054ED371CB0, OS:18.6, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1563920Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:A1592A58-03FE-4DF9-AAB4-D054ED371CB0, OS:18.6, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1564730Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:FFBED164-130D-4D1A-BBE7-EFDFBEBB7379, OS:26.0.1, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1565530Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:FFBED164-130D-4D1A-BBE7-EFDFBEBB7379, OS:26.0.1, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1566330Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:D3B40916-57B3-42CF-B759-019742933EE9, OS:26.1, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1567100Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:D3B40916-57B3-42CF-B759-019742933EE9, OS:26.1, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1567890Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:C581AFAF-6FB5-470A-A41E-6C5A9E527281, OS:26.2, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1568680Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:C581AFAF-6FB5-470A-A41E-6C5A9E527281, OS:26.2, name:iPhone 16 }[0m
+2026-04-02T11:08:26.1569480Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:957189CC-5639-4F92-ADDE-DE356A290BC5, OS:18.5, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1570310Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:957189CC-5639-4F92-ADDE-DE356A290BC5, OS:18.5, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1571170Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:66AE9260-0134-4E36-A579-3BD82DD4C5D8, OS:18.6, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1572020Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:66AE9260-0134-4E36-A579-3BD82DD4C5D8, OS:18.6, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1572850Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:2C2CFC1B-3C1E-4D5F-A52F-01935FA5E5DC, OS:26.0.1, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1573690Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:2C2CFC1B-3C1E-4D5F-A52F-01935FA5E5DC, OS:26.0.1, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1574500Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:10471A84-0096-46DA-9353-33E2BACBC289, OS:26.1, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1575520Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:10471A84-0096-46DA-9353-33E2BACBC289, OS:26.1, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1576340Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:FF236E2A-3825-40DF-BCBF-CFCE37F17FC3, OS:26.2, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1577150Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:FF236E2A-3825-40DF-BCBF-CFCE37F17FC3, OS:26.2, name:iPhone 16 Plus }[0m
+2026-04-02T11:08:26.1577960Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:D488167B-B098-4072-9ABB-CB415EE71064, OS:18.5, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1578770Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:D488167B-B098-4072-9ABB-CB415EE71064, OS:18.5, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1579580Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:15469A8D-DBC5-4111-ABBD-B337641C2ACD, OS:18.6, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1580450Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:15469A8D-DBC5-4111-ABBD-B337641C2ACD, OS:18.6, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1581330Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:2BE040BE-E949-45AC-9361-A0E5819648EB, OS:26.0.1, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1582550Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:2BE040BE-E949-45AC-9361-A0E5819648EB, OS:26.0.1, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1583400Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:5428E339-A922-425E-B782-7BAF719B42C5, OS:26.1, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1584190Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:5428E339-A922-425E-B782-7BAF719B42C5, OS:26.1, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1585000Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:97DC0D69-19C2-4920-AFCA-AA4B1E0C298B, OS:26.2, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1585850Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:97DC0D69-19C2-4920-AFCA-AA4B1E0C298B, OS:26.2, name:iPhone 16 Pro }[0m
+2026-04-02T11:08:26.1586670Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:6BC6C89B-7528-484D-BABD-7FC43279B4D7, OS:18.5, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1587650Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:6BC6C89B-7528-484D-BABD-7FC43279B4D7, OS:18.5, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1588520Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F4249BC0-633C-438B-A25A-6B374F196A31, OS:18.6, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1589360Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F4249BC0-633C-438B-A25A-6B374F196A31, OS:18.6, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1590210Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:A3B5F5E5-8975-4434-9DF5-C9BB9A151D2D, OS:26.0.1, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1591100Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:A3B5F5E5-8975-4434-9DF5-C9BB9A151D2D, OS:26.0.1, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1591940Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:221197BB-834B-4127-9FC2-BB0A6562E5D2, OS:26.1, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1592790Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:221197BB-834B-4127-9FC2-BB0A6562E5D2, OS:26.1, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1593660Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:FD0998FD-4CDE-403A-B246-BCB64A4C9948, OS:26.2, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1594510Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:FD0998FD-4CDE-403A-B246-BCB64A4C9948, OS:26.2, name:iPhone 16 Pro Max }[0m
+2026-04-02T11:08:26.1595310Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:5AE98F4C-1ED8-4145-8354-CE7249218B1D, OS:18.5, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1596290Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:5AE98F4C-1ED8-4145-8354-CE7249218B1D, OS:18.5, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1597080Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:8597DC98-BFB6-4FB2-B6BE-9DA26FDF3911, OS:18.6, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1597880Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:8597DC98-BFB6-4FB2-B6BE-9DA26FDF3911, OS:18.6, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1598680Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:02FBFEF1-E413-4AB1-B527-5E1609144583, OS:26.0.1, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1599480Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:02FBFEF1-E413-4AB1-B527-5E1609144583, OS:26.0.1, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1600280Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:E02FBDB9-E6B9-4A86-9630-E0676FFB84D3, OS:26.1, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1601080Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:E02FBDB9-E6B9-4A86-9630-E0676FFB84D3, OS:26.1, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1601880Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:5A3C768F-774B-4F99-8427-BDAE6E5D2B3C, OS:26.2, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1602730Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:5A3C768F-774B-4F99-8427-BDAE6E5D2B3C, OS:26.2, name:iPhone 16e }[0m
+2026-04-02T11:08:26.1603810Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:FADD1A12-B5DD-4DA9-8E0B-34ED5537CD59, OS:26.0.1, name:iPhone 17 }[0m
+2026-04-02T11:08:26.1605280Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:FADD1A12-B5DD-4DA9-8E0B-34ED5537CD59, OS:26.0.1, name:iPhone 17 }[0m
+2026-04-02T11:08:26.1606120Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:543B7D28-C5BD-440A-B463-1B5A3B81C944, OS:26.1, name:iPhone 17 }[0m
+2026-04-02T11:08:26.1606920Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:543B7D28-C5BD-440A-B463-1B5A3B81C944, OS:26.1, name:iPhone 17 }[0m
+2026-04-02T11:08:26.1607720Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:1658D344-D9E5-4128-A4C8-238302D2D2F5, OS:26.2, name:iPhone 17 }[0m
+2026-04-02T11:08:26.1608500Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:1658D344-D9E5-4128-A4C8-238302D2D2F5, OS:26.2, name:iPhone 17 }[0m
+2026-04-02T11:08:26.1609290Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:371AD26D-5343-4B24-89F8-3B87B71EEE7A, OS:26.0.1, name:iPhone 17 Pro }[0m
+2026-04-02T11:08:26.1610110Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:371AD26D-5343-4B24-89F8-3B87B71EEE7A, OS:26.0.1, name:iPhone 17 Pro }[0m
+2026-04-02T11:08:26.1612470Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:4AEFBD08-1DAE-44ED-ADCE-E445752A6604, OS:26.1, name:iPhone 17 Pro }[0m
+2026-04-02T11:08:26.1614740Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:4AEFBD08-1DAE-44ED-ADCE-E445752A6604, OS:26.1, name:iPhone 17 Pro }[0m
+2026-04-02T11:08:26.1624030Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:677B54D6-F775-40CC-AFB4-B198926C29DE, OS:26.2, name:iPhone 17 Pro }[0m
+2026-04-02T11:08:26.1627070Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:677B54D6-F775-40CC-AFB4-B198926C29DE, OS:26.2, name:iPhone 17 Pro }[0m
+2026-04-02T11:08:26.1629700Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:B3D17008-552D-49D2-B67C-59DDC3BAB14C, OS:26.0.1, name:iPhone 17 Pro Max }[0m
+2026-04-02T11:08:26.1646340Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:B3D17008-552D-49D2-B67C-59DDC3BAB14C, OS:26.0.1, name:iPhone 17 Pro Max }[0m
+2026-04-02T11:08:26.1648210Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F055FD1D-3F7D-41CA-9D79-F166F23D5103, OS:26.1, name:iPhone 17 Pro Max }[0m
+2026-04-02T11:08:26.1649150Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F055FD1D-3F7D-41CA-9D79-F166F23D5103, OS:26.1, name:iPhone 17 Pro Max }[0m
+2026-04-02T11:08:26.1652610Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:AAA04B4F-3B97-431D-8A7F-25B8D3088CD4, OS:26.2, name:iPhone 17 Pro Max }[0m
+2026-04-02T11:08:26.1653480Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:AAA04B4F-3B97-431D-8A7F-25B8D3088CD4, OS:26.2, name:iPhone 17 Pro Max }[0m
+2026-04-02T11:08:26.1654310Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:EC33DD5F-B59B-4161-ADB9-6643D934A41C, OS:26.0.1, name:iPhone Air }[0m
+2026-04-02T11:08:26.1655140Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:EC33DD5F-B59B-4161-ADB9-6643D934A41C, OS:26.0.1, name:iPhone Air }[0m
+2026-04-02T11:08:26.1655940Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:1FA7F2DC-FA11-4904-8D4C-54F59EC3EC95, OS:26.1, name:iPhone Air }[0m
+2026-04-02T11:08:26.1656740Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:1FA7F2DC-FA11-4904-8D4C-54F59EC3EC95, OS:26.1, name:iPhone Air }[0m
+2026-04-02T11:08:26.1657540Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:85716B09-FB95-4F98-88AC-098B8FCC581E, OS:26.2, name:iPhone Air }[0m
+2026-04-02T11:08:26.1658350Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:85716B09-FB95-4F98-88AC-098B8FCC581E, OS:26.2, name:iPhone Air }[0m
+2026-04-02T11:08:26.1659230Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:BC376A50-320B-4A8D-BB0B-65533BD29F6C, OS:18.5, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1660610Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:BC376A50-320B-4A8D-BB0B-65533BD29F6C, OS:18.5, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1661520Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:EB14E3DD-F364-41A0-B64C-0E49E9D96042, OS:18.6, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1662430Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:EB14E3DD-F364-41A0-B64C-0E49E9D96042, OS:18.6, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1663420Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:F7F29BD8-71F8-49C0-B3FC-708CEA09B496, OS:26.0.1, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1664330Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:F7F29BD8-71F8-49C0-B3FC-708CEA09B496, OS:26.0.1, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1665210Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:E2D31E59-ADCB-453D-B0FC-7353F0D7609A, OS:26.1, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1666100Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:E2D31E59-ADCB-453D-B0FC-7353F0D7609A, OS:26.1, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1667010Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:arm64, id:D6582CF6-D76E-4C46-BFFA-38B7727F68FB, OS:26.2, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1667910Z [11:08:26]: ▸ [35m		{ platform:iOS Simulator, arch:x86_64, id:D6582CF6-D76E-4C46-BFFA-38B7727F68FB, OS:26.2, name:iPhone SE (3rd generation) }[0m
+2026-04-02T11:08:26.1668680Z [11:08:26]: [31mExit status: 70[0m
+2026-04-02T11:08:26.1668950Z [11:08:26]: 
+2026-04-02T11:08:26.1669370Z [11:08:26]: [33mMaybe the error shown is caused by using the wrong version of Xcode[0m
+2026-04-02T11:08:26.1669990Z [11:08:26]: [33mFound multiple versions of Xcode in '/Applications/'[0m
+2026-04-02T11:08:26.1670690Z [11:08:26]: [33mMake sure you selected the right version for your project[0m
+2026-04-02T11:08:26.1671280Z [11:08:26]: [33mThis build process was executed using '/Applications/Xcode_26.3.app'[0m
+2026-04-02T11:08:26.1671920Z [11:08:26]: [33mIf you want to update your Xcode path, either[0m
+2026-04-02T11:08:26.1672250Z [11:08:26]: 
+2026-04-02T11:08:26.1672540Z [11:08:26]: - Specify the Xcode version in your Fastfile
+2026-04-02T11:08:26.1672980Z [11:08:26]: ▸ [35mxcversion(version: "8.1") # Selects Xcode 8.1.0[0m
+2026-04-02T11:08:26.1673320Z [11:08:26]: 
+2026-04-02T11:08:26.1673670Z [11:08:26]: - Specify an absolute path to your Xcode installation in your Fastfile
+2026-04-02T11:08:26.1674480Z [11:08:26]: ▸ [35mxcode_select "/Applications/Xcode8.app"[0m
+2026-04-02T11:08:26.1674800Z [11:08:26]: 
+2026-04-02T11:08:26.1675030Z [11:08:26]: - Manually update the path using
+2026-04-02T11:08:26.1675440Z [11:08:26]: ▸ [35msudo xcode-select -s /Applications/Xcode.app[0m
+2026-04-02T11:08:26.1675770Z [11:08:26]: 
+2026-04-02T11:08:26.1683360Z 
+2026-04-02T11:08:26.1687310Z +----------------------------------------------+
+2026-04-02T11:08:26.1688720Z |              [32m[33mBuild environment[0m               |
+2026-04-02T11:08:26.1689680Z +---------------+------------------------------+
+2026-04-02T11:08:26.1690710Z | xcode_path    | /Applications/Xcode_26.3.app |
+2026-04-02T11:08:26.1691150Z | gym_version   | 2.232.2                      |
+2026-04-02T11:08:26.1691480Z | export_method | app-store                    |
+2026-04-02T11:08:26.1691810Z +---------------+------------------------------+
+2026-04-02T11:08:26.1692010Z 
+2026-04-02T11:08:26.1692270Z [11:08:26]: ▸ [35mCommand line invocation:[0m
+2026-04-02T11:08:26.1697700Z [11:08:26]: ▸ [35m    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild -workspace Azkar.xcworkspace -scheme Azkar -destination "generic/platform=macOS,variant=Mac Catalyst" -archivePath "/Users/runner/Library/Developer/Xcode/Archives/2026-04-02/App 2026-04-02 11.08.24.xcarchive" archive[0m
+2026-04-02T11:08:26.1699040Z [11:08:26]: 
+2026-04-02T11:08:26.1700500Z [11:08:26]: [31m⬆️  Check out the few lines of raw `xcodebuild` output above for potential hints on how to solve this error[0m
+2026-04-02T11:08:26.1701220Z [11:08:26]: [33m📋  For the complete and more detailed error log, check the full log at:[0m
+2026-04-02T11:08:26.1701750Z [11:08:26]: [33m📋  /Users/runner/Library/Logs/gym/App-Azkar.log[0m
+2026-04-02T11:08:26.1702320Z [11:08:26]: 
+2026-04-02T11:08:26.1702940Z [11:08:26]: [31mLooks like fastlane ran into a build/archive error with your project[0m
+2026-04-02T11:08:26.1703860Z [11:08:26]: [31mIt's hard to tell what's causing the error, so we wrote some guides on how[0m
+2026-04-02T11:08:26.1704970Z [11:08:26]: [31mto troubleshoot build and signing issues: https://docs.fastlane.tools/codesigning/getting-started/[0m
+2026-04-02T11:08:26.1705840Z [11:08:26]: [31mBefore submitting an issue on GitHub, please follow the guide above and make[0m
+2026-04-02T11:08:26.1706560Z [11:08:26]: [31msure your project is set up correctly.[0m
+2026-04-02T11:08:26.1707270Z [11:08:26]: [31mfastlane uses `xcodebuild` commands to generate your binary, you can see the[0m
+2026-04-02T11:08:26.1708060Z [11:08:26]: [31mthe full commands printed out in yellow in the above log.[0m
+2026-04-02T11:08:26.1708870Z [11:08:26]: [31mMake sure to inspect the output above, as usually you'll find more error information there[0m
+2026-04-02T11:08:26.1709480Z [11:08:26]: 
+2026-04-02T11:08:26.1723350Z +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:26.1724390Z |                                                                                               [33mLane Context[0m                                                                                                |
+2026-04-02T11:08:26.1725210Z +------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:26.1726020Z | DEFAULT_PLATFORM                   | ios                                                                                                                                                                  |
+2026-04-02T11:08:26.1726800Z | PLATFORM_NAME                      | mac                                                                                                                                                                  |
+2026-04-02T11:08:26.1727500Z | LANE_NAME                          | mac closed_beta                                                                                                                                                      |
+2026-04-02T11:08:26.1728510Z | KEYCHAIN_PATH                      | ~/Library/Keychains/fastlane_tmp_keychain                                                                                                                            |
+2026-04-02T11:08:26.1729410Z | ORIGINAL_DEFAULT_KEYCHAIN          | "/Users/runner/Library/Keychains/login.keychain-db"                                                                                                                  |
+2026-04-02T11:08:26.1730270Z | SIGH_PROFILE_TYPE                  | app-store                                                                                                                                                            |
+2026-04-02T11:08:26.1731460Z | MATCH_PROVISIONING_PROFILE_MAPPING | {"***"=>"*** catalyst", "***"=>"*** catalyst"} |
+2026-04-02T11:08:26.1732290Z | FL_CHANGELOG                       | - Override setup_ci readonly mode for mac match                                                                                                                      |
+2026-04-02T11:08:26.1733180Z |                                    | - Update Gemfile.lock with fastlane 2.232.2                                                                                                                          |
+2026-04-02T11:08:26.1734250Z |                                    | - Use catalyst platform for Mac match and bump fastlane                                                                                                              |
+2026-04-02T11:08:26.1735040Z |                                    | - Fix mac match signing to use readonly mode                                                                                                                         |
+2026-04-02T11:08:26.1735840Z |                                    | - Fix CD workflow to use direct fastlane command instead of action                                                                                                   |
+2026-04-02T11:08:26.1736660Z |                                    | - Add platform input to CD workflow for Mac support                                                                                                                  |
+2026-04-02T11:08:26.1737460Z |                                    | - Fix mac platform signing and build number to match iOS                                                                                                             |
+2026-04-02T11:08:26.1738260Z |                                    | - Enable Mac Catalyst support for Azkar app and widgets                                                                                                              |
+2026-04-02T11:08:26.1739060Z |                                    | - Refine article widget preview assets                                                                                                                               |
+2026-04-02T11:08:26.1739800Z |                                    | - Add Claude loco skill link                                                                                                                                         |
+2026-04-02T11:08:26.1740530Z | GET_INFO_PLIST_VALUE_CUSTOM_VALUE  | 88                                                                                                                                                                   |
+2026-04-02T11:08:26.1741270Z | BUILD_NUMBER                       | 23897377317                                                                                                                                                          |
+2026-04-02T11:08:26.1768370Z +------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2026-04-02T11:08:26.1770950Z [11:08:26]: [31mCalled from Fastfile at line 195[0m
+2026-04-02T11:08:26.1772500Z [11:08:26]: [31m```[0m
+2026-04-02T11:08:26.1773420Z [11:08:26]: [31m    193:	[0m
+2026-04-02T11:08:26.1790120Z [11:08:26]: [31m    194:	    # Build Mac Catalyst app[0m
+2026-04-02T11:08:26.1791480Z [11:08:26]: [31m => 195:	    build_app([0m
+2026-04-02T11:08:26.1792510Z [11:08:26]: [31m    196:	      workspace: workspace_name,[0m
+2026-04-02T11:08:26.1793530Z [11:08:26]: [31m    197:	      scheme: 'Azkar',[0m
+2026-04-02T11:08:26.1794420Z [11:08:26]: [31m```[0m
+2026-04-02T11:08:26.1795390Z [11:08:26]: [31mError building the application - see the log above[0m
+2026-04-02T11:08:26.1823460Z 
+2026-04-02T11:08:26.1837570Z +------------------------------------------------------+
+2026-04-02T11:08:26.1838220Z |                   [32mfastlane summary[0m                   |
+2026-04-02T11:08:26.1838590Z +------+---------------------------------+-------------+
+2026-04-02T11:08:26.1838960Z | Step | Action                          | Time (in s) |
+2026-04-02T11:08:26.1839320Z +------+---------------------------------+-------------+
+2026-04-02T11:08:26.1839670Z | 1    | default_platform                | 0           |
+2026-04-02T11:08:26.1840020Z | 2    | setup_ci                        | 0           |
+2026-04-02T11:08:26.1840360Z | 3    | Switch to mac sync_signing lane | 0           |
+2026-04-02T11:08:26.1840970Z | 4    | app_store_connect_api_key       | 0           |
+2026-04-02T11:08:26.1841310Z | 5    | match                           | 10          |
+2026-04-02T11:08:26.1841650Z | 6    | changelog_from_git_commits      | 0           |
+2026-04-02T11:08:26.1842000Z | 7    | increment_build_number_in_plist | 0           |
+2026-04-02T11:08:26.1842420Z | 💥   | [31mbuild_app[0m                       | 17          |
+2026-04-02T11:08:26.1842800Z +------+---------------------------------+-------------+
+2026-04-02T11:08:26.1843010Z 
+2026-04-02T11:08:26.1850740Z +--------------------------------------------+
+2026-04-02T11:08:26.1851400Z |          [33mPlugin updates available[0m          |
+2026-04-02T11:08:26.1851790Z +------------+--------------+----------------+
+2026-04-02T11:08:26.1852290Z | Plugin     | Your Version | Latest Version |
+2026-04-02T11:08:26.1852630Z +------------+--------------+----------------+
+2026-04-02T11:08:26.1854080Z [31m
+2026-04-02T11:08:26.1854530Z | versioning | [31m0.5.2[0m        | [32m0.7.1[0m          |
+2026-04-02T11:08:26.1855040Z [!] Error building the application - see the log above[0m
+2026-04-02T11:08:26.1855410Z +------------+--------------+----------------+
+2026-04-02T11:08:26.1855740Z [11:08:26]: To update all plugins, just run
+2026-04-02T11:08:26.1856130Z [11:08:26]: [36m$ bundle exec fastlane update_plugins[0m
+2026-04-02T11:08:26.1856370Z 
+2026-04-02T11:08:26.1856550Z [11:08:26]: [31mfastlane finished with errors[0m
+2026-04-02T11:08:26.2094030Z ##[error]Process completed with exit code 1.

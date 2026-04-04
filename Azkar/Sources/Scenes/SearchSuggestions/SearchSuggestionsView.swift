@@ -1,23 +1,22 @@
 import SwiftUI
-import SwiftUIX
 import Entities
 import Library
 import Extensions
 
 struct SearchSuggestionsView: View {
-    
+
     @Environment(\.appTheme) var appTheme
     @ObservedObject var viewModel: SearchSuggestionsViewModel
-    
+
     let onSearchSuggestionSelection: (String) -> Void
-        
+
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 content
             }
         }
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .task {
             await viewModel.loadSuggestions()

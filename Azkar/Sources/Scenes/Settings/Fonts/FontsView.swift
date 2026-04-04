@@ -63,7 +63,7 @@ struct FontsView: View {
         .overlay(alignment: .bottom) {
             sampleTextView
         }
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .onAppear(perform: viewModel.loadData)
         .navigationTitle("fonts.title")

@@ -14,7 +14,7 @@ struct CounterView: View {
             .applyContainerStyle()
         }
         .applyThemedToggleStyle()
-        .customScrollContentBackground()
+        .scrollContentBackground(.hidden)
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.counter.title")
         .animation(.smooth, value: viewModel.preferences.counterType)
