@@ -41,6 +41,7 @@ struct SettingsView: View {
                 Button(action: viewModel.navigateToAboutAppScreen) {
                     Image(systemName: "info.circle")
                 }
+                .accessibilityLabel(Text("about.title"))
             }
         }
         .customScrollContentBackground()
