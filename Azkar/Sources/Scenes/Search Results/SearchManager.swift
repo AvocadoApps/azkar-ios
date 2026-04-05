@@ -58,7 +58,6 @@ final class SearchManager {
                 languages: languages
             )
         } catch {
-            print(error.localizedDescription)
             return []
         }
     }
