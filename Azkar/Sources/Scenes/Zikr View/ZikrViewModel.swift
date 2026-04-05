@@ -316,7 +316,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
             remainingRepeatsNumber = 0
             updateRemainingRepeatsText()
         } catch {
-            print(error)
+            // Handle error silently
         }
     }
     
