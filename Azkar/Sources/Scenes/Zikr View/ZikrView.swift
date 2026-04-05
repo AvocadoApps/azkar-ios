@@ -17,7 +17,7 @@ import Entities
  */
 struct ZikrView: View {
     
-    @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
+    @AppStorage(Keys.didDisplayCounterOnboardingTip, store: UserDefaults.standard)
     var didDisplayCounterOnboardingTip: Bool?
 
     @ObservedObject var viewModel: ZikrViewModel

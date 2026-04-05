@@ -50,8 +50,14 @@ extension ContentSizeCategory: Codable {
     }
 
     public init(floatValue: CGFloat) {
+        guard floatValue.isFinite else {
+            self = .medium
+            return
+        }
+
         let index = Int(round(floatValue / ContentSizeCategory.stride))
-        self = ContentSizeCategory.allCases[index]
+        let clampedIndex = min(max(index, 0), ContentSizeCategory.allCases.count - 1)
+        self = ContentSizeCategory.allCases[clampedIndex]
     }
 
     public var name: String {

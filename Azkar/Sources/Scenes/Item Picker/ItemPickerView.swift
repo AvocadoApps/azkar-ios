@@ -36,7 +36,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
 
     var content: some View {
         ForEachIndexed(items) { _, position, item in
-            let isSelected = selection.hashValue == item.hashValue
+            let isSelected = selection == item
             let isProtected = isItemProtected(item) && !isSelected
             Button {
                 DispatchQueue.main.async {
