@@ -100,7 +100,9 @@ final class Player: NSObject, ObservableObject {
     }
 
     func playAudio(_ url: URL, title: String, subtitle: String?) {
-        let item = AudioItem(highQualitySoundURL: url)!
+        guard let item = AudioItem(highQualitySoundURL: url) else {
+            return
+        }
         item.title = title
         item.artist = subtitle
         playItem(item)
