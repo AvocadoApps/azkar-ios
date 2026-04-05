@@ -130,7 +130,7 @@ struct AppIconPackListView: View {
             Spacer()
             
             if viewModel.icon == icon || viewModel.isIconAvailable(icon) {
-                CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
+                CheckboxView(isChecked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
                     .frame(width: 20, height: 20)
             } else {
                 ProBadgeView()

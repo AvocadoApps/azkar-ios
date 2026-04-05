@@ -45,7 +45,7 @@ struct FontsListItemView: View {
             }
             
             if hasAccessToFont || isSelectedFont {
-                CheckboxView(isCheked: .constant(isSelectedFont))
+                CheckboxView(isChecked: .constant(isSelectedFont))
                     .frame(width: 20, height: 20)
             } else {
                 ProBadgeView()
