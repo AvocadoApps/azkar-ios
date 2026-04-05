@@ -60,7 +60,7 @@ struct ExtraTextSettingsScreen: View {
                     infoButton("settings.text.use_system_font_size_tip")
                 }
                 Spacer()
-                Toggle("", isOn: $viewModel.preferences.useSystemFontSize.animation(.smooth))
+                Toggle("", isOn: $viewModel.preferences.useSystemFontSize)
                     .labelsHidden()
                     .accessibilityLabel(Text("settings.text.use-system-font-size"))
             }
