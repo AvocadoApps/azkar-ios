@@ -294,5 +294,6 @@ extension ZikrShareOptionsView {
         })
         .buttonStyle(.plain)
         .disabled(isDisabled)
+        .accessibilityLabel(String(localized: increasing ? "accessibility.share.increase-font-size" : "accessibility.share.decrease-font-size"))
     }
 }
