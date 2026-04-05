@@ -278,6 +278,7 @@ struct MainMenuView: View {
                         imageMaxHeight: articleCellHeight
                     )
                 })
+                .accessibilityLabel(article.title)
                 .applyTheme()
                 .padding(.horizontal, 20)
             }
