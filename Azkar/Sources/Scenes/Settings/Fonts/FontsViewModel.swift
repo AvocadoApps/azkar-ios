@@ -36,7 +36,7 @@ final class FontsViewModel: ObservableObject {
             
             static func == (lhs: FontsViewModel.FontsSection.FontsSectionType, rhs: FontsViewModel.FontsSection.FontsSectionType) -> Bool {
                 switch (lhs, rhs) {
-                case (.stantard, .stantard):
+                case (.standard, .standard):
                     return true
                 case (.appFont(let lhsStyle), .appFont(let rhsStyle)):
                     return lhsStyle.key == rhsStyle.key
@@ -45,12 +45,12 @@ final class FontsViewModel: ObservableObject {
                 }
             }
             
-            case stantard
+            case standard
             case appFont(AppFontStyle)
             
             var id: String {
                 switch self {
-                case .stantard:
+                case .standard:
                     return "standard"
                 case .appFont(let style):
                     return style.key
@@ -185,7 +185,7 @@ final class FontsViewModel: ObservableObject {
                     return FontsSection(type: FontsSection.FontsSectionType(from: style), fonts: fontViewModels)
                 }
             sections.insert(FontsSection(
-                type: .stantard,
+                type: .standard,
                 fonts: standardFonts.map { font in
                     AppFontViewModel(font: font, language: selectedLanguage)
                 }
