@@ -16,9 +16,7 @@ enum FontsHelper {
             for subdirectory in subdirectories {
                 registerFonts(in: subdirectory)
             }
-        } catch {
-            print(error)
-        }
+        } catch {}
     }
     
     static func registerFonts(_ urls: [URL]) {
@@ -32,9 +30,7 @@ enum FontsHelper {
             for file in fontFiles {
                 registerFont(at: file)
             }
-        } catch {
-            print(error)
-        }
+        } catch {}
     }
     
     /// Register font at given URL.
@@ -46,9 +42,7 @@ enum FontsHelper {
         if let font = CGFont(provider) {
             CTFontManagerRegisterGraphicsFont(font, &error)
         }
-        if let error = error {
-            print(error)
-        }
+        _ = error
     }
     
     /// Register font at given path.
