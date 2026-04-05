@@ -187,17 +187,6 @@ struct AzkarApp: App {
         }
     }
     
-    private func setNavigationControllerAppearance(
-        navigationController: UINavigationController,
-        standardAppearance: UINavigationBarAppearance,
-        scrollEdgeAppearance: UINavigationBarAppearance,
-        tintColor: UIColor
-    ) {
-        navigationController.navigationBar.standardAppearance = standardAppearance
-        navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
-        navigationController.navigationBar.tintColor = tintColor
-    }
-
     private func getFont(customName: String?, style: UIFont.TextStyle, design: UIFontDescriptor.SystemDesign) -> UIFont {
         let systemFont = UIFont.preferredFont(forTextStyle: style)
         let font: UIFont
