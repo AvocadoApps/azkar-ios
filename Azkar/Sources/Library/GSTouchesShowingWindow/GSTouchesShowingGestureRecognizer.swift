@@ -20,26 +20,30 @@ public class GSTouchesShowingGestureRecognizer: UIGestureRecognizer, UIGestureRe
     }
     
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard let view = self.view else { return }
         for touch in touches {
-            self.touchesShowingController.touchBegan(touch, view: self.view!)
+            self.touchesShowingController.touchBegan(touch, view: view)
         }
     }
-    
+
     override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard let view = self.view else { return }
         for touch in touches {
-            self.touchesShowingController.touchMoved(touch, view: self.view!)
+            self.touchesShowingController.touchMoved(touch, view: view)
         }
     }
-    
+
     override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard let view = self.view else { return }
         for touch in touches {
-            self.touchesShowingController.touchEnded(touch, view: self.view!)
+            self.touchesShowingController.touchEnded(touch, view: view)
         }
     }
-    
+
     override public func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard let view = self.view else { return }
         for touch in touches {
-            self.touchesShowingController.touchEnded(touch, view: self.view!)
+            self.touchesShowingController.touchEnded(touch, view: view)
         }
     }
     
