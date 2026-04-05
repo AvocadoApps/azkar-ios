@@ -81,7 +81,6 @@ actor ReadingActivityManager {
             currentSessionID = sessionID
             return sessionID
         } catch {
-            print("Failed to start Live Activity: \(error)")
             return nil
         }
     }
