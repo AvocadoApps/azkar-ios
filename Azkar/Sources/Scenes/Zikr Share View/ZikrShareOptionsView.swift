@@ -276,6 +276,7 @@ struct ZikrShareOptionsView: View {
             }, label: {
                 Image(systemName: selectedShareType == .image ? "square.and.arrow.down" : "doc.on.doc")
             })
+            .accessibilityLabel(Text(selectedShareType == .image ? "share.save-image" : "share.copy-text"))
             .disabled(processingQuickShareAction != nil)
             .opacity(processingQuickShareAction != nil ? 0.5 : 1)
             

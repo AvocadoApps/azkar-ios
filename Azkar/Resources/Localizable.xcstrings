@@ -8425,6 +8425,64 @@
         }
       }
     },
+    "share.save-image" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs-translation",
+            "value" : "Save Image"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save Image"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs-translation",
+            "value" : "Save Image"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs-translation",
+            "value" : "Save Image"
+          }
+        }
+      }
+    },
+    "share.copy-text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "needs-translation",
+            "value" : "Copy Text"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Text"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs-translation",
+            "value" : "Copy Text"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs-translation",
+            "value" : "Copy Text"
+          }
+        }
+      }
+    },
     "subscribe.billing.auto-renewing" : {
       "extractionState" : "manual",
       "localizations" : {
