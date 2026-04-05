@@ -107,7 +107,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.night"),
                 color: Color.init(uiColor: .systemMint),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .afterSalah,
@@ -115,7 +115,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.after-salah"),
                 color: Color.init(.systemBlue),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .other,
@@ -123,7 +123,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.other"),
                 color: Color.init(.systemTeal),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .hundredDua,
@@ -131,7 +131,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.hundred-dua"),
                 color: Color.init(.systemPink),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
         ]
 
