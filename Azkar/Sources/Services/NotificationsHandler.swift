@@ -228,7 +228,6 @@ extension NotificationsHandler: MessagingDelegate {
     }
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print(#function, fcmToken as Any)
     }
         
 }
