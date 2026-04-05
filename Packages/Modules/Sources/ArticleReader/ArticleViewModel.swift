@@ -1,4 +1,5 @@
 import SwiftUI
+import Library
 import Entities
 
 @dynamicMemberLookup
@@ -41,7 +42,7 @@ public final class ArticleViewModel: ObservableObject {
     
     @MainActor private func observeAnalyticsNumbers() async {
         for await numbers in await analyticsStream() {
-            withAnimation(.spring) {
+            withAnimationIfAllowed(.spring) {
                 setViews(numbers.viewsCount)
                 setShares(numbers.sharesCount)
             }

@@ -110,7 +110,9 @@ struct MainMenuView: View {
                 Button(action: viewModel.navigateToSettings) {
                     Image(systemName: "gear")
                 }
+<<<<<<< HEAD
                 .accessibilityLabel(Text("settings.title"))
+                .accessibilityIdentifier("settings_button")
             }
         }
         .background(
@@ -181,17 +183,21 @@ struct MainMenuView: View {
     }
     
     private func getMainMenuSectionView(_ category: ZikrCategory) -> some View {
-        getMenuButton {
-            MainCategoryView(
-                category: category
-            )
-            .frame(maxWidth: .infinity)
-            .removeSaturationIfNeeded()
-            .background(.contentBackground)
-            .applyTheme()
-        } action: {
-            self.viewModel.navigateToCategory(category)
-        }
+        getMenuButton(
+            label: {
+                MainCategoryView(
+                    category: category
+                )
+                .frame(maxWidth: .infinity)
+                .removeSaturationIfNeeded()
+                .background(.contentBackground)
+                .applyTheme()
+            },
+            action: {
+                self.viewModel.navigateToCategory(category)
+            },
+            accessibilityId: "main_menu_category_\(category.rawValue)"
+        )
         .frame(maxWidth: .infinity, minHeight: 120)
     }
     
@@ -248,23 +254,29 @@ struct MainMenuView: View {
         flipContents: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
-        getMenuButton(label: {
-            HStack {
-                MainMenuSmallGroup(item: item, flip: flipContents)
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(.tertiaryText)
-            }
-        }, action: action)
+        getMenuButton(
+            label: {
+                HStack {
+                    MainMenuSmallGroup(item: item, flip: flipContents)
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.tertiaryText)
+                }
+            },
+            action: action,
+            accessibilityId: "main_menu_item_\(item.title)"
+        )
     }
     
     private func getMenuButton<V: View>(
         label: () -> V,
-        action: @escaping () -> Void
+        action: @escaping () -> Void,
+        accessibilityId: String? = nil
     ) -> some View {
         Button(action: action, label: {
             label().contentShape(Rectangle())
         })
         .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityId ?? "")
     }
 
     private var articlesView: some View {
@@ -313,8 +325,12 @@ struct MainMenuView: View {
             item: AdButtonItem(ad: ad),
             cornerRadius: appTheme.cornerRadius,
             onClose: {
-                withAnimation(.spring) {
+                if UIAccessibility.isReduceMotionEnabled {
                     viewModel.hideAd(ad)
+                } else {
+                    withAnimation(.spring) {
+                        viewModel.hideAd(ad)
+                    }
                 }
             },
             action: {

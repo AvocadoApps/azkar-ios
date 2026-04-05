@@ -28,8 +28,12 @@ struct ArticleStatsView: View {
 
     private func togglePopover() {
         guard canShowPopover else { return }
-        withAnimation(.spring) {
+        if UIAccessibility.isReduceMotionEnabled {
             showNumber.toggle()
+        } else {
+            withAnimation(.spring) {
+                showNumber.toggle()
+            }
         }
     }
     
@@ -67,8 +71,12 @@ private struct StatsViewPreview: View {
     var body: some View {
         VStack {
             Button("Increment", action: {
-                withAnimation(.spring) {
+                if UIAccessibility.isReduceMotionEnabled {
                     number += 5
+                } else {
+                    withAnimation(.spring) {
+                        number += 5
+                    }
                 }
             })
             

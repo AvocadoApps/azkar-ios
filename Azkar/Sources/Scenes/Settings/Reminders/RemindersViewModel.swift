@@ -42,7 +42,7 @@ final class RemindersViewModel: ObservableObject {
         .eraseToAnyPublisher()
         .receive(on: RunLoop.main)
         .sink(receiveValue: { [unowned self] _ in
-            withAnimation(.smooth) {
+            withAnimationIfAllowed(.smooth) {
                 objectWillChange.send()
             }
         })

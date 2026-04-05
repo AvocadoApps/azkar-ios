@@ -5,6 +5,7 @@ struct CollapsableView<Header: View, Content: View>: View {
     @Binding var isExpanded: Bool
     @ViewBuilder let header: () -> Header
     @ViewBuilder let content: () -> Content
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: isExpanded ? 10 : 0) {
@@ -29,6 +30,7 @@ struct CollapsableView<Header: View, Content: View>: View {
             .zIndex(0)
         }
         .clipped()
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: isExpanded)
     }
 
 }
