@@ -73,7 +73,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                         ProBadgeView()
                             .accessibilityHidden(true)
                     } else {
-                        CheckboxView(isCheked: .constant(isSelected))
+                        CheckboxView(isChecked: .constant(isSelected))
                             .frame(width: 20, height: 20)
                             .accessibilityHidden(true)
                     }
