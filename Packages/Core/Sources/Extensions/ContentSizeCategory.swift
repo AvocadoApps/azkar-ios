@@ -91,6 +91,7 @@ extension ContentSizeCategory: Codable {
             .extraExtraLarge,
             .accessibilityMedium,
             .accessibilityLarge,
+            .accessibilityExtraLarge,
             .accessibilityExtraExtraLarge
         ]
     }
