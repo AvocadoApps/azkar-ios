@@ -62,7 +62,7 @@ final class SearchSuggestionsViewModel: ObservableObject {
                     try azkarDatabase.getZikr(record.zikrId, language: record.language)
                 }
         } catch {
-            print(error.localizedDescription)
+            // Error loading suggestions - silently ignore
         }
     }
     
