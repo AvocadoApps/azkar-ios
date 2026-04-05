@@ -140,7 +140,7 @@ struct MainMenuView: View {
         } else {
             SearchResultsView(
                 viewModel: viewModel.searchViewModel,
-                onSelect: viewModel.naviateToSearchResult(_:)
+                onSelect: viewModel.navigateToSearchResult(_:)
             )
         }
     }

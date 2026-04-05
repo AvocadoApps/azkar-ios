@@ -223,7 +223,7 @@ final class MainMenuViewModel: ObservableObject {
         navigator.showArticle(article)
     }
     
-    func naviateToSearchResult(_ searchResult: SearchResultZikr) {
+    func navigateToSearchResult(_ searchResult: SearchResultZikr) {
         navigator.showSearchResult(searchResult, query: searchQuery)
     }
 
