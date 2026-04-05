@@ -134,7 +134,7 @@ class GSTouchImageViewQueue {
         
         let bundle = Bundle(for: type(of: self))
         for _ in 0..<touchesCount {
-            let imageView = UIImageView(image: UIImage(named: CONSTANTS.TouchImageName, in: resourcesBunbdle, compatibleWith: nil))
+            let imageView = UIImageView(image: UIImage(named: CONSTANTS.TouchImageName, in: resourcesBundle, compatibleWith: nil))
             self.backingArray.append(imageView)
         }
     }

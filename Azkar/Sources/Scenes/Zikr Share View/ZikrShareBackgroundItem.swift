@@ -43,7 +43,7 @@ extension ZikrShareBackgroundItem {
         imageNames.map {
             ZikrShareBackgroundItem(
                 id: $0.imageName,
-                background: .localImage(UIImage(named: "Patterns/" + $0.imageName, in: resourcesBunbdle, with: nil)!),
+                background: .localImage(UIImage(named: "Patterns/" + $0.imageName, in: resourcesBundle, with: nil)!),
                 type: $0.type,
                 isProItem: false
             )

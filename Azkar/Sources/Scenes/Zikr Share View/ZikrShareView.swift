@@ -163,7 +163,7 @@ struct ZikrShareView: View {
 
             if includeLogo {
                 VStack {
-                    if let image = UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil) {
+                    if let image = UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil) {
                         Image(uiImage: image)
                             .renderingMode(.template)
                             .resizable()

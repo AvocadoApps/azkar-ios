@@ -27,7 +27,7 @@ final class ArticleShareActionHandler {
             textFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 25)!,
             pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
             footer: ArticlePDFComposer.Footer(
-                image: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
+                image: UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil),
                 text: String(localized: "share.shared-with-azkar").uppercased(),
                 link: URL(string: "https://apple.co/41O1pzQ")
             )
@@ -47,7 +47,7 @@ final class ArticleShareActionHandler {
         let view = ArticlePDFCoverView(
             article: article,
             maxHeight: 842,
-            logoImage: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
+            logoImage: UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil),
             logoSubtitle: String(localized: "share.shared-with-azkar")
         )
         .frame(width: 595, height: 842)
