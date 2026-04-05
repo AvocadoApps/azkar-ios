@@ -1,4 +1,11 @@
-- Zikirler, makaleler ve hadisler için Spotlight araması
-- Yeni sayaç boyutları
-- Zikir veritabanındaki yazım hataları düzeltildi
-- Transliterasyon türü seçimi düzeltildi
+Yenilikler
+- Zikirleri, hadisleri ve makaleleri doğrudan Spotlight'ta arayın
+- Seri takibi, makaleler ve hızlı erişim için yeni Ana Ekran ve Denetim Merkezi widget'ları
+- Tatarca desteği eklendi
+
+İyileştirmeler
+- Okunmamışa Git, ilk okunmamış zikre otomatik kaydırma ve yeni sayaç boyutları
+- VoiceOver desteği, seslendirilen etiketler ve oynatıcı denetimleri iyileştirildi
+
+Düzeltmeler
+- Geri yükleme, açılış istemleri ve widget açma sorunları giderilerek uygulama daha kararlı hale getirildi

@@ -1,4 +1,11 @@
-- Spotlight search for adhkar, articles, and hadiths
-- New counter sizes
-- Fixed typos in adhkar database
-- Fixed transliteration type selection
+New
+- Search adhkar, hadith, and articles directly from Spotlight
+- New Home Screen and Control Center widgets for streaks, articles, and quick access
+- Added Tatar language support
+
+Improvements
+- Go to Unread, auto-scroll to the first unread zikr, and new counter sizes
+- Better VoiceOver support, spoken labels, and smoother player controls
+
+Fixes
+- Fixed paywall restore, launch prompts, and widget opening issues for a more stable app
