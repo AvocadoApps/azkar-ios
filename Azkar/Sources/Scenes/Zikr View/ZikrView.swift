@@ -67,13 +67,11 @@ struct ZikrView: View {
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Zikr Reading", className: viewName)
-        }
-        .environment(\.highlightPattern, viewModel.highlightPattern)
-        .onAppear {
             Task {
                 await viewModel.updateRemainingRepeats()
             }
         }
+        .environment(\.highlightPattern, viewModel.highlightPattern)
         .onDisappear(perform: viewModel.pausePlayer)
         .removeSaturationIfNeeded()
         .background(.background, ignoreSafeArea: .all)
