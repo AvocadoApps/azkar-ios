@@ -228,7 +228,7 @@ extension NotificationsHandler: MessagingDelegate {
     }
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print(#function, fcmToken as Any)
+        // Token refresh handling is not needed for FCM APNs integration
     }
         
 }
