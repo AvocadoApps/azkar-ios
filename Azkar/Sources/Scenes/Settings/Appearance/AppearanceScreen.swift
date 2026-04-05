@@ -136,8 +136,10 @@ struct AppearanceScreen: View {
             .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(borderColor, lineWidth: 1.5))
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text(category.title))
+        .accessibilityValue(isSelected ? String(localized: "accessibility.common.selected") : String(localized: "accessibility.common.not-selected"))
     }
-
+    
     private func infoButton(_ text: LocalizedStringKey) -> some View {
         Templates.Menu {
             Text(text)
