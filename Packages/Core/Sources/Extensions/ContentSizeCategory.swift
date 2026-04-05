@@ -97,14 +97,14 @@ extension ContentSizeCategory: Codable {
     
     public func bigger() -> ContentSizeCategory {
         let all = ContentSizeCategory.availableCases
-        let index = all.firstIndex(of: self)!
+        guard let index = all.firstIndex(of: self) else { return self }
         let nextIndex = min(all.count - 1, index + 1)
         return all[nextIndex]
     }
-    
+
     public func smaller() -> ContentSizeCategory {
         let all = ContentSizeCategory.availableCases
-        let index = all.firstIndex(of: self)!
+        guard let index = all.firstIndex(of: self) else { return self }
         let prevIndex = max(0, index - 1)
         return all[prevIndex]
     }
