@@ -58,8 +58,12 @@ struct ZikrCollectionsSelectionScreen: View {
     ) -> some View {
         Button {
             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-            withAnimation(.spring) {
+            if UIAccessibility.isReduceMotionEnabled {
                 selectedCollection = collection
+            } else {
+                withAnimation(.spring) {
+                    selectedCollection = collection
+                }
             }
         } label: {
             itemViewLabel(collection)

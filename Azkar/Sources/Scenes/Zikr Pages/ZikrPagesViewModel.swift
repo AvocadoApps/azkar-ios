@@ -230,7 +230,7 @@ final class ZikrPagesViewModel: ObservableObject {
         }
         
         func setHasRemainingRepeats(_ flag: Bool) {
-            withAnimation(.smooth) {
+            withAnimationIfAllowed(.smooth) {
                 self.hasRemainingRepeats = flag
             }
         }

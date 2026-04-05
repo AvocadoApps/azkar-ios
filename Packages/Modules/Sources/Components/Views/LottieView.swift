@@ -36,6 +36,7 @@ public struct LottieView: UIViewRepresentable {
     public class Coordinator {
         var colorScheme: ColorScheme?
         var completionBlock: Action?
+        var reduceMotion: Bool = false
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -45,6 +46,7 @@ public struct LottieView: UIViewRepresentable {
     public func makeUIView(context: UIViewRepresentableContext<LottieView>) -> UIView {
         context.coordinator.colorScheme = context.environment.colorScheme
         context.coordinator.completionBlock = completionBlock
+        context.coordinator.reduceMotion = context.environment.accessibilityReduceMotion
         
         animationView.animation = LottieAnimation.named(name)
         animationView.contentMode = contentMode
@@ -52,7 +54,6 @@ public struct LottieView: UIViewRepresentable {
         animationView.backgroundBehavior = .pauseAndRestore
         animationView.animationSpeed = speed
         
-        // Apply the fill color
         if let fillColor {
             applyFillColor(to: animationView, color: fillColor)
         }
@@ -61,7 +62,8 @@ public struct LottieView: UIViewRepresentable {
             animationView.currentProgress = progress
         }
         
-        if progress != 1 {
+        let shouldPlay = !context.coordinator.reduceMotion && progress != 1
+        if shouldPlay {
             animationView.play { finished in
                 guard finished else { return }
                 context.coordinator.completionBlock?()
@@ -77,6 +79,8 @@ public struct LottieView: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<LottieView>) {
+        context.coordinator.reduceMotion = context.environment.accessibilityReduceMotion
+        
         guard context.coordinator.colorScheme != context.environment.colorScheme else {
             return
         }
@@ -88,7 +92,9 @@ public struct LottieView: UIViewRepresentable {
                 if let fillColor {
                     applyFillColor(to: view, color: fillColor)
                 }
-                view.play()
+                if !context.coordinator.reduceMotion {
+                    view.play()
+                }
             }
         }
     }

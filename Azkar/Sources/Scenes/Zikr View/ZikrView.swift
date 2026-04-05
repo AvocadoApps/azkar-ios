@@ -168,6 +168,7 @@ struct ZikrView: View {
         .accessibilityAction(named: Text("common.complete")) {
             completeCounter()
         }
+        .accessibilityIdentifier("zikr_counter_button")
     }
 
     private func getContent() -> some View {

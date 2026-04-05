@@ -263,7 +263,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
             return
         }
         
-        withAnimation(.smooth.speed(1.5)) {
+        withAnimationIfAllowed(.smooth.speed(1.5)) {
             self.remainingRepeatsNumber = remainingRepeatsNumber
         }
 
