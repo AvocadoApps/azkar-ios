@@ -46,6 +46,7 @@ struct TextSettingsScreen: View {
                         Image(systemName: "info.circle")
                     }
                 )
+                .accessibilityLabel(Text("accessibility.common.more-info"))
                 .padding(.trailing)
             }
             
