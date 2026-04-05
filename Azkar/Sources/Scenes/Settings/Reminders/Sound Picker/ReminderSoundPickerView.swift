@@ -47,7 +47,7 @@ struct ReminderSoundPickerView: View {
                 Text(sound.title)
                     .multilineTextAlignment(.leading)
                     .systemFont(.body)
-                
+
                 Spacer()
 
                 if hasAccess || isSelected {
