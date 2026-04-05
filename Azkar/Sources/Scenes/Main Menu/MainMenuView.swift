@@ -10,6 +10,15 @@ private extension View {
     func applyMenuPadding() -> some View {
         self.padding(.horizontal, 20)
     }
+
+    @ViewBuilder
+    func accessibilityIdentifierIfNeeded(_ identifier: String?) -> some View {
+        if let identifier {
+            accessibilityIdentifier(identifier)
+        } else {
+            self
+        }
+    }
 }
 
 struct MainMenuView: View {
@@ -110,7 +119,6 @@ struct MainMenuView: View {
                 Button(action: viewModel.navigateToSettings) {
                     Image(systemName: "gear")
                 }
-<<<<<<< HEAD
                 .accessibilityLabel(Text("settings.title"))
                 .accessibilityIdentifier("settings_button")
             }
@@ -276,7 +284,7 @@ struct MainMenuView: View {
             label().contentShape(Rectangle())
         })
         .buttonStyle(.plain)
-        .accessibilityIdentifier(accessibilityId ?? "")
+        .accessibilityIdentifierIfNeeded(accessibilityId)
     }
 
     private var articlesView: some View {
