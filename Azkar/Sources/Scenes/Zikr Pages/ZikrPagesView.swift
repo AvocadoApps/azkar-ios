@@ -85,7 +85,7 @@ struct ZikrPagesView: View, Equatable {
         }
         .initialPageIndex(viewModel.initialPage)
         .currentPageIndex($viewModel.page.animation(.spring))
-        .edgesIgnoringSafeArea(.bottom)
+        .ignoresSafeArea(.bottom)
         .environment(\.zikrReadingMode, readingMode ?? viewModel.preferences.zikrReadingMode)
         .onReceive(viewModel.preferences.$zikrReadingMode) { newMode in
             readingMode = newMode
@@ -104,7 +104,7 @@ struct ZikrPagesView: View, Equatable {
                     pageIndicator(index: idx, isSelected: isSelected)
                 }
             )
-            .edgesIgnoringSafeArea(.bottom)
+            .ignoresSafeArea(.bottom)
         }
         .opacity(viewModel.page < viewModel.pages.count - 1 ? 1 : 0)
         .frame(maxHeight: pageIndicatorHeight + 8)

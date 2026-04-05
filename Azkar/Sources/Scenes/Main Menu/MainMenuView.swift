@@ -122,7 +122,7 @@ struct MainMenuView: View {
                             Image("eid_background")
                                 .resizable()
                                 .aspectRatio(contentMode: ContentMode.fill)
-                                .edgesIgnoringSafeArea(.all)
+                                .ignoresSafeArea()
                                 .blendMode(.overlay)
                         }
                     }
