@@ -33,7 +33,7 @@ struct HadithView: View {
         .onAppear {
             AnalyticsReporter.reportScreen("Hadith View", className: viewName)
         }
-        .background(colorTheme.getColor(.background).edgesIgnoringSafeArea(.all))
+        .background(colorTheme.getColor(.background).ignoresSafeArea())
     }
 
     private func getContent() -> some View {

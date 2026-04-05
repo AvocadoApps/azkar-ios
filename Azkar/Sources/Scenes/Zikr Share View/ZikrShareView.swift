@@ -55,7 +55,7 @@ struct ZikrShareView: View {
     
     var body: some View {
         container
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea()
             .environment(\.colorScheme, customColorScheme)
             .onAppear {
                 AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
