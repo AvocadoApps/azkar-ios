@@ -1,0 +1,31 @@
+[
+  {
+    "version": "2.9.9",
+    "new": [
+      {
+        "icon": "magnifyingglass",
+        "title": "Spotlight Araması",
+        "subtitle": "Daha hızlı arama",
+        "body": "Zikirleri, makaleleri ve hadisleri doğrudan Spotlight'tan arayın."
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Yeni Sayaç Boyutları",
+        "subtitle": "Daha fazla seçenek",
+        "body": "Ek sayaç boyutu seçenekleri arasından seçim yapın."
+      },
+      {
+        "icon": "text.badge.checkmark",
+        "title": "Veritabanı Düzeltmeleri",
+        "subtitle": "Doğruluk",
+        "body": "Zikir veritabanındaki yazım hataları düzeltildi."
+      },
+      {
+        "icon": "character.textbox",
+        "title": "Transliterasyon Düzeltmesi",
+        "subtitle": "Hata düzeltme",
+        "body": "Transliterasyon türü seçimi düzeltildi."
+      }
+    ]
+  }
+]

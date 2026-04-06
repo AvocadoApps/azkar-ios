@@ -4,6 +4,7 @@ import AboutApp
 import FactoryKit
 import Library
 import ZikrCollectionsOnboarding
+import SwiftNEW
 
 struct SettingsFlowView: View {
 
@@ -196,6 +197,7 @@ private struct ReminderSoundPickerDestinationView: View {
 private struct AboutAppDestinationView: View {
 
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @State private var showWhatsNew = false
 
     var body: some View {
         AppInfoView(
@@ -205,8 +207,14 @@ private struct AboutAppDestinationView: View {
                     let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
                     return "\(String(localized: "common.version")) \(version) (\(build))"
                 }(),
-                isProUser: subscriptionManager.isProUser()
+                isProUser: subscriptionManager.isProUser(),
+                onVersionTap: {
+                    showWhatsNew = true
+                }
             )
         )
+        .sheet(isPresented: $showWhatsNew) {
+            SwiftNEW(show: $showWhatsNew, size: "invisible", labelImage: "sparkles", history: true, data: "data", presentation: .embed)
+        }
     }
 }

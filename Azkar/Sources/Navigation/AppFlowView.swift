@@ -5,6 +5,7 @@ import Library
 import Entities
 import ArticleReader
 import ZikrCollectionsOnboarding
+import SwiftNEW
 
 @MainActor
 struct AppFlowView: View {
@@ -16,6 +17,8 @@ struct AppFlowView: View {
 
     @InjectedObject(\.appNavigator) private var navigator: AppNavigator
     @InjectedObject(\.rootViewModel) private var rootViewModel: RootViewModel
+
+    @State private var showWhatsNew = false
 
     init() {
     }
@@ -45,6 +48,9 @@ struct AppFlowView: View {
             set: { navigator.sheet = $0 }
         )) { sheet in
             sheetView(sheet)
+        }
+        .overlay {
+            SwiftNEW(show: $showWhatsNew, size: "invisible", labelImage: "sparkles", history: true, data: "data")
         }
     }
 

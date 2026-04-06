@@ -59,5 +59,5 @@ enum Keys {
     static let pageIndicatorsCategories = "kPageIndicatorsCategories"
     static let azkarCounterLastChangeDate = "kAzkarCounterLastChangeDate"
     static let didDisplayCounterOnboardingTip = "kDidDisplayCounterOnboardingTip"
-    
+
 }
