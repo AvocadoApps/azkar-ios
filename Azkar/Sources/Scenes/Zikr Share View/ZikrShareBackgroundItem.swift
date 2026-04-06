@@ -40,10 +40,13 @@ extension ZikrShareBackgroundItem {
     ]
     
     static var images: [ZikrShareBackgroundItem] {
-        imageNames.map {
-            ZikrShareBackgroundItem(
+        imageNames.compactMap {
+            guard let image = UIImage(named: "Patterns/" + $0.imageName, in: resourcesBundle, with: nil) else {
+                return nil
+            }
+            return ZikrShareBackgroundItem(
                 id: $0.imageName,
-                background: .localImage(UIImage(named: "Patterns/" + $0.imageName, in: resourcesBundle, with: nil)!),
+                background: .localImage(image),
                 type: $0.type,
                 isProItem: false
             )
