@@ -5,7 +5,7 @@ struct RemindersScreen: View {
     
     @ObservedObject var viewModel: RemindersViewModel
     
-    var showDebugNotificataions = false
+    var showDebugNotifications = false
     
     var body: some View {
         ScrollView {
@@ -33,7 +33,7 @@ struct RemindersScreen: View {
                 notificationsDisabledView
             }
             
-            if showDebugNotificataions && UIApplication.shared.inDebugMode {
+            if showDebugNotifications && UIApplication.shared.inDebugMode {
                 Divider()
                 Button(action: viewModel.navigateToNotificationsList) {
                     Text("[DEBUG] Scheduled notifications")
