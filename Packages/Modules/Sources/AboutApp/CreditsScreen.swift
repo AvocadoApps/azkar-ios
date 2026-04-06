@@ -27,7 +27,7 @@ public struct CreditsScreen: View {
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .listStyle(.grouped)
-        .navigationBarTitle("credits.title")
+        .navigationTitle("credits.title")
         .removeSaturationIfNeeded()
     }
     

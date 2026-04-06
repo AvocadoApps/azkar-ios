@@ -125,7 +125,7 @@ struct ExtraTextSettingsScreen: View {
                 .listRowBackground(colorTheme.getColor(.contentBackground))
             }
             .customScrollContentBackground()
-            .navigationBarTitle("settings.text.line-spacing")
+            .navigationTitle("settings.text.line-spacing")
             .background(.background, ignoreSafeArea: .all)
         } label: {
             NavigationLabel(title: "settings.text.line-spacing")
