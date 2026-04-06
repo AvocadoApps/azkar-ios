@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 import FactoryKit
 import Library
 
@@ -11,8 +10,6 @@ final class AppIconPackListViewModel: ObservableObject {
     @Published var icon: AppIcon = .gold
     
     let iconPacks: [AppIconPack] = AppIconPack.allCases
-
-    private var cancellabels = Set<AnyCancellable>()
 
     init(subscribeScreenTrigger: @escaping Action) {
         self.subscribeScreenTrigger = subscribeScreenTrigger
