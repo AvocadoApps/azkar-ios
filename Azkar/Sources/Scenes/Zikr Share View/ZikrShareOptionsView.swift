@@ -89,7 +89,7 @@ struct ZikrShareOptionsView: View {
     let callback: (ShareOptions) -> Void
 
     @EnvironmentObject var backgroundsService: ShareBackgroundsServiceType
-    @Environment(\.presentationMode) var presentation
+    @Environment(\.dismiss) var dismiss
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
     @Injected(\.subscriptionManager) var subscriptionManager: SubscriptionManagerType
@@ -217,7 +217,7 @@ struct ZikrShareOptionsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(LocalizedStringKey("common.done")) {
-                        presentation.dismiss()
+                        dismiss()
                     }
                 }
                 

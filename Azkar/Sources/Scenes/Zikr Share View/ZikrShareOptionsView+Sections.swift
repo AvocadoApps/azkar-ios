@@ -9,7 +9,7 @@ extension ZikrShareOptionsView {
     var toolbar: some View {
         HStack(spacing: 16) {
             Button(LocalizedStringKey("common.done")) {
-                presentation.dismiss()
+                dismiss()
             }
             Spacer()
 
