@@ -175,7 +175,7 @@ final class FontsViewModel: ObservableObject {
                     let fontViewModels = fonts
                         .filter { font in
                             if !isArabicFonts && !showNonCyrillicFonts, let translationFont = font as? TranslationFont {
-                                return translationFont.supportsCyryllicCharacters
+                                return translationFont.supportsCyrillicCharacters
                             }
                             return true
                         }
