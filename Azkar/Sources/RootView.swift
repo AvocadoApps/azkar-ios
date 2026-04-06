@@ -44,7 +44,7 @@ struct RootView: View {
             viewModel: viewModel.mainMenuViewModel
         )
         .environmentObject(ZikrCounter.shared)
-        .navigationBarTitle(appName)
+        .navigationTitle(appName)
         .navigationTitleMode(.large)
         .searchable(
             text: $viewModel.mainMenuViewModel.searchQuery,
