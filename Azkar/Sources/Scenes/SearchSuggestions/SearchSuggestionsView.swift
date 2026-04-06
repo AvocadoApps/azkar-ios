@@ -104,19 +104,6 @@ struct SearchSuggestionsView: View {
             .padding(.top, 6)
     }
     
-    func clearAllMenu(action: @escaping () -> Void) -> some View {
-        Menu {
-            Text("Please confirm this action")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Button(role: .destructive, action: action) {
-                Label("Clear", systemImage: "trash")
-            }
-        } label: {
-            Text("Clear All")
-        }
-    }
-    
 }
 
 #Preview("Search Suggestions") {
