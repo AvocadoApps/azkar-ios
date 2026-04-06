@@ -29,7 +29,7 @@ public struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
     public var sizeAdjustment: Float?
     public var lineAdjustment: Float?
     
-    public var supportsCyryllicCharacters: Bool {
+    public var supportsCyrillicCharacters: Bool {
         isCyrillic == 1
     }
     
