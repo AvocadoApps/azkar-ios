@@ -40,19 +40,20 @@ class GSTouchesShowingController {
     }
     
     func touchMoved(_ touch: UITouch, view: UIView) {
-        self.touchImageView(for: touch).center = touch.location(in: view)
+        guard let touchImgView = self.touchImageView(for: touch) else { return }
+        touchImgView.center = touch.location(in: view)
     }
     
     func touchEnded(_ touch: UITouch, view: UIView) {
-        let touchStartDate = self.touchesStartDateMapTable.object(forKey: touch)
-        let touchDuration = NSDate().timeIntervalSince(touchStartDate! as Date)
+        guard let touchStartDate = self.touchesStartDateMapTable.object(forKey: touch) else { return }
+        let touchDuration = NSDate().timeIntervalSince(touchStartDate as Date)
         self.touchesStartDateMapTable.removeObject(forKey: touch)
         
         if touchDuration < CONSTANTS.ShortTapThresholdDuration, CONSTANTS.ShowExpandingCircle {
             self.showExpandingCircle(at: touch.location(in: view), in: view)
         }
         
-        let touchImgView = self.touchImageView(for: touch)
+        guard let touchImgView = self.touchImageView(for: touch) else { return }
         UIView.animate(withDuration: 0.1, animations: {
             touchImgView.alpha = 0.0
             touchImgView.transform = CGAffineTransform(scaleX: 1.13, y: 1.13)
@@ -112,8 +113,8 @@ class GSTouchesShowingController {
         CATransaction.commit()
     }
     
-    func touchImageView(for touch: UITouch) -> UIImageView {
-        return self.touchImgViewsDict["\(touch.hash)"]!
+    func touchImageView(for touch: UITouch) -> UIImageView? {
+        return self.touchImgViewsDict["\(touch.hash)"]
     }
     
     func setTouchImageView(_ touchImageView: UIImageView, for touch: UITouch) {
