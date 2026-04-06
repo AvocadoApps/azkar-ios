@@ -32,14 +32,14 @@ final class EnvironmentOverridesViewModel: ObservableObject {
     @Injected(\.preferences) var preferences: Preferences
     var objectWillChange = PassthroughSubject<Void, Never>()
 
-    private var cancellabels = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
     init() {
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
             .subscribe(objectWillChange)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
     }
 }
 

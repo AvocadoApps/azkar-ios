@@ -21,7 +21,6 @@ final class PlayerViewModel: ObservableObject, Equatable {
 
     @Published var isPlaying: Bool
     @Published var progress: Double = 0
-    @Published var progressInSecondsAdjustd: Double = 0
     @Published var progressInSeconds: Double = 0
     @Published var timeElapsed = ""
     @Published var timeRemaining = ""
@@ -33,7 +32,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
     let timings: [AudioTiming]
 
     private let player: Player
-    private var cancellabels = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         title: String,
@@ -53,13 +52,13 @@ final class PlayerViewModel: ObservableObject, Equatable {
         player.$speed
             .removeDuplicates()
             .assign(to: \.speed, on: self)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
 
         player.$isPlaying
             .map { $0 && player.isPlayingItemAtURL(audioURL) }
             .removeDuplicates()
             .assign(to: \.isPlaying, on: self)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
 
         player.$progress
             .map { progress in
@@ -94,7 +93,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
             .removeDuplicates()
             .map { formatter.string(from: $0) ?? zeroTime }
             .assign(to: \.timeElapsed, on: self)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
 
         player.$timeRemainingAdjusted
             .map { time in player.isPlayingItemAtURL(audioURL) ? time : duration }
@@ -102,7 +101,7 @@ final class PlayerViewModel: ObservableObject, Equatable {
             .prepend(duration)
             .map { formatter.string(from: $0) ?? zeroTime }
             .assign(to: \.timeRemaining, on: self)
-            .store(in: &cancellabels)
+            .store(in: &cancellables)
     }
 
     func play() {
