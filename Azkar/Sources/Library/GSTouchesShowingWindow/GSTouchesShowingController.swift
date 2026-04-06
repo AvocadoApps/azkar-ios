@@ -11,7 +11,7 @@ import UIKit
 private struct CONSTANTS {
     static let TouchImageName = "TouchImageBlue"
     static let ShowExpandingCircle = false
-    static let ShortTapTresholdDuration = 0.11
+    static let ShortTapThresholdDuration = 0.11
     static let ShortTapInitialCircleRadius : CGFloat = 22.0
     static let ShortTapFinalCircleRadius : CGFloat = 57.0
 }
@@ -48,7 +48,7 @@ class GSTouchesShowingController {
         let touchDuration = NSDate().timeIntervalSince(touchStartDate! as Date)
         self.touchesStartDateMapTable.removeObject(forKey: touch)
         
-        if touchDuration < CONSTANTS.ShortTapTresholdDuration, CONSTANTS.ShowExpandingCircle {
+        if touchDuration < CONSTANTS.ShortTapThresholdDuration, CONSTANTS.ShowExpandingCircle {
             self.showExpandingCircle(at: touch.location(in: view), in: view)
         }
         
