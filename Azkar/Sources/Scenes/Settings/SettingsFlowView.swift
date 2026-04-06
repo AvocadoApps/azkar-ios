@@ -201,8 +201,8 @@ private struct AboutAppDestinationView: View {
         AppInfoView(
             viewModel: AppInfoViewModel(
                 appVersion: {
-                    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
-                    let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
+                    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") ?? "?"
+                    let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") ?? "?"
                     return "\(String(localized: "common.version")) \(version) (\(build))"
                 }(),
                 isProUser: subscriptionManager.isProUser()
