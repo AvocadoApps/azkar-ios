@@ -189,7 +189,7 @@ struct NotificationsListView: View {
         .background(.background, ignoreSafeArea: .all)
         .background(
             Text("This view is only visible in test builds")
-                .ignoresSafeArea(.bottom)
+                .ignoresSafeArea(edges: .bottom)
                 .foregroundStyle(.secondary)
             ,
             alignment: .bottom
