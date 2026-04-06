@@ -7,7 +7,8 @@ final class FeedbackMailPresenter {
 
     func present(from viewController: UIViewController) {
         guard MFMailComposeViewController.canSendMail() else {
-            UIApplication.shared.open(URL(string: "https://t.me/jawziyya_feedback")!)
+            guard let url = URL(string: "https://t.me/jawziyya_feedback") else { return }
+            UIApplication.shared.open(url)
             return
         }
 
