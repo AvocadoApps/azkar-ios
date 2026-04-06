@@ -43,7 +43,7 @@ struct CollapsableSection: View, Equatable {
                     isExpandable: expandingCallback != nil
                 )
             })
-            .buttonStyle(BorderlessButtonStyle())
+            .buttonStyle(.plain)
             .zIndex(1)
 
             ZStack {
