@@ -51,7 +51,7 @@ public struct CreditsScreen: View {
             .background(.contentBackground)
             .clipShape(Rectangle())
         })
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
     }
