@@ -78,6 +78,7 @@ struct FontsView: View {
                     } label: { _ in
                         Image(systemName: "info")
                             .foregroundStyle(.accent)
+                            .accessibilityLabel(Text("accessibility.common.more-info"))
                     }
                 }
             }
