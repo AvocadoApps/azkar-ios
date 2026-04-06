@@ -14,7 +14,7 @@ struct CollapsableView<Header: View, Content: View>: View {
             }, label: {
                 header()
             })
-            .buttonStyle(BorderlessButtonStyle())
+            .buttonStyle(.plain)
             .zIndex(1)
 
             ZStack {
