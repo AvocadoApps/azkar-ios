@@ -13,8 +13,6 @@ final class SearchManager {
 
     private var searchTask: Task<Void, Never>?
     private let searchResultSectionsPublisher = PassthroughSubject<SearchResultsSection, Never>()
-    private var cancellables = Set<AnyCancellable>()
-    
     private let languages: [Language]
     private let azkarDatabase: AzkarDatabase
 
