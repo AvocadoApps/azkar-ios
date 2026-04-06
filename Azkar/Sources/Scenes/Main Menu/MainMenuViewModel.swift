@@ -81,12 +81,12 @@ final class MainMenuViewModel: ObservableObject {
                 
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
-            if let fastindDua = databaseService.getZikrBeforeBreakingFast() {
+            if let fastingDua = databaseService.getZikrBeforeBreakingFast() {
                 adhkar.append(ZikrMenuItem(
                     color: Color.blue,
                     iconType: IconType.emoji,
                     imageName: "🥛",
-                    zikr: fastindDua
+                    zikr: fastingDua
                 ))
             }
             if let laylatulQadrDua = databaseService.getLaylatulQadrDua() {
