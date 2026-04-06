@@ -10,7 +10,7 @@ struct PickerView<T: View>: View {
 
     var body: some View {
         NavigationLink(
-            destination: destination.navigationBarTitle(navigationTitle ?? label, displayMode: titleDisplayMode)
+            destination: destination.navigationTitle(navigationTitle ?? label).navigationBarTitleDisplayMode(titleDisplayMode)
         ) {
             NavigationLabel(title: label, label: subtitle)
         }
