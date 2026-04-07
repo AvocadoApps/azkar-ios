@@ -27,7 +27,7 @@ class SeekEventProducer: NSObject, EventProducer {
     /// The timer used to generate events.
     private var timer: Timer?
 
-    /// The listener that will be alerted a new event occured.
+    /// The listener that will be alerted a new event occurred.
     weak var eventListener: EventListener?
 
     /// A boolean value indicating whether we're currently producing events or not.
