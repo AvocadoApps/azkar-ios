@@ -78,8 +78,8 @@ struct ZikrShareOptionsView: View {
                 let usesTranslationFont = includeTranslation || includeTransliteration || includeBenefits
                 return includeLogo == false
                 || selectedBackground.isProItem
-                || (usesArabicFont && arabicFont.isStandartPackFont != true)
-                || (usesTranslationFont && translationFont.isStandartPackFont != true)
+                || (usesArabicFont && arabicFont.isStandardPackFont != true)
+                || (usesTranslationFont && translationFont.isStandardPackFont != true)
             } else {
                 return false
             }
