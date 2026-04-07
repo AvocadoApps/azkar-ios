@@ -23,7 +23,7 @@ public struct TranslationFont: Codable, Identifiable, Hashable, AppFont {
     public let name: String
     public var referenceName: String = STANDARD_FONT_REFERENCE_NAME
     public let postscriptName: String
-    public let isStandartPackFont: Bool?
+    public let isStandardPackFont: Bool?
     public var type: FontType = .serif
     private var isCyrillic: Int?
     public var sizeAdjustment: Float?
@@ -48,7 +48,7 @@ public extension TranslationFont {
         TranslationFont(
             name: String(localized: "settings.text.standard-font-name"),
             postscriptName: "",
-            isStandartPackFont: true,
+            isStandardPackFont: true,
             type: .sansSerif,
             isCyrillic: 1
         )
@@ -58,7 +58,7 @@ public extension TranslationFont {
         TranslationFont(
             name: "Courier New",
             postscriptName: "CourierNewPSMT",
-            isStandartPackFont: true,
+            isStandardPackFont: true,
             isCyrillic: 1
         )
     }
@@ -67,7 +67,7 @@ public extension TranslationFont {
         TranslationFont(
             name: "Iowan Old Style",
             postscriptName: "IowanOldStyle-Roman",
-            isStandartPackFont: true,
+            isStandardPackFont: true,
             isCyrillic: 1
         )
     }
@@ -76,7 +76,7 @@ public extension TranslationFont {
         TranslationFont(
             name: "Baskerville",
             postscriptName: "Baskerville",
-            isStandartPackFont: true,
+            isStandardPackFont: true,
             isCyrillic: 1
         )
     }

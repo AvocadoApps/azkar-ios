@@ -130,7 +130,7 @@ final class FontsViewModel: ObservableObject {
     }
     
     func hasAccessToFont(_ font: AppFont) -> Bool {
-        return font.isStandartPackFont == true || subscriptionManager.isProUser()
+        return font.isStandardPackFont == true || subscriptionManager.isProUser()
     }
     
     private func isFontInstalled(_ font: AppFontViewModel) -> Bool {
