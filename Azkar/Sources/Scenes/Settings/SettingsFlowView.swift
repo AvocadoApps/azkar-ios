@@ -198,6 +198,7 @@ private struct AboutAppDestinationView: View {
 
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     @State private var showWhatsNew = false
+    @AppStorage("lastSeenVersion") private var lastSeenVersion: String = ""
 
     var body: some View {
         AppInfoView(
@@ -214,7 +215,21 @@ private struct AboutAppDestinationView: View {
             )
         )
         .sheet(isPresented: $showWhatsNew) {
-            SwiftNEW(show: $showWhatsNew, size: "invisible", labelImage: "sparkles", history: true, data: "data", presentation: .embed)
+            let notes = AppFlowView.loadReleaseNotes(lastSeenVersion: AppFlowView.appVersion)
+            SwiftNEW(
+                color: .white,
+                background: .solidColor(Color(.systemBackground)),
+                triggerStyle: .hidden,
+                currentItems: notes.current,
+                historyItems: notes.history,
+                strings: AppFlowView.releaseNotesStrings,
+                history: true,
+                presentation: .embed,
+                onContinue: {
+                    showWhatsNew = false
+                    lastSeenVersion = AppFlowView.appVersion
+                }
+            )
         }
     }
 }

@@ -19,6 +19,7 @@ struct AppFlowView: View {
     @InjectedObject(\.rootViewModel) private var rootViewModel: RootViewModel
 
     @State private var showWhatsNew = false
+    @AppStorage("lastSeenVersion") private var lastSeenVersion: String = ""
 
     init() {
     }
@@ -49,8 +50,27 @@ struct AppFlowView: View {
         )) { sheet in
             sheetView(sheet)
         }
-        .overlay {
-            SwiftNEW(show: $showWhatsNew, size: "invisible", labelImage: "sparkles", history: true, data: "data")
+        .sheet(isPresented: $showWhatsNew) {
+            let notes = Self.loadReleaseNotes(lastSeenVersion: lastSeenVersion)
+            SwiftNEW(
+                color: .white,
+                background: .solidColor(Color(.systemBackground)),
+                triggerStyle: .hidden,
+                currentItems: notes.current,
+                historyItems: notes.history,
+                strings: Self.releaseNotesStrings,
+                history: true,
+                presentation: .embed,
+                onContinue: {
+                    showWhatsNew = false
+                    lastSeenVersion = Self.appVersion
+                }
+            )
+        }
+        .onAppear {
+            if lastSeenVersion != Self.appVersion {
+                showWhatsNew = true
+            }
         }
     }
 
@@ -142,6 +162,37 @@ struct AppFlowView: View {
                 }
             )
         }
+    }
+
+    static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+
+    static func loadReleaseNotes(lastSeenVersion: String) -> (current: [ReleaseNotes], history: [ReleaseNotes]) {
+        guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let all = try? JSONDecoder().decode([ReleaseNotes].self, from: data) else {
+            return ([], [])
+        }
+        let appVersion = Self.appVersion
+        let current: [ReleaseNotes]
+        if lastSeenVersion.isEmpty {
+            current = all.filter { $0.version == appVersion }
+        } else {
+            current = all.filter { $0.version == appVersion || $0.version.compare(lastSeenVersion, options: .numeric) == .orderedDescending }
+        }
+        let history = all.filter { !current.contains($0) }
+        return (current, history)
+    }
+
+    static var releaseNotesStrings: SwiftNEWStrings {
+        SwiftNEWStrings(
+            triggerButtonLabel: String(localized: "release-notes.show"),
+            historyTitle: String(localized: "release-notes.history"),
+            showHistoryButton: String(localized: "release-notes.show-history"),
+            continueButton: String(localized: "common.done"),
+            returnButton: String(localized: "release-notes.return"),
+            whatsNewIn: String(localized: "release-notes.whats-new-in"),
+            version: String(localized: "common.version")
+        )
     }
 }
 

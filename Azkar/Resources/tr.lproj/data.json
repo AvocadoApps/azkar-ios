@@ -1,7 +1,7 @@
 [
   {
     "version": "2.9.9",
-    "new": [
+    "notes": [
       {
         "icon": "magnifyingglass",
         "title": "Spotlight Araması",
@@ -26,6 +26,19 @@
         "subtitle": "Hata düzeltme",
         "body": "Transliterasyon türü seçimi düzeltildi."
       }
-    ]
+    ],
+    "subtitle": "22.03.2026"
+  },
+  {
+    "version": "1.0",
+    "notes": [
+      {
+        "icon": "star",
+        "iconBackground": "#FF9500",
+        "title": "İlk Sürüm",
+        "body": "Azkar uygulamasının ilk sürümü."
+      }
+    ],
+    "subtitle": "03.05.2020"
   }
 ]

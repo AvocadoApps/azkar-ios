@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "drops",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/omaralbeik/Drops.git",
-      "state" : {
-        "revision" : "a183ee6f79f21c940092a19c2cba756555422371",
-        "version" : "1.7.0"
-      }
-    },
-    {
       "identity" : "factory",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hmlongco/Factory",
@@ -298,21 +289,12 @@
       }
     },
     {
-      "identity" : "swiftglass",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/1998code/SwiftGlass.git",
-      "state" : {
-        "revision" : "b11729993a2f4a4f11d17ee833ec05b2140400c5",
-        "version" : "26.0.1"
-      }
-    },
-    {
       "identity" : "swiftnewkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/1998code/SwiftNEWKit.git",
+      "location" : "https://github.com/av0c0der/SwiftNEWKit",
       "state" : {
-        "revision" : "668fa5778eeec2cde72f9e940ce6c182f1a5c902",
-        "version" : "6.2.1"
+        "branch" : "main",
+        "revision" : "5a011ec9c02aab84197338eeb9b27bc1e5ede4ca"
       }
     },
     {
@@ -340,15 +322,6 @@
       "state" : {
         "revision" : "e984fd2e08140ad5a95d084be38fe02b774bc15d",
         "version" : "0.2.3"
-      }
-    },
-    {
-      "identity" : "swiftvbkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/1998code/SwiftVBKit.git",
-      "state" : {
-        "revision" : "efd706f9b2522cb8f08c75a012c3c5478757379c",
-        "version" : "1.4.0"
       }
     },
     {
