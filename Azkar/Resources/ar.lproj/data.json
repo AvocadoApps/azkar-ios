@@ -1,0 +1,44 @@
+[
+  {
+    "version": "2.9.9",
+    "notes": [
+      {
+        "icon": "magnifyingglass",
+        "title": "البحث عبر Spotlight",
+        "subtitle": "بحث أسرع",
+        "body": "ابحث عن الأذكار والمقالات والأحاديث مباشرة من Spotlight."
+      },
+      {
+        "icon": "circle.circle",
+        "title": "أحجام جديدة للعداد",
+        "subtitle": "خيارات إضافية",
+        "body": "اختر من بين أحجام إضافية للعداد."
+      },
+      {
+        "icon": "text.badge.checkmark",
+        "title": "تصحيحات في قاعدة البيانات",
+        "subtitle": "دقة أعلى",
+        "body": "تصحيح أخطاء إملائية في قاعدة بيانات الأذكار."
+      },
+      {
+        "icon": "character.textbox",
+        "title": "إصلاح النقل الحرفي",
+        "subtitle": "إصلاح خطأ",
+        "body": "إصلاح اختيار نوع النقل الحرفي."
+      }
+    ],
+    "subtitle": "22.03.2026"
+  },
+  {
+    "version": "1.0",
+    "notes": [
+      {
+        "icon": "star",
+        "iconBackground": "#FF9500",
+        "title": "الإصدار الأول",
+        "body": "الإصدار الأول من تطبيق أذكار."
+      }
+    ],
+    "subtitle": "03.05.2020"
+  }
+]

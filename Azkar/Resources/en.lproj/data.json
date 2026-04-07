@@ -1,0 +1,902 @@
+[
+  {
+    "version": "2.9.9",
+    "notes": [
+      {
+        "icon": "magnifyingglass",
+        "title": "Spotlight Search",
+        "subtitle": "Find faster",
+        "body": "Search for adhkar, articles, and hadiths right from Spotlight.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "New Counter Sizes",
+        "subtitle": "More options",
+        "body": "Choose from additional counter size options.",
+        "iconBackground": "#FF9500"
+      },
+      {
+        "icon": "text.badge.checkmark",
+        "title": "Database Fixes",
+        "subtitle": "Accuracy",
+        "body": "Fixed typos in the adhkar database.",
+        "iconBackground": "#34C759"
+      },
+      {
+        "icon": "character.textbox",
+        "title": "Transliteration Fix",
+        "subtitle": "Bug fix",
+        "body": "Fixed transliteration type selection.",
+        "iconBackground": "#AF52DE"
+      }
+    ],
+    "subtitle": "22.03.2026"
+  },
+  {
+    "version": "2.9.8",
+    "notes": [
+      {
+        "icon": "character.textbox",
+        "title": "Transliteration Fix",
+        "body": "Fixed selection of transliteration for Kazakh, Uzbek and other languages using the DIN 31635 standard.",
+        "iconBackground": "#AF52DE"
+      }
+    ],
+    "subtitle": "03.12.2025"
+  },
+  {
+    "version": "2.9.7",
+    "notes": [
+      {
+        "icon": "text.badge.checkmark",
+        "title": "Typo Corrections",
+        "subtitle": "Accuracy",
+        "body": "Corrected typos in various adhkar texts.",
+        "iconBackground": "#34C759"
+      },
+      {
+        "icon": "internaldrive",
+        "title": "Improved Storage",
+        "subtitle": "Faster loading",
+        "body": "Enhanced file storage for faster and more stable loading of articles, fonts, and background images.",
+        "iconBackground": "#8E8E93"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Share Updates",
+        "body": "Updated the Share Dhikr section with new fonts and backgrounds.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "apps.iphone",
+        "title": "iOS 26 Support",
+        "body": "Improved support for iOS 26.",
+        "iconBackground": "#30B0C7"
+      }
+    ],
+    "subtitle": "19.10.2025"
+  },
+  {
+    "version": "2.9.6",
+    "notes": [
+      {
+        "icon": "checkmark.circle",
+        "title": "Completion Checkmark Fix",
+        "body": "Fixed the display of the checkmark indicating completion of reading a category.",
+        "iconBackground": "#34C759"
+      },
+      {
+        "icon": "text.badge.checkmark",
+        "title": "Dua Typo Corrections",
+        "subtitle": "Accuracy",
+        "body": "Corrected typos in the section 100 Duas from the Quran and Sunnah.",
+        "iconBackground": "#34C759"
+      }
+    ],
+    "subtitle": "03.07.2025"
+  },
+  {
+    "version": "2.9.5",
+    "notes": [
+      {
+        "icon": "book.closed",
+        "title": "100 Duas Collection",
+        "body": "100 Duas from the Quran and Sunnah available as a separate category.",
+        "iconBackground": "#FF2D55"
+      },
+      {
+        "icon": "paintpalette",
+        "title": "Updated Color Scheme",
+        "body": "Updated default color scheme for a refreshed appearance.",
+        "iconBackground": "#FF7A00"
+      },
+      {
+        "icon": "app.badge",
+        "title": "New Icons",
+        "body": "New icons throughout the app.",
+        "iconBackground": "#5856D6"
+      }
+    ],
+    "subtitle": "19.06.2025"
+  },
+  {
+    "version": "2.9.4",
+    "notes": [
+      {
+        "icon": "lock.rectangle.on.rectangle",
+        "title": "Lock Screen Widget",
+        "body": "Track your daily reading progress directly from your iOS lock screen with a custom widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Enhanced Sharing",
+        "body": "Enhanced sharing capabilities for dhikr content.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "character.textbox",
+        "title": "Transliteration Settings",
+        "body": "Customizable transliteration settings with DIN 31635 romanization support.",
+        "iconBackground": "#AF52DE"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "body": "Counter behaviour improvements for more reliable tracking.",
+        "iconBackground": "#FF9500"
+      },
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Various bug fixes for improved stability.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "19.03.2025"
+  },
+  {
+    "version": "2.9.3",
+    "notes": [
+      {
+        "icon": "lock.rectangle.on.rectangle",
+        "title": "Lock Screen Widget",
+        "body": "Track your daily reading progress directly from your iOS lock screen with a custom widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Enhanced Sharing",
+        "body": "Enhanced sharing capabilities for dhikr content.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "character.textbox",
+        "title": "Transliteration Settings",
+        "body": "Customizable transliteration settings with DIN 31635 romanization support.",
+        "iconBackground": "#AF52DE"
+      },
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Various bug fixes for improved stability.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "14.03.2025"
+  },
+  {
+    "version": "2.9.2",
+    "notes": [
+      {
+        "icon": "lock.rectangle.on.rectangle",
+        "title": "Lock Screen Widget",
+        "body": "Track your daily reading progress directly from your iOS lock screen with a custom widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Enhanced Sharing",
+        "body": "Enhanced sharing capabilities for dhikr content.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "character.textbox",
+        "title": "Transliteration Settings",
+        "body": "Customizable transliteration settings with DIN 31635 romanization support.",
+        "iconBackground": "#AF52DE"
+      }
+    ],
+    "subtitle": "07.03.2025"
+  },
+  {
+    "version": "2.9.1",
+    "notes": [
+      {
+        "icon": "paintpalette",
+        "title": "New Themes & Fonts",
+        "subtitle": "Comfortable reading",
+        "body": "Added new themes and fonts for more comfortable reading.",
+        "iconBackground": "#FF7A00"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Enhanced Share",
+        "subtitle": "Backgrounds & more",
+        "body": "Enhanced Share function with the ability to add background images and additional settings.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "hand.tap",
+        "title": "Counter Fixed",
+        "subtitle": "Tap restored",
+        "body": "Fixed counter so the tap counting feature now works correctly.",
+        "iconBackground": "#FF9500"
+      },
+      {
+        "icon": "speedometer",
+        "title": "Stability Improvements",
+        "body": "Improved app stability and performance.",
+        "iconBackground": "#8E8E93"
+      }
+    ],
+    "subtitle": "05.03.2025"
+  },
+  {
+    "version": "2.9",
+    "notes": [
+      {
+        "icon": "paintpalette",
+        "title": "New Themes",
+        "subtitle": "Fresh visuals",
+        "body": "Fresh themes added for a better visual experience.",
+        "iconBackground": "#FF7A00"
+      },
+      {
+        "icon": "textformat",
+        "title": "New Fonts",
+        "subtitle": "More choices",
+        "body": "List of custom fonts was extended.",
+        "iconBackground": "#AF52DE"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Enhanced Sharing",
+        "subtitle": "Backgrounds & more",
+        "body": "Now you can include a background image and customize sharing options even more.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "speedometer",
+        "title": "Stability Enhancements",
+        "body": "The app is now more stable and performs better.",
+        "iconBackground": "#8E8E93"
+      },
+      {
+        "icon": "hand.tap",
+        "title": "Tap Counter Restored",
+        "subtitle": "It's back",
+        "body": "The counter functionality using taps is back.",
+        "iconBackground": "#FF9500"
+      }
+    ],
+    "subtitle": "25.02.2025"
+  },
+  {
+    "version": "2.8.1",
+    "notes": [
+      {
+        "icon": "list.bullet",
+        "title": "Collection Source Picker",
+        "subtitle": "Fortress of Muslim",
+        "body": "Adhkar collection source picker with morning and evening adhkar in Fortress of the Muslim order.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "book",
+        "title": "Reading Mode",
+        "body": "Enhanced performance in reading mode.",
+        "iconBackground": "#FF2D55"
+      },
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Fixed some recent problems.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "25.12.2024"
+  },
+  {
+    "version": "2.8",
+    "notes": [
+      {
+        "icon": "list.bullet",
+        "title": "Collection Source Picker",
+        "subtitle": "Fortress of Muslim",
+        "body": "Adhkar collection source picker with morning and evening adhkar in Fortress of the Muslim order.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "book",
+        "title": "Reading Mode",
+        "body": "Enhanced performance in reading mode.",
+        "iconBackground": "#FF2D55"
+      }
+    ],
+    "subtitle": "18.12.2024"
+  },
+  {
+    "version": "2.7.3",
+    "notes": [
+      {
+        "icon": "speedometer",
+        "title": "Stability & Performance",
+        "body": "Enhanced app stability and performance.",
+        "iconBackground": "#8E8E93"
+      }
+    ],
+    "subtitle": "30.10.2024"
+  },
+  {
+    "version": "2.7.2",
+    "notes": [
+      {
+        "icon": "speedometer",
+        "title": "Stability & Performance",
+        "body": "Improved app stability and performance.",
+        "iconBackground": "#8E8E93"
+      }
+    ],
+    "subtitle": "28.10.2024"
+  },
+  {
+    "version": "2.7.1",
+    "notes": [
+      {
+        "icon": "speedometer",
+        "title": "Stability & Performance",
+        "body": "Enhanced app stability and performance.",
+        "iconBackground": "#8E8E93"
+      },
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Resolved bugs and some crashes.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "25.10.2024"
+  },
+  {
+    "version": "2.7",
+    "notes": [
+      {
+        "icon": "speedometer",
+        "title": "Stability & Performance",
+        "body": "Improved overall app stability and performance.",
+        "iconBackground": "#8E8E93"
+      },
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Fixed various bugs and crashes.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "13.10.2024"
+  },
+  {
+    "version": "2.6.13",
+    "notes": [
+      {
+        "icon": "textformat.abc",
+        "title": "Arabic Text Fixes",
+        "body": "Arabic text related bug fixes.",
+        "iconBackground": "#AF52DE"
+      }
+    ],
+    "subtitle": "01.06.2024"
+  },
+  {
+    "version": "2.6.12",
+    "notes": [
+      {
+        "icon": "wrench",
+        "title": "Minor Improvements",
+        "body": "Minor fixes and improvements.",
+        "iconBackground": "#8E8E93"
+      }
+    ],
+    "subtitle": "20.04.2024"
+  },
+  {
+    "version": "2.6.11",
+    "notes": [
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Various bug fixes for improved stability.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "31.03.2024"
+  },
+  {
+    "version": "2.6.10",
+    "notes": [
+      {
+        "icon": "book",
+        "title": "Reading Mode",
+        "body": "New Reading Mode option in Text Settings.",
+        "iconBackground": "#FF2D55"
+      },
+      {
+        "icon": "moon.stars",
+        "title": "Dua of Night of Power",
+        "body": "Added Dua of The Night of Power.",
+        "iconBackground": "#5856D6"
+      }
+    ],
+    "subtitle": "23.03.2024"
+  },
+  {
+    "version": "2.6.9",
+    "notes": [
+      {
+        "icon": "doc.text",
+        "title": "Improved Articles",
+        "body": "Improved Articles functionality.",
+        "iconBackground": "#FF2D55"
+      },
+      {
+        "icon": "ant",
+        "title": "Bug Fixes",
+        "body": "Various bug fixes.",
+        "iconBackground": "#FF3B30"
+      }
+    ],
+    "subtitle": "17.03.2024"
+  },
+  {
+    "version": "2.6.8",
+    "notes": [
+      {
+        "icon": "doc.text",
+        "title": "Improved Articles",
+        "body": "Improved Articles functionality.",
+        "iconBackground": "#FF2D55"
+      }
+    ],
+    "subtitle": "11.03.2024"
+  },
+  {
+    "version": "2.6.7",
+    "notes": [
+      {
+        "icon": "doc.text",
+        "title": "Improved Articles",
+        "body": "Improved Articles functionality.",
+        "iconBackground": "#FF2D55"
+      }
+    ],
+    "subtitle": "03.03.2024"
+  },
+  {
+    "version": "2.6.6",
+    "notes": [
+      {
+        "icon": "doc.richtext",
+        "title": "Adhkar Articles",
+        "body": "Adhkar related articles are now available.",
+        "iconBackground": "#FF2D55"
+      }
+    ],
+    "subtitle": "25.02.2024"
+  },
+  {
+    "version": "2.6.5",
+    "notes": [
+      {
+        "icon": "text.book.closed",
+        "title": "Ayat-al-Kursi Restored",
+        "subtitle": "Content fix",
+        "body": "Added Ayat-al-Kursi back to morning and evening categories.",
+        "iconBackground": "#FF2D55"
+      }
+    ],
+    "subtitle": "18.02.2024"
+  },
+  {
+    "version": "2.6.4",
+    "notes": [
+      {
+        "icon": "text.book.closed",
+        "title": "Ayat-al-Kursi Restored",
+        "subtitle": "Content fix",
+        "body": "Added Ayat-al-Kursi back to morning and evening categories.",
+        "iconBackground": "#FF2D55"
+      }
+    ],
+    "subtitle": "09.01.2024"
+  },
+  {
+    "version": "2.6.3",
+    "notes": [
+      {
+        "icon": "rectangle.3.group",
+        "title": "Widget Improvements",
+        "body": "Improvements in Virtues of dhikr widget and fixed background color.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "sparkles",
+        "title": "What's New Fix",
+        "body": "Fixed What's New window appearance.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "magnifyingglass",
+        "title": "Search",
+        "subtitle": "Find adhkar",
+        "body": "Search through adhkar content.",
+        "iconBackground": "#5856D6"
+      }
+    ],
+    "subtitle": "23.12.2023"
+  },
+  {
+    "version": "2.6.2",
+    "notes": [
+      {
+        "icon": "rectangle.3.group",
+        "title": "Widget Improvements",
+        "body": "Improvements in Virtues of dhikr widget and fixed background color.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "sparkles",
+        "title": "What's New Fix",
+        "body": "Fixed What's New window appearance.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "magnifyingglass",
+        "title": "Search",
+        "subtitle": "Find adhkar",
+        "body": "Search through adhkar content.",
+        "iconBackground": "#5856D6"
+      }
+    ],
+    "subtitle": "01.12.2023"
+  },
+  {
+    "version": "2.6.1",
+    "notes": [
+      {
+        "icon": "magnifyingglass",
+        "title": "Search",
+        "subtitle": "Find adhkar",
+        "body": "Search through adhkar content.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "rectangle.3.group",
+        "title": "Widget Improvements",
+        "body": "Improvements in Virtues of dhikr widget.",
+        "iconBackground": "#30B0C7"
+      }
+    ],
+    "subtitle": "20.11.2023"
+  },
+  {
+    "version": "2.6.0",
+    "notes": [
+      {
+        "icon": "magnifyingglass",
+        "title": "Search",
+        "subtitle": "Find adhkar",
+        "body": "This version adds search functionality to the app.",
+        "iconBackground": "#5856D6"
+      }
+    ],
+    "subtitle": "12.11.2023"
+  },
+  {
+    "version": "2.5.4",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "New Languages",
+        "subtitle": "6 languages added",
+        "body": "Support for Georgian, Ingush, Chechen, Uzbek, Kyrgyz and Kazakh.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "rectangle.3.group",
+        "title": "Virtues Widget",
+        "subtitle": "Lock screen too",
+        "body": "Virtues of dhikr widget with support for lock screen.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "moon.zzz",
+        "title": "Bedtime Adhkar",
+        "body": "New bedtime adhkar category added.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "subtitle": "Reset on launch",
+        "body": "Adhkar Counter improvements and fixes with reset on each app launch.",
+        "iconBackground": "#FF9500"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Share Fixed",
+        "body": "Fixed Share functionality.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "25.10.2023"
+  },
+  {
+    "version": "2.5.3",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "New Languages",
+        "subtitle": "6 languages added",
+        "body": "Support for Georgian, Ingush, Chechen, Uzbek, Kyrgyz and Kazakh.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "rectangle.3.group",
+        "title": "Virtues Widget",
+        "body": "Virtues of dhikr widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "moon.zzz",
+        "title": "Bedtime Adhkar",
+        "body": "New bedtime adhkar category added.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "subtitle": "Reset on launch",
+        "body": "Adhkar Counter improvements and fixes with reset on each app launch.",
+        "iconBackground": "#FF9500"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Share Fixed",
+        "body": "Fixed Share functionality.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "19.10.2023"
+  },
+  {
+    "version": "2.5.2",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "New Languages",
+        "subtitle": "6 languages added",
+        "body": "Support for Georgian, Ingush, Chechen, Uzbek, Kyrgyz and Kazakh.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "rectangle.3.group",
+        "title": "Virtues Widget",
+        "body": "Virtues of dhikr widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "moon.zzz",
+        "title": "Bedtime Adhkar",
+        "body": "New bedtime adhkar category added.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "body": "Adhkar Counter functionality improvements and fixes.",
+        "iconBackground": "#FF9500"
+      },
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Share Fixed",
+        "body": "Fixed Share functionality.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "16.10.2023"
+  },
+  {
+    "version": "2.5.1",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "New Languages",
+        "subtitle": "6 languages added",
+        "body": "Support for Georgian, Ingush, Chechen, Uzbek, Kyrgyz and Kazakh.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "rectangle.3.group",
+        "title": "Virtues Widget",
+        "body": "Virtues of dhikr widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "moon.zzz",
+        "title": "Bedtime Adhkar",
+        "body": "New bedtime adhkar category added.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "body": "Adhkar Counter functionality improvements and fixes.",
+        "iconBackground": "#FF9500"
+      }
+    ],
+    "subtitle": "14.10.2023"
+  },
+  {
+    "version": "2.5",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "New Languages",
+        "subtitle": "5 languages added",
+        "body": "Support for Georgian, Ingush, Chechen, Uzbek and Kyrgyz.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "rectangle.3.group",
+        "title": "Virtues Widget",
+        "body": "Virtues of dhikr widget.",
+        "iconBackground": "#30B0C7"
+      },
+      {
+        "icon": "moon.zzz",
+        "title": "Bedtime Adhkar",
+        "body": "New bedtime adhkar category added.",
+        "iconBackground": "#5856D6"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "body": "Adhkar Counter functionality improvements.",
+        "iconBackground": "#FF9500"
+      }
+    ],
+    "subtitle": "15.09.2023"
+  },
+  {
+    "version": "2.4.1",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "Localization Improvements",
+        "body": "App localization related improvements.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "08.09.2022"
+  },
+  {
+    "version": "2.4",
+    "notes": [
+      {
+        "icon": "waveform",
+        "title": "Audio Text Highlighting",
+        "subtitle": "Follow along",
+        "body": "When audio is playing, Azkar will highlight the text being recited if Smart line-breaks is enabled.",
+        "iconBackground": "#FF9500"
+      }
+    ],
+    "subtitle": "04.09.2022"
+  },
+  {
+    "version": "2.3.5",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "Localization Fixes",
+        "body": "Localization related fixes.",
+        "iconBackground": "#007AFF"
+      },
+      {
+        "icon": "circle.circle",
+        "title": "Counter Improvements",
+        "body": "Improvements of counter functionality.",
+        "iconBackground": "#FF9500"
+      }
+    ],
+    "subtitle": "18.08.2022"
+  },
+  {
+    "version": "2.3.4",
+    "notes": [
+      {
+        "icon": "circle.circle",
+        "title": "Floating Counter",
+        "subtitle": "Always visible",
+        "body": "Dhikr counter as a floating button.",
+        "iconBackground": "#FF9500"
+      }
+    ],
+    "subtitle": "12.06.2022"
+  },
+  {
+    "version": "2.3.3",
+    "notes": [
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Share Dhikr",
+        "subtitle": "Text or image",
+        "body": "Share a dhikr as text or image.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "26.04.2022"
+  },
+  {
+    "version": "2.3.2",
+    "notes": [
+      {
+        "icon": "square.and.arrow.up",
+        "title": "Share Dhikr",
+        "subtitle": "Text or image",
+        "body": "Share a dhikr as text or image.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "25.04.2022"
+  },
+  {
+    "version": "2.3.1",
+    "notes": [
+      {
+        "icon": "text.alignleft",
+        "title": "Line Spacing",
+        "subtitle": "Adjustable text",
+        "body": "Implemented text line spacing adjustment changing option.",
+        "iconBackground": "#AF52DE"
+      }
+    ],
+    "subtitle": "18.04.2022"
+  },
+  {
+    "version": "2.3",
+    "notes": [
+      {
+        "icon": "globe",
+        "title": "English Language",
+        "subtitle": "First release",
+        "body": "This is the first release of Azkar app in English language.",
+        "iconBackground": "#007AFF"
+      }
+    ],
+    "subtitle": "23.10.2021"
+  },
+  {
+    "version": "1.0",
+    "notes": [
+      {
+        "icon": "star",
+        "iconBackground": "#FF9500",
+        "title": "First Release",
+        "body": "The first release of Azkar app."
+      }
+    ],
+    "subtitle": "03.05.2020"
+  }
+]

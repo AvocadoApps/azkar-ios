@@ -289,6 +289,15 @@
       }
     },
     {
+      "identity" : "swiftnewkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/av0c0der/SwiftNEWKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "5a011ec9c02aab84197338eeb9b27bc1e5ede4ca"
+      }
+    },
+    {
       "identity" : "swiftui-introspect",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",

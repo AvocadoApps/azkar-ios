@@ -181,12 +181,6 @@ final class MainMenuViewModel: ObservableObject {
             await loadAds()
         }
         
-        if !didDisplayZikrCollectionsOnboarding, !InstallationDateChecker.isRecentlyInstalled(days: 3) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                navigator.showZikrCollectionsOnboarding()
-                self.didDisplayZikrCollectionsOnboarding = true
-            }
-        }
     }
     
     private func loadArticles() async {

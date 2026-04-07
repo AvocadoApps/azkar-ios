@@ -120,6 +120,8 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "FirebaseMessaging"),
 
                     .external(name: "Mixpanel"),
+
+                    .external(name: "SwiftNEW"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
