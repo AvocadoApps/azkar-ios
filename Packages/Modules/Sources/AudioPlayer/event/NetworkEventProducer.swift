@@ -33,7 +33,7 @@ class NetworkEventProducer: NSObject, EventProducer {
     /// The date at which connection was lost.
     private(set) var connectionLossDate: NSDate?
 
-    /// The listener that will be alerted a new event occured.
+    /// The listener that will be alerted a new event occurred.
     weak var eventListener: EventListener?
 
     /// A boolean value indicating whether we're currently listening to events on the player.

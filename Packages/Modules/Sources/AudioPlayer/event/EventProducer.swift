@@ -16,14 +16,14 @@ protocol EventListener: AnyObject {
     /// Called when an event occurs.
     ///
     /// - Parameters:
-    ///   - event: The event that occured.
+    ///   - event: The event that occurred.
     ///   - eventProducer: The producer at the root of the event.
     func onEvent(_ event: Event, generetedBy eventProducer: EventProducer)
 }
 
 /// An `EventProducer` serves the purpose of producing events over time.
 protocol EventProducer: AnyObject {
-    /// The listener that will be alerted a new event occured.
+    /// The listener that will be alerted a new event occurred.
     var eventListener: EventListener? { get set }
 
     /// Tells the producer to start producing events.
