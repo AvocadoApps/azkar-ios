@@ -166,6 +166,15 @@ struct AppFlowView: View {
 
     static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
+    static func loadAllReleaseNotes() -> [ReleaseNotes] {
+        guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let all = try? JSONDecoder().decode([ReleaseNotes].self, from: data) else {
+            return []
+        }
+        return all
+    }
+
     static func loadReleaseNotes(lastSeenVersion: String) -> (current: [ReleaseNotes], history: [ReleaseNotes]) {
         guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
               let data = try? Data(contentsOf: url),

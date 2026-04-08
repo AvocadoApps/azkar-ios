@@ -235,6 +235,11 @@ struct AzkarApp: App {
             return
         }
 
+        let lastSeenVersion = UserDefaults.standard.string(forKey: "lastSeenVersion") ?? ""
+        if lastSeenVersion != AppFlowView.appVersion {
+            return
+        }
+
         guard subscriptionManager.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
             return
         }

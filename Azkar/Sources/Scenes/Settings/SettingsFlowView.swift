@@ -215,15 +215,15 @@ private struct AboutAppDestinationView: View {
             )
         )
         .sheet(isPresented: $showWhatsNew) {
-            let notes = AppFlowView.loadReleaseNotes(lastSeenVersion: AppFlowView.appVersion)
+            let all = AppFlowView.loadAllReleaseNotes()
             SwiftNEW(
                 color: .white,
                 background: .solidColor(Color(.systemBackground)),
                 triggerStyle: .hidden,
-                currentItems: notes.current,
-                historyItems: notes.history,
+                currentItems: all,
+                historyItems: [],
                 strings: AppFlowView.releaseNotesStrings,
-                history: true,
+                history: false,
                 presentation: .embed,
                 onContinue: {
                     showWhatsNew = false
