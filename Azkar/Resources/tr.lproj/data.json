@@ -1,7 +1,13 @@
 [
   {
-    "version": "2.9.9",
+    "version": "3.0.0",
     "notes": [
+      {
+        "icon": "square.stack.3d.up",
+        "title": "Ana Ekran Widget'ları",
+        "subtitle": "Her zaman bağlı kalın",
+        "body": "Yeni widget'lar: zikir sayacı, sonraki zikir, haftalık seri, makaleler ve Kontrol Merkezi widget'ı (iOS 18+)."
+      },
       {
         "icon": "magnifyingglass",
         "title": "Spotlight Araması",
@@ -9,25 +15,31 @@
         "body": "Zikirleri, makaleleri ve hadisleri doğrudan Spotlight'tan arayın."
       },
       {
-        "icon": "circle.circle",
-        "title": "Yeni Sayaç Boyutları",
-        "subtitle": "Daha fazla seçenek",
-        "body": "Ek sayaç boyutu seçenekleri arasından seçim yapın."
+        "icon": "hand.point.up.braille",
+        "title": "Erişilebilirlik",
+        "subtitle": "VoiceOver desteği",
+        "body": "Uygulama genelinde yerelleştirilmiş sesli etiketlerle VoiceOver erişilebilirliği iyileştirildi."
       },
       {
-        "icon": "text.badge.checkmark",
-        "title": "Veritabanı Düzeltmeleri",
-        "subtitle": "Doğruluk",
-        "body": "Zikir veritabanındaki yazım hataları düzeltildi."
+        "icon": "bookmark",
+        "title": "Okuma Deneyimi",
+        "subtitle": "Akıllı gezinme",
+        "body": "Okunmamışa Git düğmesi, ilk okunmamış zikre otomatik kaydırma ve kategori bazlı sayfa göstergeleri."
       },
       {
-        "icon": "character.textbox",
-        "title": "Transliterasyon Düzeltmesi",
-        "subtitle": "Hata düzeltme",
-        "body": "Transliterasyon türü seçimi düzeltildi."
+        "icon": "app.badge",
+        "title": "Koyu ve Renkli Uygulama Simgeleri",
+        "subtitle": "Kişiselleştirme",
+        "body": "Uygulama simgeleri için yeni koyu ve renkli varyantlar."
+      },
+      {
+        "icon": "globe",
+        "title": "Tatarca Dil Desteği",
+        "subtitle": "Yeni dil",
+        "body": "Tatarca dil desteği eklendi."
       }
     ],
-    "subtitle": "22.03.2026"
+    "date": "2026-04-08T00:00:00Z"
   },
   {
     "version": "1.0",
@@ -39,6 +51,6 @@
         "body": "Azkar uygulamasının ilk sürümü."
       }
     ],
-    "subtitle": "03.05.2020"
+    "date": "2020-05-03T00:00:00Z"
   }
 ]
