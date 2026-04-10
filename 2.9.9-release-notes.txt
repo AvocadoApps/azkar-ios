@@ -1,0 +1,87 @@
+Support new counter sizes
+Add analytics event occurrence tracking with first/repeat detection
+Log analytics events to console in debug mode
+Define is_hidden flag on ads to support 'Don't show again' feature
+Implement bottom sheet ad presentation type
+Install App Store Connect CLI Skills
+Add Tatar language
+Update database
+Update README.md
+Add Spotlight indexing and deep-link routing for zikr content
+Fix app keywords indexing
+Add Spotlight indexing for articles with deep-link support
+Fix Apple ID credential prompt on launch
+Add hadith Spotlight indexing
+Fix hadith Spotlight deep link navigation
+Navigate directly to HadithView from Spotlight deep link
+Fix AboutApp back button crash, add iOS 15 UIActivityViewController fallback
+Add AGENTS.md, CLAUDE.md symlink, and expand README
+Prevent seen ads from resurfacing
+Add fastlane snapshot tests for dhikr and source screens
+Fix Apple ID credentials prompt on app launch
+Fix empty NSPhotoLibraryAddUsageDescription
+Fix all SwiftLint violations and split large files
+Update build settings and gitignore Tuist Derived folders
+Update Tuist to 4.162.1 and apply recommended build settings
+Migrate localizations to Xcode string catalogs
+Move App Store metadata out of fastlane/ to top-level metadata/
+Add ASO skills and skills-lock.json
+Migrate from Superwall to RevenueCat Paywalls and upgrade SDK to v5
+Use manual signing for test targets
+Add Turkish and Arabic localization for App Store metadata and screenshots
+Update team ID and signing config for app transfer to new developer account
+Fix paywall restore state handling
+Fix FontsViewModel initialization order
+Fix paywall restore handling and entitlement checks
+Update TestFlight distribution groups to Public Beta and Azkar Team
+Add widgets and live activity support
+Refactor app navigation around state-driven routing
+Add per-category page indicators preference to Counter settings
+Add "Go to Unread" button and skip completed azkar on auto-advance
+Add weekly streak widget showing daily adhkar completion history
+Add full-moon category image to AzkarResources
+Auto-scroll to first unread zikr when opening a category
+Refine and rename the streak widget
+Skip launch paywall on first app open
+Add next dhikr widget and refine widget previews
+Move page indicators settings to Appearance
+Improve VoiceOver accessibility and localize spoken labels
+Fix Azkar list VoiceOver row compilation
+Refine VoiceOver semantics for reading and settings
+Refactor widget sources into feature folders
+Improve Zikr counter widget category handoff
+Rename widget.next to widget.counter and extract a11y-only keys with .a11y suffix
+Update widget localizations and improve streak widget styling
+Fix counter widget increment button visibility in tinted mode
+Add articles widget
+Add Claude loco skill link
+Refine article widget preview assets
+Show article stats in small widget
+Add Control Center widget (iOS 18+)
+Style speed button with rounded tint background and evenly distribute player controls
+Add quick action scene routing (#110)
+Fix Control Center widget and quick actions not opening the app
+Revert "Fix Control Center widget and quick actions not opening the app"
+Fix Control Center widget not opening the app
+Update database seed
+Add dark/tinted variants to app icons
+Refactor app-scoped DI to Factory property wrappers
+Ship accessibility and stability fixes from isolated worktrees (#112)
+Fix typo: naviateToSearchResult -> navigateToSearchResult (#118)
+Remove force unwrap in Player.playAudio (#123)
+Remove debug print statement from NotificationsHandler (#126)
+Add accessibility label and value to category chip button (#125)
+Add accessibility label to article buttons in MainMenuView (#122)
+Fix typo: isCheked -> isChecked in CheckboxView (#145)
+Remove force unwraps in ContentSizeCategory bigger/smaller (#143)
+Fix typo: resourcesBunbdle -> resourcesBundle across 7 files (#142)
+Add accessibility label to info button in TextSettingsScreen (#139)
+Replace deprecated .edgesIgnoringSafeArea() with .ignoresSafeArea() (#136)
+Fix typo: stantard -> standard in FontsSectionType enum case (#137)
+Replace deprecated .accentColor() with .tint() (#141)
+Replace deprecated Binding.animation(.smooth) with value-based form (#144)
+Combine duplicate .onAppear modifiers in ZikrView (#146)
+Remove force unwrap of URL in FeedbackMailPresenter (#149)
+Replace deprecated @Environment(\.presentationMode) with @Environment(\.dismiss) (#148)
+Remove unused cancellabels property and Combine import from AppIconPackListViewModel (#147)
+Fix bottom safe area API for CI build

@@ -214,18 +214,14 @@ private struct AboutAppDestinationView: View {
                 }
             )
         )
-        .sheet(isPresented: $showWhatsNew) {
+        .fullScreenCover(isPresented: $showWhatsNew) {
             let all = AppFlowView.loadAllReleaseNotes()
-            SwiftNEW(
+            SwiftNEWHistory(
+                historySections: AppFlowView.groupIntoSections(all),
                 color: .white,
                 background: .solidColor(Color(.systemBackground)),
-                triggerStyle: .hidden,
-                currentItems: all,
-                historyItems: [],
                 strings: AppFlowView.releaseNotesStrings,
-                history: false,
-                presentation: .embed,
-                onContinue: {
+                onDismiss: {
                     showWhatsNew = false
                     lastSeenVersion = AppFlowView.appVersion
                 }

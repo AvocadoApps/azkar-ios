@@ -59,7 +59,7 @@
                 {
                     "title": "Harmattan",
                     "link": "https://fonts.google.com/specimen/Harmattan?subset=arabic"
-                },
+                }
             ]
         },
         {
@@ -84,7 +84,7 @@
                 {
                     "title": "Weather Night",
                     "link": "https://lottiefiles.com/4799-weather-night"
-                },
+                }
             ]
         },
         {
@@ -95,8 +95,16 @@
                     "link": "https://github.com/Alamofire/Alamofire"
                 },
                 {
+                    "title": "Factory",
+                    "link": "https://github.com/hmlongco/Factory"
+                },
+                {
                     "title": "Fakery",
                     "link": "https://github.com/vadymmarkov/Fakery"
+                },
+                {
+                    "title": "Firebase",
+                    "link": "https://github.com/firebase/firebase-ios-sdk"
                 },
                 {
                     "title": "GRDB.swift",
@@ -104,7 +112,7 @@
                 },
                 {
                     "title": "Lottie",
-                    "link": "https://github.com/airbnb/lottie-ios"
+                    "link": "https://github.com/airbnb/lottie-spm"
                 },
                 {
                     "title": "MarkdownKit",
@@ -131,10 +139,6 @@
                     "link": "https://github.com/onmyway133/RoughSwift"
                 },
                 {
-                    "title": "Stinsen",
-                    "link": "https://github.com/rundfunk47/stinsen"
-                },
-                {
                     "title": "Supabase Swift",
                     "link": "https://github.com/supabase-community/supabase-swift"
                 },
@@ -145,6 +149,10 @@
                 {
                     "title": "SwiftUI Introspect",
                     "link": "https://github.com/siteline/swiftui-introspect"
+                },
+                {
+                    "title": "SwiftNEWKit",
+                    "link": "https://github.com/av0c0der/SwiftNEWKit"
                 },
                 {
                     "title": "SwiftUIX",

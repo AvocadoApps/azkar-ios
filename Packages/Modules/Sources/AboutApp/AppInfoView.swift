@@ -140,17 +140,19 @@ public struct AppInfoView: View {
                         }
                     }
                     
-                    HStack(spacing: 4) {
+                    if let onVersionTap = viewModel.onVersionTap {
+                        Button(action: onVersionTap) {
+                            HStack(spacing: 4) {
+                                Text(viewModel.appVersion)
+                                Image(systemName: "info.circle")
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(Color.secondary)
+                        }
+                    } else {
                         Text(viewModel.appVersion)
                             .font(.subheadline)
                             .foregroundStyle(Color.secondary)
-                        if let onVersionTap = viewModel.onVersionTap {
-                            Button(action: onVersionTap) {
-                                Image(systemName: "info.circle")
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.secondary)
-                            }
-                        }
                     }
                 }
                 

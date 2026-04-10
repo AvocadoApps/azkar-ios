@@ -55,12 +55,10 @@ struct AppFlowView: View {
             SwiftNEW(
                 color: .white,
                 background: .solidColor(Color(.systemBackground)),
-                triggerStyle: .hidden,
                 currentItems: notes.current,
-                historyItems: notes.history,
+                historySections: Self.groupIntoSections(notes.history),
                 strings: Self.releaseNotesStrings,
                 history: true,
-                presentation: .embed,
                 onContinue: {
                     showWhatsNew = false
                     lastSeenVersion = Self.appVersion
@@ -194,14 +192,24 @@ struct AppFlowView: View {
 
     static var releaseNotesStrings: SwiftNEWStrings {
         SwiftNEWStrings(
-            triggerButtonLabel: String(localized: "release-notes.show"),
             historyTitle: String(localized: "release-notes.history"),
             showHistoryButton: String(localized: "release-notes.show-history"),
             continueButton: String(localized: "common.done"),
             returnButton: String(localized: "release-notes.return"),
+            dismissHistoryButton: String(localized: "common.done"),
             whatsNewIn: String(localized: "release-notes.whats-new-in"),
             version: String(localized: "common.version")
         )
+    }
+
+    static func groupIntoSections(_ items: [ReleaseNotes]) -> [ReleaseNotesSection] {
+        let grouped = Dictionary(grouping: items) { item -> String in
+            let components = item.version.split(separator: ".")
+            return components.first.map(String.init) ?? item.version
+        }
+        return grouped
+            .sorted { $0.key.compare($1.key, options: .numeric) == .orderedDescending }
+            .map { ReleaseNotesSection(title: "\($0.key).x", items: $0.value) }
     }
 }
 
