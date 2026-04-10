@@ -5,37 +5,31 @@
       {
         "icon": "square.stack.3d.up",
         "title": "ويدجت الشاشة الرئيسية",
-        "subtitle": "ابقَ على اتصال",
         "body": "ويدجت جديدة: عداد الأذكار، الذكر التالي، سلسلة الأسبوع، المقالات، وويدجت مركز التحكم (iOS 18+)."
       },
       {
         "icon": "magnifyingglass",
         "title": "البحث عبر Spotlight",
-        "subtitle": "بحث أسرع",
         "body": "ابحث عن الأذكار والمقالات والأحاديث مباشرة من Spotlight."
       },
       {
         "icon": "hand.point.up.braille",
-        "title": "إمكانية الوصول",
-        "subtitle": "دعم VoiceOver",
+        "title": "دعم VoiceOver",
         "body": "تحسين إمكانية الوصول عبر VoiceOver مع تسميات صوتية مترجمة في جميع أنحاء التطبيق."
       },
       {
         "icon": "bookmark",
         "title": "تجربة قراءة محسّنة",
-        "subtitle": "تنقّل ذكي",
         "body": "زر الانتقال إلى غير المقروء، والتمرير التلقائي إلى أول ذكر غير مقروء، ومؤشرات الصفحات لكل فئة."
       },
       {
         "icon": "app.badge",
         "title": "أيقونات داكنة وملونة",
-        "subtitle": "تخصيص",
         "body": "أيقونات تطبيق جديدة بأنماط داكنة وملونة."
       },
       {
         "icon": "globe",
         "title": "اللغة التترية",
-        "subtitle": "لغة جديدة",
         "body": "تمت إضافة دعم اللغة التترية."
       }
     ],
@@ -45,8 +39,9 @@
     "version": "1.0",
     "notes": [
       {
-        "icon": "star",
-        "iconBackground": "#FF9500",
+        "icon": "moon.stars.fill",
+        "iconBackground": "#FFFFFF",
+        "iconColor": "#EDE21A",
         "title": "الإصدار الأول",
         "body": "الإصدار الأول من تطبيق أذكار."
       }

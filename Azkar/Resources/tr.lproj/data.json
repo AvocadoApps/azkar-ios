@@ -5,37 +5,31 @@
       {
         "icon": "square.stack.3d.up",
         "title": "Ana Ekran Widget'ları",
-        "subtitle": "Her zaman bağlı kalın",
         "body": "Yeni widget'lar: zikir sayacı, sonraki zikir, haftalık seri, makaleler ve Kontrol Merkezi widget'ı (iOS 18+)."
       },
       {
         "icon": "magnifyingglass",
         "title": "Spotlight Araması",
-        "subtitle": "Daha hızlı arama",
         "body": "Zikirleri, makaleleri ve hadisleri doğrudan Spotlight'tan arayın."
       },
       {
         "icon": "hand.point.up.braille",
-        "title": "Erişilebilirlik",
-        "subtitle": "VoiceOver desteği",
+        "title": "VoiceOver Desteği",
         "body": "Uygulama genelinde yerelleştirilmiş sesli etiketlerle VoiceOver erişilebilirliği iyileştirildi."
       },
       {
         "icon": "bookmark",
         "title": "Okuma Deneyimi",
-        "subtitle": "Akıllı gezinme",
         "body": "Okunmamışa Git düğmesi, ilk okunmamış zikre otomatik kaydırma ve kategori bazlı sayfa göstergeleri."
       },
       {
         "icon": "app.badge",
         "title": "Koyu ve Renkli Uygulama Simgeleri",
-        "subtitle": "Kişiselleştirme",
         "body": "Uygulama simgeleri için yeni koyu ve renkli varyantlar."
       },
       {
         "icon": "globe",
         "title": "Tatarca Dil Desteği",
-        "subtitle": "Yeni dil",
         "body": "Tatarca dil desteği eklendi."
       }
     ],
@@ -45,8 +39,9 @@
     "version": "1.0",
     "notes": [
       {
-        "icon": "star",
-        "iconBackground": "#FF9500",
+        "icon": "moon.stars.fill",
+        "iconBackground": "#FFFFFF",
+        "iconColor": "#EDE21A",
         "title": "İlk Sürüm",
         "body": "Azkar uygulamasının ilk sürümü."
       }

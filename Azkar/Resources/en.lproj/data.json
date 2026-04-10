@@ -5,42 +5,36 @@
       {
         "icon": "square.stack.3d.up",
         "title": "Home Screen Widgets",
-        "subtitle": "Stay connected",
         "body": "New widgets for your home screen: dhikr counter, next dhikr, weekly streak, articles, and a Control Center widget (iOS 18+).",
         "iconBackground": "#007AFF"
       },
       {
         "icon": "magnifyingglass",
         "title": "Spotlight Search",
-        "subtitle": "Find faster",
         "body": "Search for adhkar, articles, and hadiths right from Spotlight.",
         "iconBackground": "#5856D6"
       },
       {
         "icon": "hand.point.up.braille",
-        "title": "Accessibility",
-        "subtitle": "VoiceOver support",
+        "title": "VoiceOver Support",
         "body": "Improved VoiceOver accessibility with localized spoken labels across the app.",
         "iconBackground": "#34C759"
       },
       {
         "icon": "bookmark",
         "title": "Reading Experience",
-        "subtitle": "Smart navigation",
         "body": "Go to Unread button, auto-scroll to first unread zikr, and per-category page indicators.",
         "iconBackground": "#FF9500"
       },
       {
         "icon": "app.badge",
         "title": "Dark & Tinted App Icons",
-        "subtitle": "Personalize",
         "body": "New dark and tinted variants for app icons.",
         "iconBackground": "#8E8E93"
       },
       {
         "icon": "globe",
         "title": "Tatar Language",
-        "subtitle": "New language",
         "body": "Added Tatar language support.",
         "iconBackground": "#30B0C7"
       }
@@ -65,14 +59,12 @@
       {
         "icon": "text.badge.checkmark",
         "title": "Typo Corrections",
-        "subtitle": "Accuracy",
         "body": "Corrected typos in various adhkar texts.",
         "iconBackground": "#34C759"
       },
       {
         "icon": "internaldrive",
         "title": "Improved Storage",
-        "subtitle": "Faster loading",
         "body": "Enhanced file storage for faster and more stable loading of articles, fonts, and background images.",
         "iconBackground": "#8E8E93"
       },
@@ -103,7 +95,6 @@
       {
         "icon": "text.badge.checkmark",
         "title": "Dua Typo Corrections",
-        "subtitle": "Accuracy",
         "body": "Corrected typos in the section 100 Duas from the Quran and Sunnah.",
         "iconBackground": "#34C759"
       }
@@ -230,21 +221,18 @@
       {
         "icon": "paintpalette",
         "title": "New Themes & Fonts",
-        "subtitle": "Comfortable reading",
         "body": "Added new themes and fonts for more comfortable reading.",
         "iconBackground": "#FF7A00"
       },
       {
         "icon": "square.and.arrow.up",
         "title": "Enhanced Share",
-        "subtitle": "Backgrounds & more",
         "body": "Enhanced Share function with the ability to add background images and additional settings.",
         "iconBackground": "#007AFF"
       },
       {
         "icon": "hand.tap",
         "title": "Counter Fixed",
-        "subtitle": "Tap restored",
         "body": "Fixed counter so the tap counting feature now works correctly.",
         "iconBackground": "#FF9500"
       },
@@ -263,21 +251,18 @@
       {
         "icon": "paintpalette",
         "title": "New Themes",
-        "subtitle": "Fresh visuals",
         "body": "Fresh themes added for a better visual experience.",
         "iconBackground": "#FF7A00"
       },
       {
         "icon": "textformat",
         "title": "New Fonts",
-        "subtitle": "More choices",
         "body": "List of custom fonts was extended.",
         "iconBackground": "#AF52DE"
       },
       {
         "icon": "square.and.arrow.up",
         "title": "Enhanced Sharing",
-        "subtitle": "Backgrounds & more",
         "body": "Now you can include a background image and customize sharing options even more.",
         "iconBackground": "#007AFF"
       },
@@ -290,7 +275,6 @@
       {
         "icon": "hand.tap",
         "title": "Tap Counter Restored",
-        "subtitle": "It's back",
         "body": "The counter functionality using taps is back.",
         "iconBackground": "#FF9500"
       }
@@ -515,7 +499,6 @@
       {
         "icon": "text.book.closed",
         "title": "Ayat-al-Kursi Restored",
-        "subtitle": "Content fix",
         "body": "Added Ayat-al-Kursi back to morning and evening categories.",
         "iconBackground": "#FF2D55"
       }
@@ -528,7 +511,6 @@
       {
         "icon": "text.book.closed",
         "title": "Ayat-al-Kursi Restored",
-        "subtitle": "Content fix",
         "body": "Added Ayat-al-Kursi back to morning and evening categories.",
         "iconBackground": "#FF2D55"
       }
@@ -553,7 +535,6 @@
       {
         "icon": "magnifyingglass",
         "title": "Search",
-        "subtitle": "Find adhkar",
         "body": "Search through adhkar content.",
         "iconBackground": "#5856D6"
       }
@@ -578,7 +559,6 @@
       {
         "icon": "magnifyingglass",
         "title": "Search",
-        "subtitle": "Find adhkar",
         "body": "Search through adhkar content.",
         "iconBackground": "#5856D6"
       }
@@ -591,7 +571,6 @@
       {
         "icon": "magnifyingglass",
         "title": "Search",
-        "subtitle": "Find adhkar",
         "body": "Search through adhkar content.",
         "iconBackground": "#5856D6"
       },
@@ -610,7 +589,6 @@
       {
         "icon": "magnifyingglass",
         "title": "Search",
-        "subtitle": "Find adhkar",
         "body": "This version adds search functionality to the app.",
         "iconBackground": "#5856D6"
       }
@@ -811,7 +789,6 @@
       {
         "icon": "waveform",
         "title": "Audio Text Highlighting",
-        "subtitle": "Follow along",
         "body": "When audio is playing, Azkar will highlight the text being recited if Smart line-breaks is enabled.",
         "iconBackground": "#FF9500"
       }
@@ -842,7 +819,6 @@
       {
         "icon": "circle.circle",
         "title": "Floating Counter",
-        "subtitle": "Always visible",
         "body": "Dhikr counter as a floating button.",
         "iconBackground": "#FF9500"
       }
@@ -881,7 +857,6 @@
       {
         "icon": "text.alignleft",
         "title": "Line Spacing",
-        "subtitle": "Adjustable text",
         "body": "Implemented text line spacing adjustment changing option.",
         "iconBackground": "#AF52DE"
       }
@@ -894,7 +869,6 @@
       {
         "icon": "globe",
         "title": "English Language",
-        "subtitle": "First release",
         "body": "This is the first release of Azkar app in English language.",
         "iconBackground": "#007AFF"
       }
@@ -905,8 +879,9 @@
     "version": "1.0",
     "notes": [
       {
-        "icon": "star",
-        "iconBackground": "#FF9500",
+        "icon": "moon.stars.fill",
+        "iconBackground": "#FFFFFF",
+        "iconColor": "#EDE21A",
         "title": "First Release",
         "body": "The first release of Azkar app."
       }
