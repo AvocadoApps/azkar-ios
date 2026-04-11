@@ -156,7 +156,7 @@
               "iconBackground": "#AF52DE"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Counter Improvements",
               "body": "Counter behaviour improvements for more reliable tracking.",
               "iconBackground": "#FF9500"
@@ -467,18 +467,6 @@
           "date": "2024-03-17T00:00:00Z"
         },
         {
-          "version": "2.6.8",
-          "notes": [
-            {
-              "icon": "doc.text",
-              "title": "Improved Articles",
-              "body": "Improved Articles functionality.",
-              "iconBackground": "#FF2D55"
-            }
-          ],
-          "date": "2024-03-11T00:00:00Z"
-        },
-        {
           "version": "2.6.7",
           "notes": [
             {
@@ -503,18 +491,6 @@
           "date": "2024-02-25T00:00:00Z"
         },
         {
-          "version": "2.6.5",
-          "notes": [
-            {
-              "icon": "text.book.closed",
-              "title": "Ayat-al-Kursi Restored",
-              "body": "Added Ayat-al-Kursi back to morning and evening categories.",
-              "iconBackground": "#FF2D55"
-            }
-          ],
-          "date": "2024-02-18T00:00:00Z"
-        },
-        {
           "version": "2.6.4",
           "notes": [
             {
@@ -525,30 +501,6 @@
             }
           ],
           "date": "2024-01-09T00:00:00Z"
-        },
-        {
-          "version": "2.6.3",
-          "notes": [
-            {
-              "icon": "rectangle.3.group",
-              "title": "Widget Improvements",
-              "body": "Improvements in Virtues of dhikr widget and fixed background color.",
-              "iconBackground": "#30B0C7"
-            },
-            {
-              "icon": "sparkles",
-              "title": "What's New Fix",
-              "body": "Fixed What's New window appearance.",
-              "iconBackground": "#30B0C7"
-            },
-            {
-              "icon": "magnifyingglass",
-              "title": "Search",
-              "body": "Search through adhkar content.",
-              "iconBackground": "#5856D6"
-            }
-          ],
-          "date": "2023-12-23T00:00:00Z"
         },
         {
           "version": "2.6.2",
@@ -628,7 +580,7 @@
               "iconBackground": "#5856D6"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Adhkar Counter Improvements",
               "subtitle": "Reset on launch",
               "body": "Adhkar Counter improvements and fixes with reset on each app launch.",
@@ -666,7 +618,7 @@
               "iconBackground": "#5856D6"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Adhkar Counter Improvements",
               "subtitle": "Reset on launch",
               "body": "Adhkar Counter improvements and fixes with reset on each app launch.",
@@ -704,7 +656,7 @@
               "iconBackground": "#5856D6"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Adhkar Counter Improvements",
               "body": "Adhkar Counter improvements and fixes, with support for changing its size.",
               "iconBackground": "#FF9500"
@@ -741,7 +693,7 @@
               "iconBackground": "#5856D6"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Adhkar Counter Improvements",
               "body": "Adhkar Counter improvements and fixes, with support for changing its size.",
               "iconBackground": "#FF9500"
@@ -772,7 +724,7 @@
               "iconBackground": "#5856D6"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Adhkar Counter Improvements",
               "body": "Adhkar Counter improvements and fixes, with support for changing its size.",
               "iconBackground": "#FF9500"
@@ -814,7 +766,7 @@
               "iconBackground": "#007AFF"
             },
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Counter Improvements",
               "body": "Improvements of counter functionality.",
               "iconBackground": "#FF9500"
@@ -826,26 +778,13 @@
           "version": "2.3.4",
           "notes": [
             {
-              "icon": "circle.circle",
+              "icon": "plusminus.circle",
               "title": "Floating Counter",
               "body": "Dhikr counter as a floating button.",
               "iconBackground": "#FF9500"
             }
           ],
           "date": "2022-06-12T00:00:00Z"
-        },
-        {
-          "version": "2.3.3",
-          "notes": [
-            {
-              "icon": "square.and.arrow.up",
-              "title": "Share Dhikr",
-              "subtitle": "Text or image",
-              "body": "Share a dhikr as text or image.",
-              "iconBackground": "#007AFF"
-            }
-          ],
-          "date": "2022-04-26T00:00:00Z"
         },
         {
           "version": "2.3.2",
@@ -864,7 +803,7 @@
           "version": "2.3.1",
           "notes": [
             {
-              "icon": "text.alignleft",
+              "icon": "textformat",
               "title": "Line Spacing",
               "body": "Implemented text line spacing adjustment changing option.",
               "iconBackground": "#AF52DE"

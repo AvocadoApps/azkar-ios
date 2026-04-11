@@ -227,7 +227,8 @@ public struct AppInfoView: View {
                 Text("Avocado Apps")
                     .font(.headline.weight(.bold))
                     .tracking(-0.4)
-                    .foregroundStyle(.secondaryText)
+                    .foregroundStyle(.primary)
+                    .opacity(0.75)
             }
         }
         .buttonStyle(.plain)
