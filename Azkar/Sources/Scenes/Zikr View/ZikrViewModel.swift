@@ -1,7 +1,6 @@
 import UIKit
 import SwiftUI
 import Combine
-import AudioPlayer
 import AVFoundation
 import Library
 import AzkarServices
@@ -89,6 +88,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     
     private var cancellables: Set<AnyCancellable> = []
     private let player: Player
+    private var tickerPlayer: AVAudioPlayer?
     
     public var audioURL: URL? {
         if let link = zikr.audio?.link {
@@ -268,9 +268,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         }
 
         if preferences.enableCounterTicker, !player.isPlaying {
-            DispatchQueue.global(qos: .userInitiated).async {
-                self.playTickerSound()
-            }
+            playTickerSound()
         }
     }
 
@@ -279,12 +277,24 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     }
 
     private func playTickerSound() {
-        guard
-            let url = Bundle.main.url(forResource: "counter-ticker", withExtension: "m4a"),
-            let audioItem = AudioItem(soundURLs: [.high: url]) else {
+        guard let url = Bundle.main.url(forResource: "counter-ticker", withExtension: "m4a") else {
             return
         }
-        player.playItem(audioItem, atVolume: 0.25)
+
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
+
+            if tickerPlayer == nil {
+                tickerPlayer = try AVAudioPlayer(contentsOf: url)
+                tickerPlayer?.volume = 0.25
+                tickerPlayer?.prepareToPlay()
+            }
+
+            tickerPlayer?.currentTime = 0
+            tickerPlayer?.play()
+        } catch {
+            return
+        }
     }
     
     func playAudio(at index: Int) {
