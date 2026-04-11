@@ -8,7 +8,7 @@ import AzkarResources
 public struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
-    @Environment(\.safariPresenter) var safariPresenter
+    @Environment(\.openURL) private var openURL
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
     public init(viewModel: AppInfoViewModel) {
@@ -168,7 +168,7 @@ public struct AppInfoView: View {
         color: Color
     ) -> some View {
         Button {
-            safariPresenter.set(url)
+            openURL(url)
         } label: {
             buttonLabel(title, image: image, color: color)
         }
@@ -207,17 +207,32 @@ public struct AppInfoView: View {
             Text("Copyright © 2020-\(currentYear)")
                 .font(.caption)
             
-            HStack {
-                Text("🥜 Al Jawziyya")
-                    .font(Font.title3.weight(.bold).monospaced())
-            }
+            avocadoAppsBrandView
         }
         .padding(20)
-        .opacity(0.5)
         .frame(maxWidth: .infinity)
         .background(.background)
     }
-    
+
+    private var avocadoAppsBrandView: some View {
+        Button {
+            openURL(URL(string: "https://avocadoapps.github.io/")!)
+        } label: {
+            HStack(spacing: 8) {
+                Image("avocado-apps-logo", bundle: azkarResourcesBundle)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+
+                Text("Avocado Apps")
+                    .font(.headline.weight(.bold))
+                    .tracking(-0.4)
+                    .foregroundStyle(.secondaryText)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+     
 }
 
 #Preview("App Info") {
