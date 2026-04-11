@@ -227,8 +227,10 @@ struct AppFlowView: View {
             return []
         }
 
+        let versions = Set(items.map(\.version))
+
         return payload.historySections.compactMap { section in
-            let sectionItems = section.items.filter { items.contains($0) }
+            let sectionItems = section.items.filter { versions.contains($0.version) }
             guard !sectionItems.isEmpty else {
                 return nil
             }
