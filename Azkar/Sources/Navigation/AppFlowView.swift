@@ -10,6 +10,19 @@ import ChangelogKit
 @MainActor
 struct AppFlowView: View {
 
+    private struct ReleaseNotesPayload: Decodable {
+        let historySections: [ReleaseNotesPayloadSection]
+
+        var allItems: [ReleaseNotes] {
+            historySections.flatMap(\.items)
+        }
+    }
+
+    private struct ReleaseNotesPayloadSection: Decodable {
+        let title: String
+        let items: [ReleaseNotes]
+    }
+
     @InjectedObject(\.preferences) private var preferences: Preferences
     @Injected(\.appDependencies) private var dependencies: AppDependencies
     @Injected(\.articleShareActionHandler) private var articleShareActionHandler: ArticleShareActionHandler
@@ -164,27 +177,34 @@ struct AppFlowView: View {
 
     static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
-    static func loadAllReleaseNotes() -> [ReleaseNotes] {
+    private static func loadReleaseNotesPayload() -> ReleaseNotesPayload? {
         guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
               let data = try? Data(contentsOf: url),
-              let all = try? JSONDecoder().decode([ReleaseNotes].self, from: data) else {
-            return []
+              let payload = try? JSONDecoder().decode(ReleaseNotesPayload.self, from: data) else {
+            return nil
         }
-        return all
+
+        return payload
+    }
+
+    static func loadAllReleaseNotes() -> [ReleaseNotes] {
+        loadReleaseNotesPayload()?.allItems ?? []
     }
 
     static func loadReleaseNotes(lastSeenVersion: String) -> (current: [ReleaseNotes], history: [ReleaseNotes]) {
-        guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let all = try? JSONDecoder().decode([ReleaseNotes].self, from: data) else {
+        let all = loadAllReleaseNotes()
+        guard !all.isEmpty else {
             return ([], [])
         }
-        let appVersion = Self.appVersion
+
         let current: [ReleaseNotes]
         if lastSeenVersion.isEmpty {
-            current = all.filter { $0.version == appVersion }
+            current = Array(all.prefix(1))
         } else {
-            current = all.filter { $0.version == appVersion || $0.version.compare(lastSeenVersion, options: .numeric) == .orderedDescending }
+            let unseen = all.filter {
+                $0.version.compare(lastSeenVersion, options: .numeric) == .orderedDescending
+            }
+            current = unseen.isEmpty ? Array(all.prefix(1)) : unseen
         }
         let history = all.filter { !current.contains($0) }
         return (current, history)
@@ -203,13 +223,18 @@ struct AppFlowView: View {
     }
 
     static func groupIntoSections(_ items: [ReleaseNotes]) -> [ReleaseNotesSection] {
-        let grouped = Dictionary(grouping: items) { item -> String in
-            let components = item.version.split(separator: ".")
-            return components.first.map(String.init) ?? item.version
+        guard let payload = loadReleaseNotesPayload() else {
+            return []
         }
-        return grouped
-            .sorted { $0.key.compare($1.key, options: .numeric) == .orderedDescending }
-            .map { ReleaseNotesSection(title: "\($0.key).x", items: $0.value) }
+
+        return payload.historySections.compactMap { section in
+            let sectionItems = section.items.filter { items.contains($0) }
+            guard !sectionItems.isEmpty else {
+                return nil
+            }
+
+            return ReleaseNotesSection(title: section.title, items: sectionItems)
+        }
     }
 }
 
