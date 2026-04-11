@@ -5,7 +5,7 @@ import Library
 import Entities
 import ArticleReader
 import ZikrCollectionsOnboarding
-import SwiftNEW
+import ChangelogKit
 
 @MainActor
 struct AppFlowView: View {
@@ -52,7 +52,7 @@ struct AppFlowView: View {
         }
         .sheet(isPresented: $showWhatsNew) {
             let notes = Self.loadReleaseNotes(lastSeenVersion: lastSeenVersion)
-            SwiftNEW(
+            ChangelogScreen(
                 color: .white,
                 background: .solidColor(Color(.systemBackground)),
                 currentItems: notes.current,
@@ -190,8 +190,8 @@ struct AppFlowView: View {
         return (current, history)
     }
 
-    static var releaseNotesStrings: SwiftNEWStrings {
-        SwiftNEWStrings(
+    static var releaseNotesStrings: ChangelogStrings {
+        ChangelogStrings(
             historyTitle: String(localized: "release-notes.history"),
             showHistoryButton: String(localized: "release-notes.show-history"),
             continueButton: String(localized: "common.done"),

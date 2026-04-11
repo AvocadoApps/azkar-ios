@@ -4,7 +4,7 @@ import AboutApp
 import FactoryKit
 import Library
 import ZikrCollectionsOnboarding
-import SwiftNEW
+import ChangelogKit
 
 struct SettingsFlowView: View {
 
@@ -216,7 +216,7 @@ private struct AboutAppDestinationView: View {
         )
         .fullScreenCover(isPresented: $showWhatsNew) {
             let all = AppFlowView.loadAllReleaseNotes()
-            SwiftNEWHistory(
+            ChangelogHistoryScreen(
                 historySections: AppFlowView.groupIntoSections(all),
                 color: .white,
                 background: .solidColor(Color(.systemBackground)),

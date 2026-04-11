@@ -121,7 +121,7 @@ enum AzkarTarget: String, CaseIterable {
 
                     .external(name: "Mixpanel"),
 
-                    .external(name: "SwiftNEW"),
+                    .external(name: "ChangelogKit"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
