@@ -1,7 +1,7 @@
 {
   "historySections": [
     {
-      "title": "3.x",
+      "title": "v3.0 Kahire",
       "items": [
         {
           "version": "3.0.0",
@@ -42,7 +42,33 @@
       ]
     },
     {
-      "title": "1.x",
+      "title": "v2.0 Istanbul",
+      "items": [
+        {
+          "version": "2.0",
+          "notes": [
+            {
+              "icon": "book.closed",
+              "title": "İçerik ve okuma geliştirmeleri",
+              "body": "2.x sürümü boyunca yeni dualar, sureler, makaleler ve kaynak bilgileri eklendi; okuma deneyimi de sayaç, metin ayarları ve ses özellikleriyle geliştirildi."
+            },
+            {
+              "icon": "square.and.arrow.up",
+              "title": "Widget'lar, paylaşım ve kişiselleştirme",
+              "body": "Kilit ekranı ve ana ekran widget'ları, görselli paylaşım, yeni temalar, yazı tipleri ve uygulama simgeleri eklendi."
+            },
+            {
+              "icon": "globe",
+              "title": "Yerelleştirme ve kararlılık",
+              "body": "Yeni diller desteği eklendi, transliterasyon ve erişilebilirlik iyileştirildi, ayrıca çok sayıda hata düzeltmesi ve performans iyileştirmesi yapıldı."
+            }
+          ],
+          "date": "2021-02-14T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "title": "v1.0 Grozni",
       "items": [
         {
           "version": "1.0",

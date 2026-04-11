@@ -1,7 +1,7 @@
 {
   "historySections": [
     {
-      "title": "3.x",
+      "title": "v3.0 Cairo",
       "items": [
         {
           "version": "3.0.0",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "title": "2.x",
+      "title": "v2.0 Istanbul",
       "items": [
         {
           "version": "2.9.8",
@@ -887,7 +887,7 @@
       ]
     },
     {
-      "title": "1.x",
+      "title": "v1.0 Grozny",
       "items": [
         {
           "version": "1.0",
