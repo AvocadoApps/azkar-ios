@@ -1,5 +1,4 @@
-{
-  "historySections": [
+[
     {
       "title": "Versiyon 3.0 Kahire",
       "imageName": "cairo",
@@ -97,5 +96,4 @@
         }
       ]
     }
-  ]
-}
+]

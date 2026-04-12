@@ -1,5 +1,4 @@
-{
-  "historySections": [
+[
     {
       "title": "Версия 3.0 Каир",
       "imageName": "cairo",
@@ -655,5 +654,4 @@
         }
       ]
     }
-  ]
-}
+]

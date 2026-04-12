@@ -10,14 +10,6 @@ import ChangelogKit
 @MainActor
 struct AppFlowView: View {
 
-    private struct ReleaseNotesPayload: Decodable {
-        let historySections: [ReleaseNotesPayloadSection]
-
-        var allItems: [ReleaseNotes] {
-            historySections.flatMap(\.items)
-        }
-    }
-
     private struct ReleaseNotesPayloadSection: Decodable {
         let title: String
         let imageName: String?
@@ -178,18 +170,18 @@ struct AppFlowView: View {
 
     static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
-    private static func loadReleaseNotesPayload() -> ReleaseNotesPayload? {
+    private static func loadReleaseNotesPayload() -> [ReleaseNotesPayloadSection]? {
         guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
               let data = try? Data(contentsOf: url),
-              let payload = try? JSONDecoder().decode(ReleaseNotesPayload.self, from: data) else {
+              let sections = try? JSONDecoder().decode([ReleaseNotesPayloadSection].self, from: data) else {
             return nil
         }
 
-        return payload
+        return sections
     }
 
     static func loadAllReleaseNotes() -> [ReleaseNotes] {
-        loadReleaseNotesPayload()?.allItems ?? []
+        loadReleaseNotesPayload()?.flatMap(\.items) ?? []
     }
 
     static func loadReleaseNotes(lastSeenVersion: String) -> (current: [ReleaseNotes], history: [ReleaseNotes]) {
@@ -224,13 +216,13 @@ struct AppFlowView: View {
     }
 
     static func groupIntoSections(_ items: [ReleaseNotes]) -> [ReleaseNotesSection] {
-        guard let payload = loadReleaseNotesPayload() else {
+        guard let sections = loadReleaseNotesPayload() else {
             return []
         }
 
         let versions = Set(items.map(\.version))
 
-        return payload.historySections.compactMap { section in
+        return sections.compactMap { section in
             let sectionItems = section.items.filter { versions.contains($0.version) }
             guard !sectionItems.isEmpty else {
                 return nil
