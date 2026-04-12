@@ -44,10 +44,8 @@ struct ZikrPagesView: View, Equatable {
                     HStack {
                         Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
                             .accessibilityLabel(Text("common.share"))
-                            .glassButtonStyleCompat()
                         Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
                             .accessibilityLabel(Text("settings.text.title"))
-                            .glassButtonStyleCompat()
                     }
                 }
             }
@@ -96,81 +94,47 @@ struct ZikrPagesView: View, Equatable {
 
     var bottomPageOverlay: some View {
         GeometryReader { geo in
-            if #available(iOS 26, *) {
-                GlassEffectContainer(spacing: 8) {
-                    pagesPreviewView(safeAreaBottom: geo.safeAreaInsets.bottom)
+            PagesPreviewView(
+                selectedPage: $viewModel.page,
+                pageCount: viewModel.pages.count - 1,
+                height: pageIndicatorHeight,
+                spacing: 4,
+                safeAreaBottom: geo.safeAreaInsets.bottom,
+                indicatorView: { idx, isSelected in
+                    pageIndicator(index: idx, isSelected: isSelected)
                 }
-                .ignoresSafeArea(edges: .bottom)
-            } else {
-                pagesPreviewView(safeAreaBottom: geo.safeAreaInsets.bottom)
-                    .ignoresSafeArea(edges: .bottom)
-            }
+            )
+            .ignoresSafeArea(edges: .bottom)
         }
         .opacity(viewModel.page < viewModel.pages.count - 1 ? 1 : 0)
         .frame(maxHeight: pageIndicatorHeight + 8)
         .allowsHitTesting(true)
     }
-
-    private func pagesPreviewView(safeAreaBottom: CGFloat) -> some View {
-        PagesPreviewView(
-            selectedPage: $viewModel.page,
-            pageCount: viewModel.pages.count - 1,
-            height: pageIndicatorHeight,
-            spacing: 4,
-            safeAreaBottom: safeAreaBottom,
-            indicatorView: { idx, isSelected in
-                pageIndicator(index: idx, isSelected: isSelected)
-            }
-        )
-    }
     
     @ViewBuilder private func pageIndicator(index: Int, isSelected: Bool) -> some View {
         let viewModel = self.viewModel.azkar[index]
-        if #available(iOS 26, *) {
-            pageIndicatorLabel(index: index, viewModel: viewModel, isSelected: isSelected)
-                .foregroundStyle(isSelected ? Color.white : colorTheme.getColor(.text))
-                .background {
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(colorTheme.getColor(.accent, opacity: 0.35))
-                    }
+        ZStack {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(isSelected ? colorTheme.getColor(.accent) : colorTheme.getColor(.contentBackground))
+                .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 1)
+            VStack(spacing: 0) {
+                Text("\(index + 1)")
+                    .font(.caption)
+                let remainingRepeatsNumber = viewModel.remainingRepeatsNumber ?? 0
+                if remainingRepeatsNumber == 0 {
+                    Text("✓")
+                        .font(.caption2)
                 }
-                .glassEffect(
-                    .regular
-                        .tint(isSelected ? colorTheme.getColor(.accent, opacity: 0.2) : nil)
-                        .interactive(),
-                    in: .rect(cornerRadius: 10)
-                )
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel(String(format: String(localized: "common.dhikr"), locale: Locale.current, String(index + 1)))
-                .accessibilityValue(pageIndicatorAccessibilityValue(for: viewModel))
-        } else {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(isSelected ? colorTheme.getColor(.accent) : colorTheme.getColor(.contentBackground))
-                    .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 1)
-                pageIndicatorLabel(index: index, viewModel: viewModel, isSelected: isSelected)
-                    .foregroundColor(isSelected ? Color.white : colorTheme.getColor(.tertiaryText))
             }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(String(format: String(localized: "common.dhikr"), locale: Locale.current, String(index + 1)))
-            .accessibilityValue(pageIndicatorAccessibilityValue(for: viewModel))
+            .foregroundColor(isSelected ? Color.white : colorTheme.getColor(.tertiaryText))
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .minimumScaleFactor(0.15)
         }
-    }
-
-    private func pageIndicatorLabel(index: Int, viewModel: ZikrViewModel, isSelected: Bool) -> some View {
-        VStack(spacing: 0) {
-            Text("\(index + 1)")
-                .font(.caption)
-            let remainingRepeatsNumber = viewModel.remainingRepeatsNumber ?? 0
-            if remainingRepeatsNumber == 0 {
-                Text("✓")
-                    .font(.caption2)
-            }
-        }
-        .multilineTextAlignment(.center)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .minimumScaleFactor(0.15)
+        .glassEffectCompat(.clear, in: RoundedRectangle(cornerRadius: 10))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(format: String(localized: "common.dhikr"), locale: Locale.current, String(index + 1)))
+        .accessibilityValue(pageIndicatorAccessibilityValue(for: viewModel))
     }
 
     private func pageIndicatorAccessibilityValue(for viewModel: ZikrViewModel) -> String {

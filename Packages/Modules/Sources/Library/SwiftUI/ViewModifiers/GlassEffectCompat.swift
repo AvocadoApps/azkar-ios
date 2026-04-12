@@ -90,19 +90,4 @@ extension View {
             self
         }
     }
-
-    /// Applies the native Liquid Glass button style on iOS 26+ and preserves
-    /// the caller's existing styling on earlier OS versions.
-    @ViewBuilder
-    nonisolated public func glassButtonStyleCompat(prominent: Bool = false) -> some View {
-        if #available(iOS 26, *) {
-            if prominent {
-                self.buttonStyle(.glassProminent)
-            } else {
-                self.buttonStyle(.glass)
-            }
-        } else {
-            self
-        }
-    }
 }
