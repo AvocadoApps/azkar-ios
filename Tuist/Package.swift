@@ -45,7 +45,7 @@ let package = Package(
         .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0"),
         .package(url: "https://github.com/shaps80/SwiftUIBackports", from: "2.8.1"),
         .package(url: "https://github.com/bmoliveira/MarkdownKit", from: "1.7.3"),
-        .package(url: "https://github.com/av0c0der/SwiftNEWKit", branch: "main"),
+        .package(url: "https://github.com/av0c0der/ChangelogKit", branch: "main"),
     ],
     targets: [
     ]

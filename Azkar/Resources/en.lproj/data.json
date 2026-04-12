@@ -2,6 +2,7 @@
   "historySections": [
     {
       "title": "Version 3.0 Cairo",
+      "imageName": "cairo",
       "items": [
         {
           "version": "3.0.0",
@@ -49,66 +50,19 @@
     },
     {
       "title": "Version 2.0 Istanbul",
+      "imageName": "istanbul",
       "items": [
-        {
-          "version": "2.9.8",
-          "notes": [
-            {
-              "icon": "character.textbox",
-              "title": "Transliteration Fix",
-              "body": "Fixed selection of transliteration for Kazakh, Uzbek and other languages using the DIN 31635 standard.",
-              "iconBackground": "#AF52DE"
-            }
-          ],
-          "date": "2025-12-03T00:00:00Z"
-        },
         {
           "version": "2.9.7",
           "notes": [
-            {
-              "icon": "text.badge.checkmark",
-              "title": "Typo Corrections",
-              "body": "Corrected typos in various adhkar texts.",
-              "iconBackground": "#34C759"
-            },
-            {
-              "icon": "internaldrive",
-              "title": "Improved Storage",
-              "body": "Enhanced file storage for faster and more stable loading of articles, fonts, and background images.",
-              "iconBackground": "#8E8E93"
-            },
             {
               "icon": "square.and.arrow.up",
               "title": "Share Updates",
               "body": "Updated the Share Dhikr section with new fonts and backgrounds.",
               "iconBackground": "#007AFF"
-            },
-            {
-              "icon": "apps.iphone",
-              "title": "iOS 26 Support",
-              "body": "Improved support for iOS 26.",
-              "iconBackground": "#30B0C7"
             }
           ],
           "date": "2025-10-19T00:00:00Z"
-        },
-        {
-          "version": "2.9.6",
-          "notes": [
-            {
-              "icon": "checkmark.circle",
-              "title": "Completion Checkmark Fix",
-              "body": "Fixed the display of the checkmark indicating completion of reading a category.",
-              "iconBackground": "#34C759"
-            },
-            {
-              "icon": "text.badge.checkmark",
-              "title": "Dua Typo Corrections",
-              "body": "Corrected typos in the section 100 Duas from the Quran and Sunnah.",
-              "iconBackground": "#34C759"
-            }
-          ],
-          "date": "2025-07-03T00:00:00Z"
         },
         {
           "version": "2.9.5",
@@ -154,18 +108,6 @@
               "title": "Transliteration Settings",
               "body": "Customizable transliteration settings with DIN 31635 romanization support.",
               "iconBackground": "#AF52DE"
-            },
-            {
-              "icon": "plusminus.circle",
-              "title": "Counter Improvements",
-              "body": "Counter behaviour improvements for more reliable tracking.",
-              "iconBackground": "#FF9500"
-            },
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Various bug fixes for improved stability.",
-              "iconBackground": "#FF3B30"
             }
           ],
           "date": "2025-03-19T00:00:00Z"
@@ -190,12 +132,6 @@
               "title": "Transliteration Settings",
               "body": "Customizable transliteration settings with DIN 31635 romanization support.",
               "iconBackground": "#AF52DE"
-            },
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Various bug fixes for improved stability.",
-              "iconBackground": "#FF3B30"
             }
           ],
           "date": "2025-03-14T00:00:00Z"
@@ -238,18 +174,6 @@
               "title": "Enhanced Share",
               "body": "Enhanced Share function with the ability to add background images and additional settings.",
               "iconBackground": "#007AFF"
-            },
-            {
-              "icon": "hand.tap",
-              "title": "Counter Fixed",
-              "body": "Fixed counter so the tap counting feature now works correctly.",
-              "iconBackground": "#FF9500"
-            },
-            {
-              "icon": "speedometer",
-              "title": "Stability Improvements",
-              "body": "Improved app stability and performance.",
-              "iconBackground": "#8E8E93"
             }
           ],
           "date": "2025-03-05T00:00:00Z"
@@ -276,15 +200,9 @@
               "iconBackground": "#007AFF"
             },
             {
-              "icon": "speedometer",
-              "title": "Stability Enhancements",
-              "body": "The app is now more stable and performs better.",
-              "iconBackground": "#8E8E93"
-            },
-            {
               "icon": "hand.tap",
-              "title": "Tap Counter Restored",
-              "body": "The counter functionality using taps is back.",
+              "title": "Tap Counter",
+              "body": "Count dhikr with taps while reading.",
               "iconBackground": "#FF9500"
             }
           ],
@@ -299,18 +217,6 @@
               "subtitle": "Fortress of Muslim",
               "body": "Adhkar collection source picker with morning and evening adhkar in Fortress of the Muslim order.",
               "iconBackground": "#007AFF"
-            },
-            {
-              "icon": "book",
-              "title": "Reading Mode",
-              "body": "Enhanced performance in reading mode.",
-              "iconBackground": "#FF2D55"
-            },
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Fixed some recent problems.",
-              "iconBackground": "#FF3B30"
             }
           ],
           "date": "2024-12-25T00:00:00Z"
@@ -324,111 +230,9 @@
               "subtitle": "Fortress of Muslim",
               "body": "Adhkar collection source picker with morning and evening adhkar in Fortress of the Muslim order.",
               "iconBackground": "#007AFF"
-            },
-            {
-              "icon": "book",
-              "title": "Reading Mode",
-              "body": "Enhanced performance in reading mode.",
-              "iconBackground": "#FF2D55"
             }
           ],
           "date": "2024-12-18T00:00:00Z"
-        },
-        {
-          "version": "2.7.3",
-          "notes": [
-            {
-              "icon": "speedometer",
-              "title": "Stability & Performance",
-              "body": "Enhanced app stability and performance.",
-              "iconBackground": "#8E8E93"
-            }
-          ],
-          "date": "2024-10-30T00:00:00Z"
-        },
-        {
-          "version": "2.7.2",
-          "notes": [
-            {
-              "icon": "speedometer",
-              "title": "Stability & Performance",
-              "body": "Improved app stability and performance.",
-              "iconBackground": "#8E8E93"
-            }
-          ],
-          "date": "2024-10-28T00:00:00Z"
-        },
-        {
-          "version": "2.7.1",
-          "notes": [
-            {
-              "icon": "speedometer",
-              "title": "Stability & Performance",
-              "body": "Enhanced app stability and performance.",
-              "iconBackground": "#8E8E93"
-            },
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Resolved bugs and some crashes.",
-              "iconBackground": "#FF3B30"
-            }
-          ],
-          "date": "2024-10-25T00:00:00Z"
-        },
-        {
-          "version": "2.7",
-          "notes": [
-            {
-              "icon": "speedometer",
-              "title": "Stability & Performance",
-              "body": "Improved overall app stability and performance.",
-              "iconBackground": "#8E8E93"
-            },
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Fixed various bugs and crashes.",
-              "iconBackground": "#FF3B30"
-            }
-          ],
-          "date": "2024-10-13T00:00:00Z"
-        },
-        {
-          "version": "2.6.13",
-          "notes": [
-            {
-              "icon": "textformat.abc",
-              "title": "Arabic Text Fixes",
-              "body": "Arabic text related bug fixes.",
-              "iconBackground": "#AF52DE"
-            }
-          ],
-          "date": "2024-06-01T00:00:00Z"
-        },
-        {
-          "version": "2.6.12",
-          "notes": [
-            {
-              "icon": "wrench",
-              "title": "Minor Improvements",
-              "body": "Minor fixes and improvements.",
-              "iconBackground": "#8E8E93"
-            }
-          ],
-          "date": "2024-04-20T00:00:00Z"
-        },
-        {
-          "version": "2.6.11",
-          "notes": [
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Various bug fixes for improved stability.",
-              "iconBackground": "#FF3B30"
-            }
-          ],
-          "date": "2024-03-31T00:00:00Z"
         },
         {
           "version": "2.6.10",
@@ -447,36 +251,6 @@
             }
           ],
           "date": "2024-03-23T00:00:00Z"
-        },
-        {
-          "version": "2.6.9",
-          "notes": [
-            {
-              "icon": "doc.text",
-              "title": "Improved Articles",
-              "body": "Improved Articles functionality.",
-              "iconBackground": "#FF2D55"
-            },
-            {
-              "icon": "ant",
-              "title": "Bug Fixes",
-              "body": "Various bug fixes.",
-              "iconBackground": "#FF3B30"
-            }
-          ],
-          "date": "2024-03-17T00:00:00Z"
-        },
-        {
-          "version": "2.6.7",
-          "notes": [
-            {
-              "icon": "doc.text",
-              "title": "Improved Articles",
-              "body": "Improved Articles functionality.",
-              "iconBackground": "#FF2D55"
-            }
-          ],
-          "date": "2024-03-03T00:00:00Z"
         },
         {
           "version": "2.6.6",
@@ -506,18 +280,6 @@
           "version": "2.6.2",
           "notes": [
             {
-              "icon": "rectangle.3.group",
-              "title": "Widget Improvements",
-              "body": "Improvements in Virtues of dhikr widget and fixed background color.",
-              "iconBackground": "#30B0C7"
-            },
-            {
-              "icon": "sparkles",
-              "title": "What's New Fix",
-              "body": "Fixed What's New window appearance.",
-              "iconBackground": "#30B0C7"
-            },
-            {
               "icon": "magnifyingglass",
               "title": "Search",
               "body": "Search through adhkar content.",
@@ -534,12 +296,6 @@
               "title": "Search",
               "body": "Search through adhkar content.",
               "iconBackground": "#5856D6"
-            },
-            {
-              "icon": "rectangle.3.group",
-              "title": "Widget Improvements",
-              "body": "Improvements in Virtues of dhikr widget.",
-              "iconBackground": "#30B0C7"
             }
           ],
           "date": "2023-11-20T00:00:00Z"
@@ -581,16 +337,10 @@
             },
             {
               "icon": "plusminus.circle",
-              "title": "Adhkar Counter Improvements",
+              "title": "Counter Reset on Launch",
               "subtitle": "Reset on launch",
-              "body": "Adhkar Counter improvements and fixes with reset on each app launch.",
+              "body": "The dhikr counter now resets on each app launch.",
               "iconBackground": "#FF9500"
-            },
-            {
-              "icon": "square.and.arrow.up",
-              "title": "Share Fixed",
-              "body": "Fixed Share functionality.",
-              "iconBackground": "#007AFF"
             }
           ],
           "date": "2023-10-25T00:00:00Z"
@@ -619,16 +369,10 @@
             },
             {
               "icon": "plusminus.circle",
-              "title": "Adhkar Counter Improvements",
+              "title": "Counter Reset on Launch",
               "subtitle": "Reset on launch",
-              "body": "Adhkar Counter improvements and fixes with reset on each app launch.",
+              "body": "The dhikr counter now resets on each app launch.",
               "iconBackground": "#FF9500"
-            },
-            {
-              "icon": "square.and.arrow.up",
-              "title": "Share Fixed",
-              "body": "Fixed Share functionality.",
-              "iconBackground": "#007AFF"
             }
           ],
           "date": "2023-10-19T00:00:00Z"
@@ -657,15 +401,9 @@
             },
             {
               "icon": "plusminus.circle",
-              "title": "Adhkar Counter Improvements",
-              "body": "Adhkar Counter improvements and fixes, with support for changing its size.",
+              "title": "Counter Size Options",
+              "body": "Choose different sizes for the dhikr counter.",
               "iconBackground": "#FF9500"
-            },
-            {
-              "icon": "square.and.arrow.up",
-              "title": "Share Fixed",
-              "body": "Fixed Share functionality.",
-              "iconBackground": "#007AFF"
             }
           ],
           "date": "2023-10-16T00:00:00Z"
@@ -694,8 +432,8 @@
             },
             {
               "icon": "plusminus.circle",
-              "title": "Adhkar Counter Improvements",
-              "body": "Adhkar Counter improvements and fixes, with support for changing its size.",
+              "title": "Counter Size Options",
+              "body": "Choose different sizes for the dhikr counter.",
               "iconBackground": "#FF9500"
             }
           ],
@@ -725,24 +463,12 @@
             },
             {
               "icon": "plusminus.circle",
-              "title": "Adhkar Counter Improvements",
-              "body": "Adhkar Counter improvements and fixes, with support for changing its size.",
+              "title": "Counter Size Options",
+              "body": "Choose different sizes for the dhikr counter.",
               "iconBackground": "#FF9500"
             }
           ],
           "date": "2023-09-15T00:00:00Z"
-        },
-        {
-          "version": "2.4.1",
-          "notes": [
-            {
-              "icon": "globe",
-              "title": "Localization Improvements",
-              "body": "App localization related improvements.",
-              "iconBackground": "#007AFF"
-            }
-          ],
-          "date": "2022-09-08T00:00:00Z"
         },
         {
           "version": "2.4",
@@ -755,24 +481,6 @@
             }
           ],
           "date": "2022-09-04T00:00:00Z"
-        },
-        {
-          "version": "2.3.5",
-          "notes": [
-            {
-              "icon": "globe",
-              "title": "Localization Fixes",
-              "body": "Localization related fixes.",
-              "iconBackground": "#007AFF"
-            },
-            {
-              "icon": "plusminus.circle",
-              "title": "Counter Improvements",
-              "body": "Improvements of counter functionality.",
-              "iconBackground": "#FF9500"
-            }
-          ],
-          "date": "2022-08-18T00:00:00Z"
         },
         {
           "version": "2.3.4",
@@ -827,6 +535,7 @@
     },
     {
       "title": "Version 1.0 Grozny",
+      "imageName": "grozny",
       "items": [
         {
           "version": "1.0",

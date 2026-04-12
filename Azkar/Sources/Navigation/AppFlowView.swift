@@ -20,6 +20,7 @@ struct AppFlowView: View {
 
     private struct ReleaseNotesPayloadSection: Decodable {
         let title: String
+        let imageName: String?
         let items: [ReleaseNotes]
     }
 
@@ -235,7 +236,7 @@ struct AppFlowView: View {
                 return nil
             }
 
-            return ReleaseNotesSection(title: section.title, items: sectionItems)
+            return ReleaseNotesSection(title: section.title, imageName: section.imageName, items: sectionItems)
         }
     }
 }

@@ -128,24 +128,7 @@ struct ZikrView: View {
                 Label("common.complete", systemImage: "checkmark")
             })
         } label: {
-            counterText(repeats)
-                .font(Font.system(
-                    size: viewModel.preferences.counterSize.value / 3,
-                    weight: .regular,
-                    design: .monospaced).monospacedDigit()
-                )
-                .minimumScaleFactor(0.25)
-                .padding()
-                .frame(
-                    width: viewModel.preferences.counterSize.value,
-                    height: viewModel.preferences.counterSize.value
-                )
-                .foregroundStyle(Color.white)
-                .background(.accent)
-                .clipShape(Circle())
-                .glassEffectCompat(.regular.interactive(), in: Circle())
-                .clipShape(Circle())
-                .padding(.horizontal)
+            counterButtonLabel(repeats)
         } primaryAction: {
             incrementZikrCounter()
         }
@@ -383,6 +366,34 @@ private struct ZikrViewPreview: View {
 }
 
 private extension ZikrView {
+    @ViewBuilder
+    func counterButtonLabel(_ repeats: String) -> some View {
+        let size = viewModel.preferences.counterSize.value
+        let label = counterText(repeats)
+            .font(Font.system(
+                size: size / 3,
+                weight: .regular,
+                design: .monospaced).monospacedDigit()
+            )
+            .minimumScaleFactor(0.25)
+            .padding()
+            .frame(width: size, height: size)
+            .foregroundStyle(Color.white)
+            .contentShape(Circle())
+
+        if #available(iOS 26, *) {
+            label
+                .glassEffect(.regular.tint(Color.accentColor.opacity(0.3)).interactive(), in: Circle())
+                .clipShape(Circle())
+                .padding(.horizontal)
+        } else {
+            label
+                .background(.accent)
+                .clipShape(Circle())
+                .padding(.horizontal)
+        }
+    }
+
     var counterAccessibilityLabel: String {
         String(localized: "read.repeats")
     }

@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "changelogkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/av0c0der/ChangelogKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b0621591bc2f8934d0d59df4a27b90a7407327f8"
+      }
+    },
+    {
       "identity" : "factory",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hmlongco/Factory",
@@ -286,15 +295,6 @@
       "state" : {
         "revision" : "ddca6a237c1ba2291d5a3cc47ec8480ce6e9f805",
         "version" : "1.0.3"
-      }
-    },
-    {
-      "identity" : "swiftnewkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/av0c0der/SwiftNEWKit",
-      "state" : {
-        "branch" : "main",
-        "revision" : "d219b087d93e547975afda5ce7145b7920425734"
       }
     },
     {

@@ -2,6 +2,7 @@
   "historySections": [
     {
       "title": "Versiyon 3.0 Kahire",
+      "imageName": "cairo",
       "items": [
         {
           "version": "3.0.0",
@@ -49,6 +50,7 @@
     },
     {
       "title": "Versiyon 2.0 Istanbul",
+      "imageName": "istanbul",
       "items": [
         {
           "version": "2.0",
@@ -67,8 +69,8 @@
             },
             {
               "icon": "globe",
-              "title": "Yerelleştirme ve kararlılık",
-              "body": "Yeni diller desteği eklendi, transliterasyon ve erişilebilirlik iyileştirildi, ayrıca çok sayıda hata düzeltmesi ve performans iyileştirmesi yapıldı.",
+              "title": "Yerelleştirme ve erişilebilirlik",
+              "body": "Yeni diller desteği eklendi, transliterasyon ve erişilebilirlik geliştirildi.",
               "iconBackground": "#34C759"
             }
           ],
@@ -78,6 +80,7 @@
     },
     {
       "title": "Versiyon 1.0 Grozni",
+      "imageName": "grozny",
       "items": [
         {
           "version": "1.0",
