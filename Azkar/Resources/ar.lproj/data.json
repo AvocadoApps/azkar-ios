@@ -1,7 +1,7 @@
 [
     {
-      "title": "نسخة التطبيق 3.0 القاهرة",
-      "imageName": "cairo",
+      "title": "القاهرة (v3)",
+      "imageName": "v3",
       "items": [
         {
           "version": "3.0.0",
@@ -42,8 +42,8 @@
       ]
     },
     {
-      "title": "نسخة التطبيق 2.0 إسطنبول",
-      "imageName": "istanbul",
+      "title": "إسطنبول (v2)",
+      "imageName": "v2",
       "items": [
         {
           "version": "2.0",
@@ -69,8 +69,8 @@
       ]
     },
     {
-      "title": "نسخة التطبيق 1.0 الشيشان",
-      "imageName": "grozny",
+      "title": "الشيشان (v1)",
+      "imageName": "v1",
       "items": [
         {
           "version": "1.0",

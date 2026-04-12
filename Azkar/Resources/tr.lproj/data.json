@@ -1,7 +1,7 @@
 [
     {
-      "title": "Versiyon 3.0 Kahire",
-      "imageName": "cairo",
+      "title": "Kahire (v3)",
+      "imageName": "v3",
       "items": [
         {
           "version": "3.0.0",
@@ -48,8 +48,8 @@
       ]
     },
     {
-      "title": "Versiyon 2.0 Istanbul",
-      "imageName": "istanbul",
+      "title": "Istanbul (v2)",
+      "imageName": "v2",
       "items": [
         {
           "version": "2.0",
@@ -78,8 +78,8 @@
       ]
     },
     {
-      "title": "Versiyon 1.0 Grozni",
-      "imageName": "grozny",
+      "title": "Çeçenya (v1)",
+      "imageName": "v1",
       "items": [
         {
           "version": "1.0",
