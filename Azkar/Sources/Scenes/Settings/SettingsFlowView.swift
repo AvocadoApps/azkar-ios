@@ -215,13 +215,16 @@ private struct AboutAppDestinationView: View {
             )
         )
         .fullScreenCover(isPresented: $showWhatsNew) {
-            let all = AppFlowView.loadAllReleaseNotes()
-            ChangelogHistoryScreen(
-                historySections: AppFlowView.groupIntoSections(all),
+            ChangelogScreen(
                 color: .white,
                 background: .solidColor(Color(.systemBackground)),
-                strings: AppFlowView.releaseNotesStrings,
-                onDismiss: {
+                sections: AppFlowView.loadAllSections(),
+                strings: {
+                    var strings = AppFlowView.releaseNotesStrings
+                    strings.screenTitle = String(localized: "release-notes.changelog")
+                    return strings
+                }(),
+                onContinue: {
                     showWhatsNew = false
                     lastSeenVersion = AppFlowView.appVersion
                 }

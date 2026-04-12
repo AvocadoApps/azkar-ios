@@ -1,6 +1,7 @@
 [
     {
-      "title": "Kahire (v3)",
+      "title": "Kahire",
+      "subtitle": "v3",
       "imageName": "v3",
       "items": [
         {
@@ -48,7 +49,8 @@
       ]
     },
     {
-      "title": "Istanbul (v2)",
+      "title": "Istanbul",
+      "subtitle": "v2",
       "imageName": "v2",
       "items": [
         {
@@ -78,7 +80,8 @@
       ]
     },
     {
-      "title": "Çeçenya (v1)",
+      "title": "Çeçenya",
+      "subtitle": "v1",
       "imageName": "v1",
       "items": [
         {

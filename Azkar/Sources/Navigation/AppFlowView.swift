@@ -10,12 +10,6 @@ import ChangelogKit
 @MainActor
 struct AppFlowView: View {
 
-    private struct ReleaseNotesPayloadSection: Decodable {
-        let title: String
-        let imageName: String?
-        let items: [ReleaseNotes]
-    }
-
     @InjectedObject(\.preferences) private var preferences: Preferences
     @Injected(\.appDependencies) private var dependencies: AppDependencies
     @Injected(\.articleShareActionHandler) private var articleShareActionHandler: ArticleShareActionHandler
@@ -23,9 +17,6 @@ struct AppFlowView: View {
 
     @InjectedObject(\.appNavigator) private var navigator: AppNavigator
     @InjectedObject(\.rootViewModel) private var rootViewModel: RootViewModel
-
-    @State private var showWhatsNew = false
-    @AppStorage("lastSeenVersion") private var lastSeenVersion: String = ""
 
     init() {
     }
@@ -55,26 +46,6 @@ struct AppFlowView: View {
             set: { navigator.sheet = $0 }
         )) { sheet in
             sheetView(sheet)
-        }
-        .sheet(isPresented: $showWhatsNew) {
-            let notes = Self.loadReleaseNotes(lastSeenVersion: lastSeenVersion)
-            ChangelogScreen(
-                color: .white,
-                background: .solidColor(Color(.systemBackground)),
-                currentItems: notes.current,
-                historySections: Self.groupIntoSections(notes.history),
-                strings: Self.releaseNotesStrings,
-                history: true,
-                onContinue: {
-                    showWhatsNew = false
-                    lastSeenVersion = Self.appVersion
-                }
-            )
-        }
-        .onAppear {
-            if lastSeenVersion != Self.appVersion {
-                showWhatsNew = true
-            }
         }
     }
 
@@ -170,66 +141,43 @@ struct AppFlowView: View {
 
     static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
 
-    private static func loadReleaseNotesPayload() -> [ReleaseNotesPayloadSection]? {
+    static func loadAllSections() -> [ReleaseNotesSection] {
         guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
               let data = try? Data(contentsOf: url),
-              let sections = try? JSONDecoder().decode([ReleaseNotesPayloadSection].self, from: data) else {
-            return nil
+              let sections = try? JSONDecoder().decode([ReleaseNotesSection].self, from: data) else {
+            return []
         }
-
         return sections
     }
 
     static func loadAllReleaseNotes() -> [ReleaseNotes] {
-        loadReleaseNotesPayload()?.flatMap(\.items) ?? []
+        loadAllSections().flatMap(\.items)
     }
 
-    static func loadReleaseNotes(lastSeenVersion: String) -> (current: [ReleaseNotes], history: [ReleaseNotes]) {
+    /// Returns the version string that marks the boundary between new and previously seen notes.
+    ///
+    /// If `lastSeenVersion` doesn't exist in the changelog, the highest version
+    /// that is less than or equal to it is used instead.
+    static func boundaryVersion(for lastSeenVersion: String) -> String? {
+        guard !lastSeenVersion.isEmpty else { return nil }
         let all = loadAllReleaseNotes()
-        guard !all.isEmpty else {
-            return ([], [])
+        let hasUnseen = all.contains {
+            $0.version.compare(lastSeenVersion, options: .numeric) == .orderedDescending
         }
-
-        let current: [ReleaseNotes]
-        if lastSeenVersion.isEmpty {
-            current = Array(all.prefix(1))
-        } else {
-            let unseen = all.filter {
-                $0.version.compare(lastSeenVersion, options: .numeric) == .orderedDescending
-            }
-            current = unseen.isEmpty ? Array(all.prefix(1)) : unseen
+        guard hasUnseen else { return nil }
+        // Pick the highest changelog version <= lastSeenVersion.
+        let seen = all.filter {
+            $0.version.compare(lastSeenVersion, options: .numeric) != .orderedDescending
         }
-        let history = all.filter { !current.contains($0) }
-        return (current, history)
+        return seen.first?.version ?? all.last?.version
     }
 
     static var releaseNotesStrings: ChangelogStrings {
         ChangelogStrings(
-            historyTitle: String(localized: "release-notes.history"),
-            showHistoryButton: String(localized: "release-notes.show-history"),
-            continueButton: String(localized: "common.done"),
-            returnButton: String(localized: "release-notes.return"),
-            dismissHistoryButton: String(localized: "common.done"),
-            whatsNewIn: String(localized: "release-notes.whats-new-in"),
-            version: String(localized: "common.version")
+            previouslySeenTitle: String(localized: "release-notes.previously-seen"),
+            screenTitle: String(localized: "release-notes.whats-new"),
+            continueButton: String(localized: "common.done")
         )
-    }
-
-    static func groupIntoSections(_ items: [ReleaseNotes]) -> [ReleaseNotesSection] {
-        guard let sections = loadReleaseNotesPayload() else {
-            return []
-        }
-
-        let versions = Set(items.map(\.version))
-
-        return sections.compactMap { section in
-            let sectionItems = section.items.filter { versions.contains($0.version) }
-            guard !sectionItems.isEmpty else {
-                return nil
-            }
-
-            return ReleaseNotesSection(title: section.title, imageName: section.imageName, items: sectionItems)
-        }
     }
 }
 

@@ -5,6 +5,7 @@ import Entities
 import ArticleReader
 import Library
 import AzkarResources
+import ChangelogKit
 
 private extension View {
     func applyMenuPadding() -> some View {
@@ -26,11 +27,17 @@ struct MainMenuView: View {
     @State private var didShowBottomSheetAdThisSession = false
     @State private var showAdBottomSheet = false
     @State private var adBottomSheetHeight: CGFloat = 0
+    @State private var showWhatsNew = false
+    @AppStorage("lastSeenVersion") private var lastSeenVersion: String = ""
     
     private let articleCellHeight: CGFloat = 230
     private let borderWidth: CGFloat = 2
     private var borderColor: Color {
         Color.accentColor.opacity(0.5)
+    }
+
+    private var hasUnseenChangelog: Bool {
+        lastSeenVersion != AppFlowView.appVersion
     }
 
     var body: some View {
@@ -106,12 +113,43 @@ struct MainMenuView: View {
         }
         .customScrollContentBackground()
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Group {
+                    if hasUnseenChangelog {
+                        Button {
+                            showWhatsNew = true
+                        } label: {
+                            Image(systemName: "sparkles")
+                                .overlay(alignment: .topTrailing) {
+                                    Circle()
+                                        .fill(.red)
+                                        .frame(width: 8, height: 8)
+                                        .offset(x: 2, y: -2)
+                                }
+                        }
+                        .accessibilityLabel(Text("release-notes.whats-new"))
+                    }
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: viewModel.navigateToSettings) {
                     Image(systemName: "gear")
                 }
                 .accessibilityLabel(Text("settings.title"))
             }
+        }
+        .fullScreenCover(isPresented: $showWhatsNew) {
+            ChangelogScreen(
+                color: .white,
+                background: .solidColor(Color(.systemBackground)),
+                sections: AppFlowView.loadAllSections(),
+                lastSeenVersion: AppFlowView.boundaryVersion(for: lastSeenVersion),
+                strings: AppFlowView.releaseNotesStrings,
+                onContinue: {
+                    showWhatsNew = false
+                    lastSeenVersion = AppFlowView.appVersion
+                }
+            )
         }
         .background(
             colorTheme.getColor(.background)
