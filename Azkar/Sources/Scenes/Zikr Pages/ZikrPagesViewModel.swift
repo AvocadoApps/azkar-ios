@@ -250,10 +250,10 @@ final class ZikrPagesViewModel: ObservableObject {
                 let hasRemainingRepeats = count < totalCount
                 setHasRemainingRepeats(hasRemainingRepeats)
                 if !hasRemainingRepeats {
-                    self.analytics.track(.categoryCompleted(
-                        category: category,
+                    self.analytics.category.completed(
+                        category,
                         totalRepeats: totalCount
-                    ))
+                    )
                     Task {
                         try await zikrCounter.markCategoryAsCompleted(category)
                     }

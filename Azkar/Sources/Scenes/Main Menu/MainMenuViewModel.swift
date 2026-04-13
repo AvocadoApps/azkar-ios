@@ -214,10 +214,10 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func selectSearchSuggestion(_ query: String) {
-        analytics.track(.searchSuggestionSelected(
+        analytics.search.selectedSuggestion(
             queryLength: query.count,
-            source: "recent_query"
-        ))
+            source: .recentQuery
+        )
         searchQuery = query
     }
     

@@ -37,7 +37,7 @@ final class AppUsageTracker {
         observeNotificationPermissions()
         observeSettingChanges()
 
-        beginSessionIfNeeded(source: "app_launch")
+        beginSessionIfNeeded(source: .appLaunch)
         Task {
             await recorder.cleanup(retainingEventsFor: retentionInterval)
         }
@@ -46,7 +46,7 @@ final class AppUsageTracker {
     private func observeLifecycle() {
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
             .sink { [weak self] _ in
-                self?.beginSessionIfNeeded(source: "foreground")
+                self?.beginSessionIfNeeded(source: .foreground)
             }
             .store(in: &cancellables)
 
@@ -77,64 +77,64 @@ final class AppUsageTracker {
 
     private func observeSettingChanges() {
         observeSetting(
-            name: "content_language",
+            .contentLanguage,
             publisher: preferences.$contentLanguage.eraseToAnyPublisher(),
             serialize: { $0.rawValue }
         )
         observeSetting(
-            name: "zikr_collection_source",
+            .zikrCollectionSource,
             publisher: preferences.$zikrCollectionSource.eraseToAnyPublisher(),
             serialize: { $0.rawValue }
         )
         observeSetting(
-            name: "color_theme",
+            .colorTheme,
             publisher: preferences.$colorTheme.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "app_theme",
+            .appTheme,
             publisher: preferences.$appTheme.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "zikr_reading_mode",
+            .zikrReadingMode,
             publisher: preferences.$zikrReadingMode.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "counter_type",
+            .counterType,
             publisher: preferences.$counterType.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "counter_position",
+            .counterPosition,
             publisher: preferences.$counterPosition.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "enable_adhkar_reminder",
+            .enableAdhkarReminder,
             publisher: preferences.$enableAdhkarReminder.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "enable_jumua_reminder",
+            .enableJumuaReminder,
             publisher: preferences.$enableJumuaReminder.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "transliteration_type",
+            .transliterationType,
             publisher: preferences.$transliterationType.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(
-            name: "app_icon",
+            .appIcon,
             publisher: preferences.$appIcon.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
     }
 
     private func observeSetting<T: Equatable>(
-        name: String,
+        _ setting: AppAnalyticsSetting,
         publisher: AnyPublisher<T, Never>,
         serialize: @escaping (T) -> String
     ) {
@@ -150,7 +150,7 @@ final class AppUsageTracker {
                 }
 
                 self.track(.settingChanged(
-                    name: name,
+                    setting: setting,
                     oldValue: previousValue,
                     newValue: value
                 ))
@@ -158,7 +158,7 @@ final class AppUsageTracker {
             .store(in: &cancellables)
     }
 
-    private func beginSessionIfNeeded(source: String) {
+    private func beginSessionIfNeeded(source: AppAnalyticsSource) {
         let now = Date()
         let shouldStartNewSession: Bool
 
@@ -200,16 +200,16 @@ final class AppUsageTracker {
 
 private extension NotificationsHandler.NotificationsPermissionState {
 
-    var analyticsValue: String {
+    var analyticsValue: AppAnalyticsNotificationPermissionState {
         switch self {
         case .notDetermined:
-            return "not_determined"
+            return .notDetermined
         case .denied:
-            return "denied"
+            return .denied
         case .noSound:
-            return "granted_no_sound"
+            return .grantedNoSound
         case .granted:
-            return "granted"
+            return .granted
         }
     }
 

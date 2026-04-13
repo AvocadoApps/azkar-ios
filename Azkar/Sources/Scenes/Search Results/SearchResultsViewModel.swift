@@ -155,12 +155,12 @@ final class SearchResultsViewModel: ObservableObject {
                 }
 
                 let resultCount = results.reduce(0) { $0 + $1.results.count }
-                self.analytics.track(.searchPerformed(
+                self.analytics.search.performed(
                     queryLength: query.count,
                     selectedTokenCount: self.selectedTokens.count,
                     sectionCount: results.count,
                     resultCount: resultCount
-                ))
+                )
             })
             .store(in: &cancellables)
         

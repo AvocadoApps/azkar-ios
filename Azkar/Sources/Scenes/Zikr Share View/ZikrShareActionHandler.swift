@@ -53,7 +53,7 @@ private extension ZikrShareActionHandler {
 
         if options.actionType == .copyText {
             UIPasteboard.general.string = text
-            analytics.track(.zikrShared(id: zikr.id, shareType: "text", action: "copy"))
+            analytics.sharing.sharedZikr(id: zikr.id, shareType: .text, action: .copy)
         } else if options.actionType == .sheet {
             let activityController = UIActivityViewController(
                 activityItems: [text],
@@ -70,7 +70,7 @@ private extension ZikrShareActionHandler {
                 guard completed else {
                     return
                 }
-                self.analytics.track(.zikrShared(id: zikr.id, shareType: "text", action: "sheet"))
+                self.analytics.sharing.sharedZikr(id: zikr.id, shareType: .text, action: .sheet)
             }
 
             rootViewController.present(activityController, animated: true)
@@ -114,7 +114,7 @@ private extension ZikrShareActionHandler {
 
         if options.actionType == .saveImage {
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-            analytics.track(.zikrShared(id: zikr.id, shareType: "image", action: "save"))
+            analytics.sharing.sharedZikr(id: zikr.id, shareType: .image, action: .save)
             return
         }
 
@@ -143,7 +143,7 @@ private extension ZikrShareActionHandler {
             guard completed else {
                 return
             }
-            self.analytics.track(.zikrShared(id: zikr.id, shareType: "image", action: "sheet"))
+            self.analytics.sharing.sharedZikr(id: zikr.id, shareType: .image, action: .sheet)
         }
 
         rootViewController.present(activityController, animated: true)

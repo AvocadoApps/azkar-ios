@@ -89,7 +89,7 @@ final class ArticleShareActionHandler {
         activityController.completionWithItemsHandler = { [articlesService] _, completed, _, _ in
             viewController.dismiss(animated: true)
             if completed {
-                self.analytics.track(.articleShared(id: article.id, format: "pdf"))
+                self.analytics.sharing.sharedArticle(id: article.id, format: .pdf)
                 articlesService.sendAnalyticsEvent(.share, articleId: article.id)
             }
         }

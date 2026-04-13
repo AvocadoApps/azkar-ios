@@ -58,7 +58,7 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
     }
 
     func show(_ destination: SettingsDestination) {
-        analytics.track(.settingsDetailOpened(destination: destination.analyticsName))
+        analytics.settings.openedDetail(destination.analyticsName)
         stack.append(destination)
     }
 
@@ -78,22 +78,22 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
 
 extension SettingsDestination {
 
-    var analyticsName: String {
+    var analyticsName: AppAnalyticsSettingsDestination {
         switch self {
         case .notificationsList:
-            return "notifications_list"
+            return .notificationsList
         case .appearance:
-            return "appearance"
+            return .appearance
         case .text:
-            return "text"
+            return .text
         case .counter:
-            return "counter"
+            return .counter
         case .reminders:
-            return "reminders"
+            return .reminders
         case .soundPicker:
-            return "sound_picker"
+            return .soundPicker
         case .aboutApp:
-            return "about_app"
+            return .aboutApp
         }
     }
 

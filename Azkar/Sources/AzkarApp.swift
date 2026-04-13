@@ -62,17 +62,17 @@ struct AzkarApp: App {
                 case .evening: category = .evening
                 case .jumua: category = .hundredDua
                 }
-                localAnalytics.track(.appEntrypointUsed(
-                    source: "notification",
-                    target: category.rawValue
-                ))
+                localAnalytics.entrypoint.used(
+                    source: .notification,
+                    target: .category(category)
+                )
                 self.deepLinker.open(.azkar(category))
             }
             .onReceive(quickActionDispatcher.routes) { route in
-                localAnalytics.track(.appEntrypointUsed(
-                    source: "quick_action",
+                localAnalytics.entrypoint.used(
+                    source: .quickAction,
                     target: route.analyticsTarget
-                ))
+                )
                 deepLinker.open(route)
             }
             .onOpenURL { url in
@@ -96,10 +96,10 @@ struct AzkarApp: App {
             return
         }
         defaults?.removeObject(forKey: "controlCenterDeepLink")
-        localAnalytics.track(.appEntrypointUsed(
-            source: "control_center",
-            target: url.host ?? "unknown"
-        ))
+        localAnalytics.entrypoint.used(
+            source: .controlCenter,
+            target: .raw(url.host ?? "unknown")
+        )
         handleIncomingURL(url)
     }
 
@@ -107,10 +107,10 @@ struct AzkarApp: App {
         guard let route = quickActionDispatcher.takePendingRoute() else {
             return
         }
-        localAnalytics.track(.appEntrypointUsed(
-            source: "quick_action",
+        localAnalytics.entrypoint.used(
+            source: .quickAction,
             target: route.analyticsTarget
-        ))
+        )
         deepLinker.open(route)
     }
 
@@ -118,10 +118,10 @@ struct AzkarApp: App {
         guard let deepLink = AppDeepLink(url: url) else {
             return
         }
-        localAnalytics.track(.appEntrypointUsed(
-            source: "deeplink",
+        localAnalytics.entrypoint.used(
+            source: .deeplink,
             target: deepLink.analyticsTarget
-        ))
+        )
         deepLinker.open(deepLink.route)
     }
 
@@ -132,10 +132,10 @@ struct AzkarApp: App {
         else {
             return
         }
-        localAnalytics.track(.appEntrypointUsed(
-            source: "spotlight",
+        localAnalytics.entrypoint.used(
+            source: .spotlight,
             target: deepLink.analyticsTarget
-        ))
+        )
         deepLinker.open(deepLink.route)
     }
     
@@ -283,20 +283,20 @@ struct AzkarApp: App {
 
 private extension AppDeepLink {
 
-    var analyticsTarget: String {
+    var analyticsTarget: AppAnalyticsEntrypointTarget {
         switch self {
         case .home:
-            return "home"
+            return .home
         case .category(let category):
-            return "category_\(category.rawValue)"
+            return .category(category)
         case .categoryZikr(let category, _):
-            return "category_zikr_\(category.rawValue)"
+            return .categoryZikr(category)
         case .zikr:
-            return "zikr"
+            return .zikr
         case .article:
-            return "article"
+            return .article
         case .hadith:
-            return "hadith"
+            return .hadith
         }
     }
 
@@ -304,22 +304,22 @@ private extension AppDeepLink {
 
 private extension Deeplinker.Route {
 
-    var analyticsTarget: String {
+    var analyticsTarget: AppAnalyticsEntrypointTarget {
         switch self {
         case .home:
-            return "home"
+            return .home
         case .settings:
-            return "settings"
+            return .settings
         case .azkar(let category):
-            return "category_\(category.rawValue)"
+            return .category(category)
         case .categoryZikr(let category, _):
-            return "category_zikr_\(category.rawValue)"
+            return .categoryZikr(category)
         case .zikr:
-            return "zikr"
+            return .zikr
         case .article:
-            return "article"
+            return .article
         case .hadith:
-            return "hadith"
+            return .hadith
         }
     }
 
