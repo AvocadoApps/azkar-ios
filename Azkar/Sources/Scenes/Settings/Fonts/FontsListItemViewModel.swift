@@ -15,7 +15,7 @@ struct AppFontViewModel: Identifiable, Equatable, Hashable {
         lhs.id == rhs.id
     }
     
-    private static let baseURL = URL(string: "https://storage.yandexcloud.net/azkar/fonts/files/")!
+    private static let filesBaseURL = FontsType.baseURL.appendingPathComponent("files")
     
     let id = UUID()
     let font: AppFont
@@ -48,8 +48,8 @@ struct AppFontViewModel: Identifiable, Equatable, Hashable {
         
         let referenceName = font.referenceName
         if referenceName != STANDARD_FONT_REFERENCE_NAME {
-            imageURL = AppFontViewModel.baseURL.appendingPathComponent("\(referenceName)/\(referenceName)\(langIdSuffix).png")
-            zipFileURL = AppFontViewModel.baseURL.appendingPathComponent(referenceName).appendingPathComponent("\(referenceName).zip")
+            imageURL = AppFontViewModel.filesBaseURL.appendingPathComponent("\(referenceName)/\(referenceName)\(langIdSuffix).png")
+            zipFileURL = AppFontViewModel.filesBaseURL.appendingPathComponent(referenceName).appendingPathComponent("\(referenceName).zip")
         } else {
             imageURL = nil
             zipFileURL = nil

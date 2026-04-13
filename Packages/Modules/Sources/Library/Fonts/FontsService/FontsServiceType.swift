@@ -4,13 +4,15 @@ import Foundation
 
 public enum FontsType {
     case arabic, translation
-    
+
+    public static let baseURL = URL(string: "https://storage.yandexcloud.net/azkar/fonts/")!
+
     public var url: URL {
         switch self {
         case .arabic:
-            return URL(string: "https://storage.yandexcloud.net/azkar/fonts/arabic_fonts.json")!
+            return Self.baseURL.appendingPathComponent("arabic_fonts.json")
         case .translation:
-            return URL(string: "https://storage.yandexcloud.net/azkar/fonts/translation_fonts.json")!
+            return Self.baseURL.appendingPathComponent("translation_fonts.json")
         }
     }
 }

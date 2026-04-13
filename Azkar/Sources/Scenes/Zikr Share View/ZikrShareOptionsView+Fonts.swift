@@ -405,5 +405,5 @@ extension ZikrShareOptionsView {
 
     static var defaultArabicFonts: [ArabicFont] { ArabicFont.standardFonts.compactMap { $0 as? ArabicFont } }
     static var defaultTranslationFonts: [TranslationFont] { TranslationFont.standardFonts }
-    static var fontDownloadBaseURL: URL { URL(string: "https://storage.yandexcloud.net/azkar/fonts/files/")! }
+    static var fontDownloadBaseURL: URL { FontsType.baseURL.appendingPathComponent("files") }
 }
