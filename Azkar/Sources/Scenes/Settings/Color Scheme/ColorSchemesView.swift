@@ -153,7 +153,7 @@ struct ColorSchemesView: View {
                 }
             }
         }
-        .scrollContentBackground(.hidden)
+        .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)

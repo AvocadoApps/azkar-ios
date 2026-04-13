@@ -14,7 +14,7 @@ struct CounterView: View {
             .applyContainerStyle()
         }
         .applyThemedToggleStyle()
-        .scrollContentBackground(.hidden)
+        .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.counter.title")
         .animation(.smooth, value: viewModel.preferences.counterType)
@@ -30,14 +30,11 @@ struct CounterView: View {
                 HStack {
                     Text("settings.counter.counter-size.title")
                     Spacer()
-                    Picker(
-                        CounterSize.allCases,
-                        id: \.self,
-                        selection: $viewModel.preferences.counterSize,
-                        content: { size in
-                            Text(size.title)
+                    Picker("", selection: $viewModel.preferences.counterSize) {
+                        ForEach(CounterSize.allCases, id: \.self) { size in
+                            Text(size.title).tag(size)
                         }
-                    )
+                    }
                     .pickerStyle(.segmented)
                 }
                 
@@ -46,14 +43,11 @@ struct CounterView: View {
                 HStack {
                     Text("settings.counter.counter-position.title")
                     Spacer()
-                    Picker(
-                        CounterPosition.allCases,
-                        id: \.self,
-                        selection: $viewModel.preferences.counterPosition,
-                        content: { size in
-                            Text(size.title)
+                    Picker("", selection: $viewModel.preferences.counterPosition) {
+                        ForEach(CounterPosition.allCases, id: \.self) { position in
+                            Text(position.title).tag(position)
                         }
-                    )
+                    }
                     .pickerStyle(.segmented)
                 }
                 
@@ -98,14 +92,11 @@ struct CounterView: View {
 
             infoButton("settings.counter.counter-type.info")
 
-            Picker(
-                CounterType.allCases,
-                id: \.self,
-                selection: $viewModel.preferences.counterType,
-                content: { type in
-                    Text(type.title)
+            Picker("", selection: $viewModel.preferences.counterType) {
+                ForEach(CounterType.allCases, id: \.self) { type in
+                    Text(type.title).tag(type)
                 }
-            )
+            }
             .pickerStyle(.segmented)
         }
         .padding(.vertical, 3)

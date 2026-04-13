@@ -16,7 +16,7 @@ struct SearchSuggestionsView: View {
                 content
             }
         }
-        .scrollContentBackground(.hidden)
+        .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .task {
             await viewModel.loadSuggestions()

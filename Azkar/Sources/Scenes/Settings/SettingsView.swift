@@ -44,7 +44,7 @@ struct SettingsView: View {
                 .accessibilityLabel(Text("about.title"))
             }
         }
-        .scrollContentBackground(.hidden)
+        .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.title")
         .onAppear {

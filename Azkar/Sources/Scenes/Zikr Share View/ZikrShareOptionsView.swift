@@ -238,7 +238,7 @@ struct ZikrShareOptionsView: View {
     
     private var mainContent: some View {
         scrollView
-            .scrollContentBackground(.hidden)
+            .customScrollContentBackground()
             .applyThemedToggleStyle()
             .background(.background, ignoreSafeArea: .all)
             .ignoresSafeArea(edges: selectedShareType == .image ? .bottom : [])

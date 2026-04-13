@@ -15,7 +15,7 @@ struct AppearanceScreen: View {
             }
             .applyContainerStyle()
         }
-        .scrollContentBackground(.hidden)
+        .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .navigationTitle("settings.appearance.title")
         .onAppear {
@@ -80,14 +80,11 @@ struct AppearanceScreen: View {
                     .systemFont(.body)
                     .foregroundStyle(.text)
                 Spacer()
-                Picker(
-                    PageIndicatorsMode.allCases,
-                    id: \.self,
-                    selection: $viewModel.preferences.pageIndicatorsMode,
-                    content: { mode in
-                        Text(mode.title)
+                Picker("", selection: $viewModel.preferences.pageIndicatorsMode) {
+                    ForEach(PageIndicatorsMode.allCases, id: \.self) { mode in
+                        Text(mode.title).tag(mode)
                     }
-                )
+                }
                 .pickerStyle(.segmented)
                 .fixedSize()
             }

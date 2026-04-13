@@ -111,7 +111,7 @@ struct MainMenuView: View {
                 }
             }
         }
-        .scrollContentBackground(.hidden)
+        .customScrollContentBackground()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Group {

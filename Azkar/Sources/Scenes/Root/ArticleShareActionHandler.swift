@@ -25,7 +25,7 @@ final class ArticleShareActionHandler {
             article: article,
             titleFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 45)!,
             textFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 25)!,
-            pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
+            pageMargins: UIEdgeInsets(top: 65, left: 75, bottom: 65, right: 75),
             footer: ArticlePDFComposer.Footer(
                 image: UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil),
                 text: String(localized: "share.shared-with-azkar").uppercased(),

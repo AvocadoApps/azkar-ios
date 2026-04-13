@@ -160,6 +160,7 @@ final class ZikrPagesViewModel: ObservableObject {
         #endif
     }
 
+    #if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
     /// Single serialized path for all live activity updates.
     /// Reads current page at the moment of execution to avoid stale captures.
     @available(iOS 16.2, *)
@@ -199,6 +200,7 @@ final class ZikrPagesViewModel: ObservableObject {
             ), sequence: updateSequence, sessionID: sessionID)
         }
     }
+    #endif
 
     func endLiveActivity(completed: Bool) {
         #if canImport(ActivityKit) && !targetEnvironment(macCatalyst)

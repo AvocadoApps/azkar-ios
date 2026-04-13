@@ -15,7 +15,7 @@ struct ToastView: View {
         HStack(spacing: 12) {
             if let icon {
                 Image(systemName: icon)
-                    .font(.system(.title3), weight: .semibold)
+                    .font(.system(.title3).weight(.semibold))
                     .foregroundStyle(tint)
             }
             

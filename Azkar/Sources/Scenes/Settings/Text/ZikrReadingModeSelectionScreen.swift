@@ -43,14 +43,11 @@ struct ZikrReadingModeSelectionScreen: View {
     }
     
     var pickerView: some View {
-        Picker(
-            selection: $mode.animation(.spring),
-            content: {
-                ForEach(ZikrReadingMode.allCases) { mode in
-                    Text(mode.title)
-                }
+        Picker("", selection: $mode.animation(.spring)) {
+            ForEach(ZikrReadingMode.allCases) { mode in
+                Text(mode.title)
             }
-        )
+        }
         .pickerStyle(.segmented)
     }
     
