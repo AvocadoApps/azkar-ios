@@ -29,8 +29,6 @@ public struct ArticleScreen: View {
         self.shareOptions = shareOptions
         self.onShareButtonTap = onShareButtonTap
     }
-    
-    private let minHeight = 175.0
     private var maxHeight: CGFloat {
         if viewModel.coverImage?.imageFormat == .titleBackground {
             return 250
