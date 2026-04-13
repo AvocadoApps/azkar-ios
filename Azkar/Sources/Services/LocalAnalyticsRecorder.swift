@@ -47,7 +47,9 @@ actor LocalAnalyticsRecorder {
 
     func recordScreen(screenName: String, className: String?) async {
         var metadata: [String: Any] = [:]
-        metadata["class_name"] = className
+        if let className {
+            metadata["class_name"] = className
+        }
         await recordEvent(name: screenName, metadata: metadata, kind: .screen)
     }
 

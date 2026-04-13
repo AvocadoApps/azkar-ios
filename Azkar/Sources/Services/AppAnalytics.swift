@@ -20,7 +20,7 @@ final class AppAnalyticsStack {
         let databasePath = FileManager.default
             .appGroupContainerURL
             .appendingPathComponent("analytics.db")
-            .absoluteString
+            .path
 
         guard let database = try? AnalyticsSQLiteDatabase(databasePath: databasePath) else {
             processedEventsStore = nil
