@@ -35,7 +35,9 @@ struct AzkarWidgetsBundleWithControl: WidgetBundle {
         VirtuesWidget()
         ArticlesWidget()
         CompletionWidget()
+        #if !targetEnvironment(macCatalyst)
         AzkarReadingLiveActivity()
+        #endif
         AzkarControlCenterWidget()
     }
 }
@@ -49,7 +51,9 @@ struct AzkarWidgetsBundleWithStreak: WidgetBundle {
         VirtuesWidget()
         ArticlesWidget()
         CompletionWidget()
+        #if !targetEnvironment(macCatalyst)
         AzkarReadingLiveActivity()
+        #endif
     }
 }
 
@@ -60,6 +64,8 @@ struct AzkarWidgetsBundleModern: WidgetBundle {
         VirtuesWidget()
         ArticlesWidget()
         CompletionWidget()
+        #if !targetEnvironment(macCatalyst)
         AzkarReadingLiveActivity()
+        #endif
     }
 }
