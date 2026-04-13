@@ -1,7 +1,6 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 
 import SwiftUI
-import Popovers
 import Entities
 import Library
 import Components
