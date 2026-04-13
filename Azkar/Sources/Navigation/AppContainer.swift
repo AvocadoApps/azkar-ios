@@ -63,7 +63,7 @@ extension Container {
     var appDependencies: Factory<AppDependencies> {
         self {
             let analyticsStack = self.appAnalyticsStack()
-            AppDependencies(
+            return AppDependencies(
                 preferences: self.preferences(),
                 player: self.player(),
                 analytics: analyticsStack.localAnalytics,
