@@ -10,8 +10,8 @@ import FactoryKit
 final class ArticleShareActionHandler {
 
     @Injected(\.appDependencies) private var dependencies: AppDependencies
+    @Injected(\.localAnalytics) private var analytics: AppAnalyticsTracking
     private let mailPresenter = FeedbackMailPresenter()
-
     func share(_ article: Article) {
         assert(Thread.isMainThread)
         guard let rootViewController = topViewController() else {
@@ -89,6 +89,7 @@ final class ArticleShareActionHandler {
         activityController.completionWithItemsHandler = { [articlesService] _, completed, _, _ in
             viewController.dismiss(animated: true)
             if completed {
+                self.analytics.track(.articleShared(id: article.id, format: "pdf"))
                 articlesService.sendAnalyticsEvent(.share, articleId: article.id)
             }
         }

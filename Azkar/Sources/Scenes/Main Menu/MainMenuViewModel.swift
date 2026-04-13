@@ -26,7 +26,8 @@ final class MainMenuViewModel: ObservableObject {
         azkarDatabase: azkarDatabase,
         preferencesDatabase: preferencesDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
-        searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
+        searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher(),
+        analytics: analytics
     )
     
     private(set) lazy var searchSuggestionsViewModel = SearchSuggestionsViewModel(
@@ -59,6 +60,7 @@ final class MainMenuViewModel: ObservableObject {
     let preferences: Preferences
     private let articlesService: ArticlesServiceType
     private let adsService: AdsServiceType
+    private let analytics: AppAnalyticsTracking
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -69,7 +71,8 @@ final class MainMenuViewModel: ObservableObject {
         preferences: Preferences,
         player: Player,
         articlesService: ArticlesServiceType,
-        adsService: AdsServiceType
+        adsService: AdsServiceType,
+        analytics: AppAnalyticsTracking
     ) {
         self.azkarDatabase = databaseService
         self.preferencesDatabase = preferencesDatabase
@@ -78,6 +81,7 @@ final class MainMenuViewModel: ObservableObject {
         self.player = player
         self.articlesService = articlesService
         self.adsService = adsService
+        self.analytics = analytics
                 
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
@@ -208,6 +212,14 @@ final class MainMenuViewModel: ObservableObject {
     func navigateToArticle(_ article: Article) {
         navigator.showArticle(article)
     }
+
+    func selectSearchSuggestion(_ query: String) {
+        analytics.track(.searchSuggestionSelected(
+            queryLength: query.count,
+            source: "recent_query"
+        ))
+        searchQuery = query
+    }
     
     func navigateToSearchResult(_ searchResult: SearchResultZikr) {
         navigator.showSearchResult(searchResult, query: searchQuery)
@@ -266,7 +278,8 @@ extension MainMenuViewModel {
             preferences: Preferences.shared,
             player: .test,
             articlesService: DemoArticlesService(),
-            adsService: DemoAdsService()
+            adsService: DemoAdsService(),
+            analytics: NoopAppAnalytics()
         )
     }
     

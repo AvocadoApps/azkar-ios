@@ -45,11 +45,29 @@ extension Container {
             .singleton
     }
 
+    var appAnalyticsStack: Factory<AppAnalyticsStack> {
+        self {
+            AppAnalyticsStack(
+                preferences: self.preferences(),
+                notificationsHandler: self.notificationsHandler()
+            )
+        }
+        .singleton
+    }
+
+    var localAnalytics: Factory<AppAnalyticsTracking> {
+        self { self.appAnalyticsStack().localAnalytics }
+            .singleton
+    }
+
     var appDependencies: Factory<AppDependencies> {
         self {
+            let analyticsStack = self.appAnalyticsStack()
             AppDependencies(
                 preferences: self.preferences(),
-                player: self.player()
+                player: self.player(),
+                analytics: analyticsStack.localAnalytics,
+                analyticsDatabase: analyticsStack.processedEventsStore
             )
         }
         .singleton
@@ -59,7 +77,8 @@ extension Container {
         self { MainActor.assumeIsolated {
             AppNavigator(
                 dependencies: self.appDependencies(),
-                deeplinker: self.deeplinker()
+                deeplinker: self.deeplinker(),
+                analytics: self.localAnalytics()
             )
         } }
         .singleton
@@ -75,7 +94,8 @@ extension Container {
                 preferences: dependencies.preferences,
                 player: dependencies.player,
                 articlesService: dependencies.articlesService,
-                adsService: dependencies.adsService
+                adsService: dependencies.adsService,
+                analytics: dependencies.analytics
             )
         } }
         .singleton

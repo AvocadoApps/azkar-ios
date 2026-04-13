@@ -21,6 +21,7 @@ struct AzkarApp: App {
     @Injected(\.deeplinker) private var deepLinker: Deeplinker
     @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @Injected(\.localAnalytics) private var localAnalytics: AppAnalyticsTracking
 
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
@@ -30,7 +31,10 @@ struct AzkarApp: App {
     var body: some Scene {
         WindowGroup {
             AppFlowView()
-            .task { await presentPaywall() }
+            .task {
+                localAnalytics.start()
+                await presentPaywall()
+            }
             .connectAppTheme()
             .connectCustomFonts()
             .attachEnvironmentOverrides(onChange: { _ in
@@ -58,9 +62,17 @@ struct AzkarApp: App {
                 case .evening: category = .evening
                 case .jumua: category = .hundredDua
                 }
+                localAnalytics.track(.appEntrypointUsed(
+                    source: "notification",
+                    target: category.rawValue
+                ))
                 self.deepLinker.open(.azkar(category))
             }
             .onReceive(quickActionDispatcher.routes) { route in
+                localAnalytics.track(.appEntrypointUsed(
+                    source: "quick_action",
+                    target: route.analyticsTarget
+                ))
                 deepLinker.open(route)
             }
             .onOpenURL { url in
@@ -84,6 +96,10 @@ struct AzkarApp: App {
             return
         }
         defaults?.removeObject(forKey: "controlCenterDeepLink")
+        localAnalytics.track(.appEntrypointUsed(
+            source: "control_center",
+            target: url.host ?? "unknown"
+        ))
         handleIncomingURL(url)
     }
 
@@ -91,6 +107,10 @@ struct AzkarApp: App {
         guard let route = quickActionDispatcher.takePendingRoute() else {
             return
         }
+        localAnalytics.track(.appEntrypointUsed(
+            source: "quick_action",
+            target: route.analyticsTarget
+        ))
         deepLinker.open(route)
     }
 
@@ -98,6 +118,10 @@ struct AzkarApp: App {
         guard let deepLink = AppDeepLink(url: url) else {
             return
         }
+        localAnalytics.track(.appEntrypointUsed(
+            source: "deeplink",
+            target: deepLink.analyticsTarget
+        ))
         deepLinker.open(deepLink.route)
     }
 
@@ -108,6 +132,10 @@ struct AzkarApp: App {
         else {
             return
         }
+        localAnalytics.track(.appEntrypointUsed(
+            source: "spotlight",
+            target: deepLink.analyticsTarget
+        ))
         deepLinker.open(deepLink.route)
     }
     
@@ -251,6 +279,50 @@ struct AzkarApp: App {
         )
     }
     
+}
+
+private extension AppDeepLink {
+
+    var analyticsTarget: String {
+        switch self {
+        case .home:
+            return "home"
+        case .category(let category):
+            return "category_\(category.rawValue)"
+        case .categoryZikr(let category, _):
+            return "category_zikr_\(category.rawValue)"
+        case .zikr:
+            return "zikr"
+        case .article:
+            return "article"
+        case .hadith:
+            return "hadith"
+        }
+    }
+
+}
+
+private extension Deeplinker.Route {
+
+    var analyticsTarget: String {
+        switch self {
+        case .home:
+            return "home"
+        case .settings:
+            return "settings"
+        case .azkar(let category):
+            return "category_\(category.rawValue)"
+        case .categoryZikr(let category, _):
+            return "category_zikr_\(category.rawValue)"
+        case .zikr:
+            return "zikr"
+        case .article:
+            return "article"
+        case .hadith:
+            return "hadith"
+        }
+    }
+
 }
 
 // Extension to get all child view controllers recursively
