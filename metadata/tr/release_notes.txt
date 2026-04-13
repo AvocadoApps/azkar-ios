@@ -1,4 +1,6 @@
+- Ana Ekran Widget'ları: zikir sayacı, sonraki zikir, haftalık seri, makaleler ve Kontrol Merkezi widget'ı (iOS 18+)
 - Zikirler, makaleler ve hadisler için Spotlight araması
-- Yeni sayaç boyutları
-- Zikir veritabanındaki yazım hataları düzeltildi
-- Transliterasyon türü seçimi düzeltildi
+- Yerelleştirilmiş sesli etiketlerle geliştirilmiş VoiceOver erişilebilirliği
+- Okunmamışa Git düğmesi, ilk okunmamış zikre otomatik kaydırma ve kategori bazında sayfa göstergeleri
+- Koyu ve renkli uygulama simgesi çeşitleri
+- Tatar dili desteği eklendi

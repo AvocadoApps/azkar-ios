@@ -8,7 +8,7 @@ Azkar is an Islamic adhkar (daily remembrance) app for iOS 15.0+ and macOS 12.0+
 
 - Bundle ID: `io.jawziyya.azkar-app`
 - Team: `2VFCBFYPFW`
-- Current version: 2.9.9
+- Current version: 3.0.0
 
 ## Architecture
 
