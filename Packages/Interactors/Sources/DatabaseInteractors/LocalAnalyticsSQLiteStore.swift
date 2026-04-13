@@ -111,24 +111,32 @@ public final class LocalAnalyticsSQLiteStore: LocalAnalyticsStore {
         let safeLimit = max(1, limit)
 
         return try await writer.read { db in
+            var conditions: [String] = []
+            var arguments = StatementArguments()
+
+            if let kind {
+                conditions.append("kind = ?")
+                arguments += StatementArguments([kind.rawValue])
+            }
+            if let date {
+                conditions.append("recorded_at >= ?")
+                arguments += StatementArguments([date])
+            }
+
+            let whereClause = conditions.isEmpty ? "" : "WHERE " + conditions.joined(separator: " AND ")
+            arguments += StatementArguments([safeLimit])
+
             let rows = try Row.fetchAll(
                 db,
                 sql: """
                 SELECT name, COUNT(*) AS count
                 FROM \(StoredLocalAnalyticsEvent.databaseTableName)
-                WHERE (? IS NULL OR kind = ?)
-                AND (? IS NULL OR recorded_at >= ?)
+                \(whereClause)
                 GROUP BY name
                 ORDER BY count DESC, name ASC
                 LIMIT ?
                 """,
-                arguments: StatementArguments([
-                    kind?.rawValue,
-                    kind?.rawValue,
-                    date,
-                    date,
-                    safeLimit
-                ])
+                arguments: arguments
             )
 
             return rows.map {
