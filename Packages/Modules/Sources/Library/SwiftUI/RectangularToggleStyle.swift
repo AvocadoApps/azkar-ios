@@ -34,7 +34,7 @@ public struct RectangularToggleStyle: ToggleStyle {
                 }
                 .animation(.smooth, value: configuration.isOn)
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
         }
         .hapticFeedback(.impact(flexibility: .soft), trigger: configuration.isOn)
     }

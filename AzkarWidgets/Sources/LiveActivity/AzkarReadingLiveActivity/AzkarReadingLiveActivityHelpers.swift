@@ -8,17 +8,25 @@ import Entities
 extension AzkarReadingLiveActivity {
     func remainingRepeatsText(for state: AzkarReadingActivityAttributes.ContentState) -> String {
         if state.currentZikrRemainingRepeats == state.currentZikrTotalRepeats {
-            return String(format: String(localized: "widget.liveActivity.remaining-repeats"), locale: Locale.current, state.currentZikrTotalRepeats)
+            return String(
+                format: String(localized: "widget.liveActivity.remaining-repeats", bundle: .main),
+                locale: Locale.current,
+                state.currentZikrTotalRepeats
+            )
         } else if state.currentZikrRemainingRepeats == 0 {
-            return String(localized: "widget.liveActivity.remaining-repeats.completed")
+            return String(localized: "widget.liveActivity.remaining-repeats.completed", bundle: .main)
         } else {
-            return String(format: String(localized: "widget.liveActivity.remaining-repeats"), locale: Locale.current, state.currentZikrRemainingRepeats)
+            return String(
+                format: String(localized: "widget.liveActivity.remaining-repeats", bundle: .main),
+                locale: Locale.current,
+                state.currentZikrRemainingRepeats
+            )
         }
     }
 
     func activityAccessibilitySummary(for state: AzkarReadingActivityAttributes.ContentState) -> String {
         if state.isCompleted {
-            return String(localized: "widget.liveActivity.completed")
+            return String(localized: "widget.liveActivity.completed", bundle: .main)
         }
 
         return [state.currentZikrTitle, remainingRepeatsText(for: state), state.progressText]

@@ -85,10 +85,12 @@ public struct ArticleScreen: View {
     
     var sharedWithAzkarView: some View {
         VStack {
-            Image(uiImage: UIImage(named: "ink", in: azkarResourcesBundle, compatibleWith: nil)!)
-                .resizable()
-                .frame(width: 30, height: 30)
-                .cornerRadius(6)
+            if let image = UIImage(named: "ink", in: azkarResourcesBundle, compatibleWith: nil) {
+                Image(uiImage: image)
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .cornerRadius(6)
+            }
             Text("share.shared-with-azkar")
                 .foregroundStyle(Color.secondary)
                 .systemFont(12, modification: .smallCaps)

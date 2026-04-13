@@ -85,7 +85,7 @@ class PlayerEventProducer: NSObject, EventProducer {
         }
     }
 
-    /// The listener that will be alerted a new event occured.
+    /// The listener that will be alerted a new event occurred.
     weak var eventListener: EventListener?
 
     /// The time observer for the player.

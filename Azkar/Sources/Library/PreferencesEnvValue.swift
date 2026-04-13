@@ -1,7 +1,8 @@
 import SwiftUI
+import FactoryKit
 
 private struct PreferencesEnvKey: EnvironmentKey {
-    static let defaultValue: Preferences = Preferences.shared
+    static let defaultValue: Preferences = Container.shared.preferences()
 }
 
 extension EnvironmentValues {

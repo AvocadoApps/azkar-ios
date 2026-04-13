@@ -55,6 +55,14 @@ struct WidgetCategoryMetadata {
         }
     }
 
+    static func controlCenterImageName(for category: ZikrCategory) -> String {
+        switch category {
+        case .morning: return "control-center-morning"
+        case .evening: return "control-center-evening"
+        default: return "control-center-night"
+        }
+    }
+
     static func localizedTitle(for category: ZikrCategory) -> String {
         NSLocalizedString(metadata(for: category).titleKey, bundle: .main, comment: "")
     }

@@ -9,7 +9,7 @@ extension ZikrShareOptionsView {
     var toolbar: some View {
         HStack(spacing: 16) {
             Button(LocalizedStringKey("common.done")) {
-                presentation.dismiss()
+                dismiss()
             }
             Spacer()
 
@@ -63,7 +63,8 @@ extension ZikrShareOptionsView {
                             .scaleEffect(isLogoOptionLocked ? 1 : 0)
                             .opacity(isLogoOptionLocked ? 1 : 0)
                             .animation(.smooth, value: isLogoOptionLocked)
-                        Toggle("share.include-azkar-logo", isOn: $includeLogo.animation(.smooth))
+                        Toggle("share.include-azkar-logo", isOn: $includeLogo)
+                            .animation(.smooth, value: includeLogo)
                             .labelsHidden()
                     }
                     .padding(.horizontal, 16)
@@ -125,7 +126,7 @@ extension ZikrShareOptionsView {
                 zikr: zikr,
                 isNested: true,
                 hadith: nil,
-                preferences: Preferences.shared,
+                preferences: preferences,
                 player: .test
             ),
             includeTitle: includeTitle,
@@ -153,7 +154,7 @@ extension ZikrShareOptionsView {
     }
 
     var backgroundTypePicker: some View {
-        Picker(selection: $selectedBackgroundType.animation(.smooth)) {
+        Picker(selection: $selectedBackgroundType) {
             ForEach(ShareBackgroundTypes.allCases) { item in
                 Text(item.title)
                     .tag(item)
@@ -196,7 +197,7 @@ extension ZikrShareOptionsView {
 
     var shareAsSection: some View {
         Section {
-            Picker("share.share-as", selection: $selectedShareType.animation(.smooth)) {
+            Picker("share.share-as", selection: $selectedShareType) {
                 ForEach(ZikrShareType.allCases) { type in
                     Label(type.title, systemImage: type.imageName)
                         .tag(type)

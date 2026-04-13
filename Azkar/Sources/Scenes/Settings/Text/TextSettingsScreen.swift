@@ -46,6 +46,7 @@ struct TextSettingsScreen: View {
                         Image(systemName: "info.circle")
                     }
                 )
+                .accessibilityLabel(Text("accessibility.common.more-info"))
                 .padding(.trailing)
             }
             
@@ -141,21 +142,6 @@ struct TextSettingsScreen: View {
         FontsView(viewModel: viewModel.getFontsViewModel(fontsType: .translation))
     }
     
-    var adhkarSourcePicker: some View {
-        ItemPickerView(
-            selection: $viewModel.preferences.zikrCollectionSource,
-            items: ZikrCollectionSource.allCases,
-            dismissOnSelect: true
-        )
-    }
-    
-    var contentLanguagePicker: some View {
-        ItemPickerView(
-            selection: $viewModel.preferences.contentLanguage,
-            items: viewModel.getAvailableLanguages(),
-            dismissOnSelect: true
-        )
-    }
 }
 
 #Preview {

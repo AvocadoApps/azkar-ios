@@ -155,7 +155,7 @@ extension AzkarReadingLiveActivity {
             .padding(.vertical, 16)
         }
         .accessibilityLabel(lockScreenAccessibilityLabel(for: context))
-        .accessibilityHint(Text("widget.liveActivity.open"))
+        .accessibilityHint(Text("widget.liveActivity.a11y.open"))
         .activityBackgroundTint(.clear)
     }
 }

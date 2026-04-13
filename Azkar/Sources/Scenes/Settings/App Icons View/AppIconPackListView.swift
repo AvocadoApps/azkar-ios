@@ -1,25 +1,17 @@
 import SwiftUI
-import Combine
+import FactoryKit
 import Library
 
 final class AppIconPackListViewModel: ObservableObject {
 
-    var preferences: Preferences
-    let subscriptionManager: SubscriptionManagerType
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     let subscribeScreenTrigger: Action
-    @Published var icon: AppIcon
+    @Published var icon: AppIcon = .gold
     
     let iconPacks: [AppIconPack] = AppIconPack.allCases
 
-    private var cancellabels = Set<AnyCancellable>()
-
-    init(
-        preferences: Preferences,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
-        subscribeScreenTrigger: @escaping Action
-    ) {
-        self.preferences = preferences
-        self.subscriptionManager = subscriptionManager
+    init(subscribeScreenTrigger: @escaping Action) {
         self.subscribeScreenTrigger = subscribeScreenTrigger
         icon = preferences.appIcon
     }
@@ -119,7 +111,7 @@ struct AppIconPackListView: View {
     
     func iconView(for icon: AppIcon, position: IndexPosition) -> some View {
         HStack(spacing: 16) {
-            if let image = UIImage(named: icon.iconImageName, in: resourcesBunbdle, compatibleWith: nil) {
+            if let image = UIImage(named: icon.iconImageName, in: resourcesBundle, compatibleWith: nil) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -135,7 +127,7 @@ struct AppIconPackListView: View {
             Spacer()
             
             if viewModel.icon == icon || viewModel.isIconAvailable(icon) {
-                CheckboxView(isCheked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
+                CheckboxView(isChecked:  .constant(self.viewModel.icon.referenceName == icon.referenceName))
                     .frame(width: 20, height: 20)
             } else {
                 ProBadgeView()
@@ -155,7 +147,6 @@ struct AppIconPackListView_Previews: PreviewProvider {
     static var previews: some View {
         AppIconPackListView(
             viewModel: AppIconPackListViewModel(
-                preferences: Preferences.shared,
                 subscribeScreenTrigger: {}
             )
         )

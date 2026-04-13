@@ -58,7 +58,7 @@ struct AzkarListView: View {
             .padding()
             .contentShape(Rectangle())
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
         .accessibilityLabel(title)
         .applyAccessibilityLanguage(zikr.zikr.language.id)
     }

@@ -18,7 +18,7 @@ extension Article.ImageType {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .accentColor(Color.primary)
+                        .tint(Color.primary)
                 } else if state.isLoading {
                     Color(.systemBackground)
                         .overlay {
@@ -34,7 +34,7 @@ extension Article.ImageType {
             Image(name)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .accentColor(Color.primary)
+                .tint(Color.primary)
                 .frame(minWidth: 0, maxHeight: maxHeight)
             
         }

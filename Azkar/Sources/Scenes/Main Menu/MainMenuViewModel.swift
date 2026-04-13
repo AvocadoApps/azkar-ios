@@ -81,12 +81,12 @@ final class MainMenuViewModel: ObservableObject {
                 
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
-            if let fastindDua = databaseService.getZikrBeforeBreakingFast() {
+            if let fastingDua = databaseService.getZikrBeforeBreakingFast() {
                 adhkar.append(ZikrMenuItem(
                     color: Color.blue,
                     iconType: IconType.emoji,
                     imageName: "🥛",
-                    zikr: fastindDua
+                    zikr: fastingDua
                 ))
             }
             if let laylatulQadrDua = databaseService.getLaylatulQadrDua() {
@@ -107,7 +107,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.night"),
                 color: Color.init(uiColor: .systemMint),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .afterSalah,
@@ -115,7 +115,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.after-salah"),
                 color: Color.init(.systemBlue),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .other,
@@ -123,7 +123,7 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.other"),
                 color: Color.init(.systemTeal),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .hundredDua,
@@ -131,17 +131,9 @@ final class MainMenuViewModel: ObservableObject {
                 title: String(localized: "category.hundred-dua"),
                 color: Color.init(.systemPink),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
         ]
-
-        do {
-            if let fadl = try databaseService.getRandomFadl() {
-                print(fadl)
-            }
-        } catch {
-            print(error)
-        }
 
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {
@@ -189,12 +181,6 @@ final class MainMenuViewModel: ObservableObject {
             await loadAds()
         }
         
-        if !didDisplayZikrCollectionsOnboarding, !InstallationDateChecker.isRecentlyInstalled(days: 3) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                navigator.showZikrCollectionsOnboarding()
-                self.didDisplayZikrCollectionsOnboarding = true
-            }
-        }
     }
     
     private func loadArticles() async {
@@ -223,7 +209,7 @@ final class MainMenuViewModel: ObservableObject {
         navigator.showArticle(article)
     }
     
-    func naviateToSearchResult(_ searchResult: SearchResultZikr) {
+    func navigateToSearchResult(_ searchResult: SearchResultZikr) {
         navigator.showSearchResult(searchResult, query: searchQuery)
     }
 

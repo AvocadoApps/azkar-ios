@@ -11,7 +11,7 @@ import UIKit
 private struct CONSTANTS {
     static let TouchImageName = "TouchImageBlue"
     static let ShowExpandingCircle = false
-    static let ShortTapTresholdDuration = 0.11
+    static let ShortTapThresholdDuration = 0.11
     static let ShortTapInitialCircleRadius : CGFloat = 22.0
     static let ShortTapFinalCircleRadius : CGFloat = 57.0
 }
@@ -40,19 +40,20 @@ class GSTouchesShowingController {
     }
     
     func touchMoved(_ touch: UITouch, view: UIView) {
-        self.touchImageView(for: touch).center = touch.location(in: view)
+        guard let touchImgView = self.touchImageView(for: touch) else { return }
+        touchImgView.center = touch.location(in: view)
     }
     
     func touchEnded(_ touch: UITouch, view: UIView) {
-        let touchStartDate = self.touchesStartDateMapTable.object(forKey: touch)
-        let touchDuration = NSDate().timeIntervalSince(touchStartDate! as Date)
+        guard let touchStartDate = self.touchesStartDateMapTable.object(forKey: touch) else { return }
+        let touchDuration = NSDate().timeIntervalSince(touchStartDate as Date)
         self.touchesStartDateMapTable.removeObject(forKey: touch)
         
-        if touchDuration < CONSTANTS.ShortTapTresholdDuration, CONSTANTS.ShowExpandingCircle {
+        if touchDuration < CONSTANTS.ShortTapThresholdDuration, CONSTANTS.ShowExpandingCircle {
             self.showExpandingCircle(at: touch.location(in: view), in: view)
         }
         
-        let touchImgView = self.touchImageView(for: touch)
+        guard let touchImgView = self.touchImageView(for: touch) else { return }
         UIView.animate(withDuration: 0.1, animations: {
             touchImgView.alpha = 0.0
             touchImgView.transform = CGAffineTransform(scaleX: 1.13, y: 1.13)
@@ -112,8 +113,8 @@ class GSTouchesShowingController {
         CATransaction.commit()
     }
     
-    func touchImageView(for touch: UITouch) -> UIImageView {
-        return self.touchImgViewsDict["\(touch.hash)"]!
+    func touchImageView(for touch: UITouch) -> UIImageView? {
+        return self.touchImgViewsDict["\(touch.hash)"]
     }
     
     func setTouchImageView(_ touchImageView: UIImageView, for touch: UITouch) {
@@ -134,7 +135,7 @@ class GSTouchImageViewQueue {
         
         let bundle = Bundle(for: type(of: self))
         for _ in 0..<touchesCount {
-            let imageView = UIImageView(image: UIImage(named: CONSTANTS.TouchImageName, in: resourcesBunbdle, compatibleWith: nil))
+            let imageView = UIImageView(image: UIImage(named: CONSTANTS.TouchImageName, in: resourcesBundle, compatibleWith: nil))
             self.backingArray.append(imageView)
         }
     }

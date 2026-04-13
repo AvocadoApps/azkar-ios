@@ -6,4 +6,4 @@ import AzkarResources
 
 typealias AnalyticsReporter = AzkarServices.AnalyticsReporter
 
-let resourcesBunbdle = azkarResourcesBundle
+let resourcesBundle = azkarResourcesBundle

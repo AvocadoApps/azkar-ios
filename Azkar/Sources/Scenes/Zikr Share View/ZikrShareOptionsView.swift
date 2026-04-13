@@ -2,6 +2,7 @@
 
 import SwiftUI
 import AudioPlayer
+import FactoryKit
 import Library
 import Popovers
 import Entities
@@ -77,23 +78,23 @@ struct ZikrShareOptionsView: View {
                 let usesTranslationFont = includeTranslation || includeTransliteration || includeBenefits
                 return includeLogo == false
                 || selectedBackground.isProItem
-                || (usesArabicFont && arabicFont.isStandartPackFont != true)
-                || (usesTranslationFont && translationFont.isStandartPackFont != true)
+                || (usesArabicFont && arabicFont.isStandardPackFont != true)
+                || (usesTranslationFont && translationFont.isStandardPackFont != true)
             } else {
                 return false
             }
         }
     }
 
-    var callback: (ShareOptions) -> Void
+    let callback: (ShareOptions) -> Void
 
     @EnvironmentObject var backgroundsService: ShareBackgroundsServiceType
-    @Environment(\.presentationMode) var presentation
+    @Environment(\.dismiss) var dismiss
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
-    let subscriptionManager = SubscriptionManager.shared
-    
-    let preferences = Preferences.shared
+    @Injected(\.subscriptionManager) var subscriptionManager: SubscriptionManagerType
+    @Injected(\.preferences) var preferences: Preferences
+    @Injected(\.fontsService) var fontsService: FontsServiceType
     
     @AppStorage("kShareShowExtraOptions")
     var showExtraOptions = false
@@ -168,19 +169,17 @@ struct ZikrShareOptionsView: View {
         }
     }
     let alignments: [ZikrShareTextAlignment] = [.center, .start]
-    let fontsService = FontsService()
-    
     @AppStorage("kShareArabicFont")
     var selectedArabicFontId: String = ""
 
     @AppStorage("kShareTranslationFont")
     var selectedTranslationFontId: String = ""
 
-    @State var selectedArabicFont: ArabicFont = Preferences.shared.preferredArabicFont
-    @State var selectedTranslationFont: TranslationFont = Preferences.shared.preferredTranslationFont
+    @State var selectedArabicFont: ArabicFont
+    @State var selectedTranslationFont: TranslationFont
 
-    @State var appliedArabicFont: ArabicFont = Preferences.shared.preferredArabicFont
-    @State var appliedTranslationFont: TranslationFont = Preferences.shared.preferredTranslationFont
+    @State var appliedArabicFont: ArabicFont
+    @State var appliedTranslationFont: TranslationFont
 
     @State var availableArabicFonts: [ArabicFont] = ZikrShareOptionsView.defaultArabicFonts
     @State var availableTranslationFonts: [TranslationFont] = ZikrShareOptionsView.defaultTranslationFonts
@@ -191,6 +190,17 @@ struct ZikrShareOptionsView: View {
 
     enum FontsLoadingState {
         case idle, loading, loaded, failed
+    }
+
+    init(zikr: Zikr, callback: @escaping (ShareOptions) -> Void) {
+        self.zikr = zikr
+        self.callback = callback
+
+        let preferences = Container.shared.preferences()
+        _selectedArabicFont = State(initialValue: preferences.preferredArabicFont)
+        _selectedTranslationFont = State(initialValue: preferences.preferredTranslationFont)
+        _appliedArabicFont = State(initialValue: preferences.preferredArabicFont)
+        _appliedTranslationFont = State(initialValue: preferences.preferredTranslationFont)
     }
             
     var body: some View {
@@ -207,7 +217,7 @@ struct ZikrShareOptionsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(LocalizedStringKey("common.done")) {
-                        presentation.dismiss()
+                        dismiss()
                     }
                 }
                 

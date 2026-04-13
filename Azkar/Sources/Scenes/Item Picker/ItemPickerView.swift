@@ -3,7 +3,7 @@ import Library
 
 struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Identifiable & PickableItem {
 
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Binding var selection: SelectionValue
     var header: String?
     let items: [SelectionValue]
@@ -36,7 +36,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
 
     var content: some View {
         ForEachIndexed(items) { _, position, item in
-            let isSelected = selection.hashValue == item.hashValue
+            let isSelected = selection == item
             let isProtected = isItemProtected(item) && !isSelected
             Button {
                 DispatchQueue.main.async {
@@ -45,7 +45,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                     }
                     UISelectionFeedbackGenerator().selectionChanged()
                     if self.dismissOnSelect {
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.dismiss()
                     }
                 }
             } label: {
@@ -73,7 +73,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                         ProBadgeView()
                             .accessibilityHidden(true)
                     } else {
-                        CheckboxView(isCheked: .constant(isSelected))
+                        CheckboxView(isChecked: .constant(isSelected))
                             .frame(width: 20, height: 20)
                             .accessibilityHidden(true)
                     }

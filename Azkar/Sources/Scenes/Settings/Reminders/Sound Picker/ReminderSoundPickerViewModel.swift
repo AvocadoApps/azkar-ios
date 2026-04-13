@@ -3,6 +3,7 @@
 import Foundation
 import UserNotifications
 import AudioPlayer
+import FactoryKit
 import Library
 
 enum ReminderSound: String, Identifiable, Hashable, Codable {
@@ -128,21 +129,17 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     let sections = [Section.standard, Section.custom]
 
     private let type: ReminderType
-    private let preferences: Preferences
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: Action
-    private let subscriptionManager: SubscriptionManagerType
     
     init(
         type: ReminderType,
-        preferences: Preferences = Preferences.shared,
         preferredSound: ReminderSound,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManager.shared,
         subscribeScreenTrigger: @escaping Action
     ) {
         self.type = type
-        self.preferences = preferences
         self.preferredSound = preferredSound
-        self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
     }
     
@@ -151,12 +148,13 @@ final class ReminderSoundPickerViewModel: ObservableObject {
     @Published var preferredSound: ReminderSound
     
     static var placeholder: ReminderSoundPickerViewModel {
-        return ReminderSoundPickerViewModel(
+        let viewModel = ReminderSoundPickerViewModel(
             type: .adhkar,
             preferredSound: ReminderSound.standard,
-            subscriptionManager: DemoSubscriptionManager(),
             subscribeScreenTrigger: {}
         )
+        viewModel.subscriptionManager = DemoSubscriptionManager()
+        return viewModel
     }
     
     func playSound(_ sound: ReminderSound) {

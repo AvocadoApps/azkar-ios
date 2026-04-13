@@ -9,7 +9,7 @@ import Extensions
 struct FontsService: FontsServiceType {
     
     func loadFonts<T>(of type: FontsType) async throws -> [T] where T : AppFont, T : Decodable {
-        let fontsListURL = URL(string: type.url)!
+        let fontsListURL = type.url
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return try await AF.request(

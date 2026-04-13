@@ -60,7 +60,7 @@ struct ExtraTextSettingsScreen: View {
                     infoButton("settings.text.use_system_font_size_tip")
                 }
                 Spacer()
-                Toggle("", isOn: $viewModel.preferences.useSystemFontSize.animation(.smooth))
+                Toggle("", isOn: $viewModel.preferences.useSystemFontSize)
                     .labelsHidden()
                     .accessibilityLabel(Text("settings.text.use-system-font-size"))
             }
@@ -124,8 +124,8 @@ struct ExtraTextSettingsScreen: View {
                 }
                 .listRowBackground(colorTheme.getColor(.contentBackground))
             }
-.scrollContentBackground(.hidden)
-            .navigationBarTitle("settings.text.line-spacing")
+            .customScrollContentBackground()
+            .navigationTitle("settings.text.line-spacing")
             .background(.background, ignoreSafeArea: .all)
         } label: {
             NavigationLabel(title: "settings.text.line-spacing")

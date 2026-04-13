@@ -1,55 +1,24 @@
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 import Entities
 import ArticleReader
 import ZikrCollectionsOnboarding
+import ChangelogKit
 
+@MainActor
 struct AppFlowView: View {
 
-    @ObservedObject private var preferences: Preferences
-    private let dependencies: AppDependencies
-    private let articleShareActionHandler: ArticleShareActionHandler
-    private let zikrShareActionHandler: ZikrShareActionHandler
+    @InjectedObject(\.preferences) private var preferences: Preferences
+    @Injected(\.appDependencies) private var dependencies: AppDependencies
+    @Injected(\.articleShareActionHandler) private var articleShareActionHandler: ArticleShareActionHandler
+    @Injected(\.zikrShareActionHandler) private var zikrShareActionHandler: ZikrShareActionHandler
 
-    @StateObject private var navigator: AppNavigator
-    @StateObject private var rootViewModel: RootViewModel
+    @InjectedObject(\.appNavigator) private var navigator: AppNavigator
+    @InjectedObject(\.rootViewModel) private var rootViewModel: RootViewModel
 
-    init(
-        preferences: Preferences,
-        deeplinker: Deeplinker,
-        player: Player
-    ) {
-        _preferences = ObservedObject(wrappedValue: preferences)
-        let dependencies = AppDependencies(preferences: preferences, player: player)
-        let navigator = AppNavigator(
-            dependencies: dependencies,
-            deeplinker: deeplinker
-        )
-        let rootViewModel = RootViewModel(
-            mainMenuViewModel: MainMenuViewModel(
-                databaseService: dependencies.databaseService,
-                preferencesDatabase: dependencies.preferencesDatabase,
-                navigator: navigator,
-                preferences: dependencies.preferences,
-                player: dependencies.player,
-                articlesService: dependencies.articlesService,
-                adsService: dependencies.adsService
-            )
-        )
-        self.dependencies = dependencies
-        articleShareActionHandler = ArticleShareActionHandler(
-            preferences: preferences,
-            articlesService: dependencies.articlesService
-        )
-        zikrShareActionHandler = ZikrShareActionHandler(
-            preferences: preferences,
-            player: player
-        )
-        _navigator = StateObject(
-            wrappedValue: navigator
-        )
-        _rootViewModel = StateObject(wrappedValue: rootViewModel)
+    init() {
     }
 
     var body: some View {
@@ -139,7 +108,6 @@ struct AppFlowView: View {
 
         case .settings(let context):
             SettingsFlowView(
-                preferences: dependencies.preferences,
                 initialDestination: context.initialDestination,
                 embedInNavigation: false
             )
@@ -151,7 +119,6 @@ struct AppFlowView: View {
         switch sheet.destination {
         case .settings(let context):
             SettingsFlowView(
-                preferences: dependencies.preferences,
                 initialDestination: context.initialDestination,
                 embedInNavigation: true
             )
@@ -170,6 +137,47 @@ struct AppFlowView: View {
                 }
             )
         }
+    }
+
+    static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+
+    static func loadAllSections() -> [ReleaseNotesSection] {
+        guard let url = Bundle.main.url(forResource: "data", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let sections = try? JSONDecoder().decode([ReleaseNotesSection].self, from: data) else {
+            return []
+        }
+        return sections
+    }
+
+    static func loadAllReleaseNotes() -> [ReleaseNotes] {
+        loadAllSections().flatMap(\.items)
+    }
+
+    /// Returns the version string that marks the boundary between new and previously seen notes.
+    ///
+    /// If `lastSeenVersion` doesn't exist in the changelog, the highest version
+    /// that is less than or equal to it is used instead.
+    static func boundaryVersion(for lastSeenVersion: String) -> String? {
+        guard !lastSeenVersion.isEmpty else { return nil }
+        let all = loadAllReleaseNotes()
+        let hasUnseen = all.contains {
+            $0.version.compare(lastSeenVersion, options: .numeric) == .orderedDescending
+        }
+        guard hasUnseen else { return nil }
+        // Pick the highest changelog version <= lastSeenVersion.
+        let seen = all.filter {
+            $0.version.compare(lastSeenVersion, options: .numeric) != .orderedDescending
+        }
+        return seen.first?.version ?? all.last?.version
+    }
+
+    static var releaseNotesStrings: ChangelogStrings {
+        ChangelogStrings(
+            previouslySeenTitle: String(localized: "release-notes.previously-seen"),
+            screenTitle: String(localized: "release-notes.whats-new"),
+            continueButton: String(localized: "common.done")
+        )
     }
 }
 

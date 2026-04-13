@@ -3,6 +3,7 @@
 import SwiftUI
 import Combine
 import Entities
+import FactoryKit
 import Library
 
 final class FontsViewModel: ObservableObject {
@@ -27,7 +28,6 @@ final class FontsViewModel: ObservableObject {
             fonts: [TranslationFont.placeholder].map { AppFontViewModel(font: $0, language: Language.getSystemLanguage()) }
         ),
     ]
-    @Published var preferredFont: AppFont
     @Published var loadingFonts = Set<UUID>()
     
     struct FontsSection: Equatable, Identifiable {
@@ -36,7 +36,7 @@ final class FontsViewModel: ObservableObject {
             
             static func == (lhs: FontsViewModel.FontsSection.FontsSectionType, rhs: FontsViewModel.FontsSection.FontsSectionType) -> Bool {
                 switch (lhs, rhs) {
-                case (.stantard, .stantard):
+                case (.standard, .standard):
                     return true
                 case (.appFont(let lhsStyle), .appFont(let rhsStyle)):
                     return lhsStyle.key == rhsStyle.key
@@ -45,12 +45,12 @@ final class FontsViewModel: ObservableObject {
                 }
             }
             
-            case stantard
+            case standard
             case appFont(AppFontStyle)
             
             var id: String {
                 switch self {
-                case .stantard:
+                case .standard:
                     return "standard"
                 case .appFont(let style):
                     return style.key
@@ -71,26 +71,21 @@ final class FontsViewModel: ObservableObject {
         let fonts: [AppFontViewModel]
     }
     
-    private let service: FontsServiceType
-    private let preferences: Preferences
-    private let subscriptionManager: SubscriptionManagerType
+    @Injected(\.fontsService) private var service: FontsServiceType
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: () -> Void
     private var cancellables = Set<AnyCancellable>()
     let fontsType: FontsType
+    @Published var preferredFont: AppFont = TranslationFont.placeholder
     
     init(
         sampleText: String,
         fontsType: FontsType,
-        service: FontsServiceType,
-        preferences: Preferences = Preferences.shared,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
         subscribeScreenTrigger: @escaping () -> Void
     ) {
         self.sampleText = sampleText
         self.fontsType = fontsType
-        self.service = service
-        self.preferences = preferences
-        self.subscriptionManager = subscriptionManager
         self.subscribeScreenTrigger = subscribeScreenTrigger
         if fontsType == .arabic {
             preferredFont = preferences.preferredArabicFont
@@ -135,7 +130,7 @@ final class FontsViewModel: ObservableObject {
     }
     
     func hasAccessToFont(_ font: AppFont) -> Bool {
-        return font.isStandartPackFont == true || subscriptionManager.isProUser()
+        return font.isStandardPackFont == true || subscriptionManager.isProUser()
     }
     
     private func isFontInstalled(_ font: AppFontViewModel) -> Bool {
@@ -157,7 +152,8 @@ final class FontsViewModel: ObservableObject {
     }
     
     private func loadFonts() async throws {
-        let showNonCyrillicFonts = preferences.contentLanguage != .russian
+        let selectedLanguage = preferences.contentLanguage
+        let showNonCyrillicFonts = selectedLanguage != .russian
         let isArabicFonts = fontsType == .arabic
         let fonts: [AppFont]
         if isArabicFonts {
@@ -167,7 +163,7 @@ final class FontsViewModel: ObservableObject {
             let translationFonts: [TranslationFont] = try await service.loadFonts(of: .translation)
             fonts = translationFonts
         }
-        DispatchQueue.main.async {
+        await MainActor.run {
             let standardFonts = self.fontsType == .arabic ? ArabicFont.standardFonts : TranslationFont.standardFonts
             let grouped = Dictionary(grouping: fonts, by: \.style.key)
             var sections = grouped.keys.sorted(by: { $0 < $1 })
@@ -179,19 +175,19 @@ final class FontsViewModel: ObservableObject {
                     let fontViewModels = fonts
                         .filter { font in
                             if !isArabicFonts && !showNonCyrillicFonts, let translationFont = font as? TranslationFont {
-                                return translationFont.supportsCyryllicCharacters
+                                return translationFont.supportsCyrillicCharacters
                             }
                             return true
                         }
                         .map { font in
-                            AppFontViewModel(font: font, language: self.preferences.contentLanguage)
+                            AppFontViewModel(font: font, language: selectedLanguage)
                         }
                     return FontsSection(type: FontsSection.FontsSectionType(from: style), fonts: fontViewModels)
                 }
             sections.insert(FontsSection(
-                type: .stantard,
+                type: .standard,
                 fonts: standardFonts.map { font in
-                    AppFontViewModel(font: font, language: self.preferences.contentLanguage)
+                    AppFontViewModel(font: font, language: selectedLanguage)
                 }
             ), at: 0)
             self.fonts = sections
@@ -200,12 +196,13 @@ final class FontsViewModel: ObservableObject {
     }
     
     static var placeholder: FontsViewModel {
-        FontsViewModel(
+        let viewModel = FontsViewModel(
             sampleText: "С именем Аллаха",
             fontsType: .translation,
-            service: DemoFontsService(),
             subscribeScreenTrigger: {}
         )
+        viewModel.service = DemoFontsService()
+        return viewModel
     }
     
 }

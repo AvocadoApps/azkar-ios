@@ -46,7 +46,7 @@ extension ZikrShareOptionsView {
             }
         )
 
-        let labelPrefixAccessory: PickerMenuAccessory? = selection.wrappedValue.isStandartPackFont != true && !subscriptionManager.isProUser() ? .image(systemName: "lock.fill", tint: Color.getColor(.accent)) : nil
+        let labelPrefixAccessory: PickerMenuAccessory? = selection.wrappedValue.isStandardPackFont != true && !subscriptionManager.isProUser() ? .image(systemName: "lock.fill", tint: Color.getColor(.accent)) : nil
 
         return PickerMenu(
             title: title,
@@ -189,7 +189,7 @@ extension ZikrShareOptionsView {
     }
 
     func isFontPro<T: AppFont>(_ font: T) -> Bool {
-        font.isStandartPackFont != true
+        font.isStandardPackFont != true
     }
 
     func isFontLocked<T: AppFont>(_ font: T) -> Bool {

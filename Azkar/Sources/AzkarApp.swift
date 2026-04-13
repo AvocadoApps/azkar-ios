@@ -2,34 +2,34 @@
 // All Rights Reserved.
 
 import SwiftUI
+import FactoryKit
 import Library
 import Entities
-import AudioPlayer
 import StoreKit
 import CoreSpotlight
+import Combine
 
+@MainActor
 @main
 struct AzkarApp: App {
 
     private static var hasHandledLaunchPaywall = false
-    
+
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
-    
-    let preferences = Preferences.shared
-    let deepLinker = Deeplinker.shared
-    
+
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.deeplinker) private var deepLinker: Deeplinker
+    @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
         applyWindowBackground(colorTheme: preferences.colorTheme)
     }
-        
+
     var body: some Scene {
         WindowGroup {
-            AppFlowView(
-                preferences: Preferences.shared,
-                deeplinker: deepLinker,
-                player: Player(player: AudioPlayer())
-            )
+            AppFlowView()
             .task { await presentPaywall() }
             .connectAppTheme()
             .connectCustomFonts()
@@ -60,13 +60,38 @@ struct AzkarApp: App {
                 }
                 self.deepLinker.open(.azkar(category))
             }
+            .onReceive(quickActionDispatcher.routes) { route in
+                deepLinker.open(route)
+            }
             .onOpenURL { url in
                 handleIncomingURL(url)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                handlePendingQuickAction()
+                handleControlCenterDeepLink()
             }
             .onContinueUserActivity(CSSearchableItemActionType) { userActivity in
                 handleSearchActivity(userActivity)
             }
         }
+    }
+
+    private func handleControlCenterDeepLink() {
+        let defaults = UserDefaults(suiteName: "group.io.jawziyya.azkar-app")
+        guard let urlString = defaults?.string(forKey: "controlCenterDeepLink"),
+              let url = URL(string: urlString)
+        else {
+            return
+        }
+        defaults?.removeObject(forKey: "controlCenterDeepLink")
+        handleIncomingURL(url)
+    }
+
+    private func handlePendingQuickAction() {
+        guard let route = quickActionDispatcher.takePendingRoute() else {
+            return
+        }
+        deepLinker.open(route)
     }
 
     private func handleIncomingURL(_ url: URL) {
@@ -210,10 +235,15 @@ struct AzkarApp: App {
             return
         }
 
-        guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
+        let lastSeenVersion = UserDefaults.standard.string(forKey: "lastSeenVersion") ?? ""
+        if lastSeenVersion != AppFlowView.appVersion {
             return
         }
-        SubscriptionManager.shared.presentPaywall(
+
+        guard subscriptionManager.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
+            return
+        }
+        subscriptionManager.presentPaywall(
             presentationType: .appLaunch,
             completion: {
                 requestAppReview()

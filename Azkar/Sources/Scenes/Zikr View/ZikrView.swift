@@ -1,7 +1,6 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 
 import SwiftUI
-import Combine
 import Extensions
 import Library
 import Components
@@ -17,7 +16,7 @@ import Entities
  */
 struct ZikrView: View {
     
-    @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
+    @AppStorage(Keys.didDisplayCounterOnboardingTip, store: UserDefaults.standard)
     var didDisplayCounterOnboardingTip: Bool?
 
     @ObservedObject var viewModel: ZikrViewModel
@@ -67,13 +66,11 @@ struct ZikrView: View {
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Zikr Reading", className: viewName)
-        }
-        .environment(\.highlightPattern, viewModel.highlightPattern)
-        .onAppear {
             Task {
                 await viewModel.updateRemainingRepeats()
             }
         }
+        .environment(\.highlightPattern, viewModel.highlightPattern)
         .onDisappear(perform: viewModel.pausePlayer)
         .removeSaturationIfNeeded()
         .background(.background, ignoreSafeArea: .all)

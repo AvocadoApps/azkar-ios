@@ -77,7 +77,7 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "\(rawValue)/Info.plist"),
-                sources: "Azkar/Sources/**",
+                sources: ["Azkar/Sources/**", "Shared/Sources/**"],
                 resources: [
                     "Azkar/Resources/**",
                     "Azkar/*.lproj/InfoPlist.strings",
@@ -111,6 +111,7 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "SwiftUIIntrospect"),
                     .external(name: "RevenueCatUI"),
                     .external(name: "ZIPFoundation"),
+                    .external(name: "FactoryKit"),
                     
                     // Firebase
                     .external(name: "FirebaseCore"),
@@ -118,6 +119,8 @@ enum AzkarTarget: String, CaseIterable {
                     .external(name: "FirebaseMessaging"),
 
                     .external(name: "Mixpanel"),
+
+                    .external(name: "ChangelogKit"),
                 ],
                 settings: Settings.settings(
                     base: baseSettingsDictionary
@@ -155,7 +158,7 @@ enum AzkarTarget: String, CaseIterable {
                 bundleId: bundleId,
                 deploymentTargets: deploymentTarget,
                 infoPlist: .file(path: "AzkarWidgets/Info.plist"),
-                sources: "AzkarWidgets/Sources/**",
+                sources: ["AzkarWidgets/Sources/**", "Shared/Sources/**"],
                 resources: [
                     "AzkarWidgets/Resources/**",
                     "Azkar/Resources/azkar.db",

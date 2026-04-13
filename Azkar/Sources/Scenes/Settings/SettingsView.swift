@@ -41,6 +41,7 @@ struct SettingsView: View {
                 Button(action: viewModel.navigateToAboutAppScreen) {
                     Image(systemName: "info.circle")
                 }
+                .accessibilityLabel(Text("about.title"))
             }
         }
         .scrollContentBackground(.hidden)
@@ -165,7 +166,6 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView(
                 viewModel: SettingsViewModel(
-                    preferences: Preferences.shared,
                     navigator: EmptySettingsNavigator()
                 )
             )

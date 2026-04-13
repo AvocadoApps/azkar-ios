@@ -1,10 +1,12 @@
 import SwiftUI
 import UIKit
+import FactoryKit
 import Library
 
 struct NavigationControllerHost<Screen: Hashable>: UIViewControllerRepresentable {
 
     @Binding private var stack: [Screen]
+    @Injected(\.preferences) private var preferences: Preferences
     private let root: () -> AnyView
     private let destination: (Screen) -> AnyView
 
@@ -51,7 +53,7 @@ struct NavigationControllerHost<Screen: Hashable>: UIViewControllerRepresentable
 
     private func applyBackgroundColor(to navigationController: UINavigationController) {
         navigationController.view.backgroundColor = UIColor(
-            Color.getColor(.background, theme: Preferences.shared.colorTheme)
+            Color.getColor(.background, theme: preferences.colorTheme)
         )
     }
 

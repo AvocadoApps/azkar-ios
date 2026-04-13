@@ -1,28 +1,25 @@
 import SwiftUI
 import UserNotifications
 import AboutApp
+import FactoryKit
 import Library
 import ZikrCollectionsOnboarding
+import ChangelogKit
 
 struct SettingsFlowView: View {
 
-    private let preferences: Preferences
+    @Injected(\.preferences) private var preferences: Preferences
     private let embedInNavigation: Bool
 
     @StateObject private var navigator: SettingsNavigator
 
     init(
-        preferences: Preferences = .shared,
         initialDestination: SettingsDestination? = nil,
         embedInNavigation: Bool = false
     ) {
-        self.preferences = preferences
         self.embedInNavigation = embedInNavigation
         _navigator = StateObject(
-            wrappedValue: SettingsNavigator(
-                preferences: preferences,
-                initialDestination: initialDestination
-            )
+            wrappedValue: SettingsNavigator(initialDestination: initialDestination)
         )
     }
 
@@ -34,7 +31,7 @@ struct SettingsFlowView: View {
             ),
             resetToken: .constant(UUID()),
             root: {
-                SettingsRootSceneView(preferences: preferences, navigator: navigator)
+                SettingsRootSceneView(navigator: navigator)
             },
             destination: { destination in
                 AnyView(destinationView(destination))
@@ -105,12 +102,9 @@ private struct SettingsRootSceneView: View {
 
     @StateObject private var viewModel: SettingsViewModel
 
-    init(preferences: Preferences, navigator: any SettingsNavigationRouting) {
+    init(navigator: any SettingsNavigationRouting) {
         _viewModel = StateObject(
-            wrappedValue: SettingsViewModel(
-                preferences: preferences,
-                navigator: navigator
-            )
+            wrappedValue: SettingsViewModel(navigator: navigator)
         )
     }
 
@@ -202,22 +196,39 @@ private struct ReminderSoundPickerDestinationView: View {
 
 private struct AboutAppDestinationView: View {
 
-    @StateObject private var viewModel: AppInfoViewModel
-
-    init(subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create()) {
-        _viewModel = StateObject(
-            wrappedValue: AppInfoViewModel(
-                appVersion: {
-                    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!
-                    let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!
-                    return "\(String(localized: "common.version")) \(version) (\(build))"
-                }(),
-                isProUser: subscriptionManager.isProUser()
-            )
-        )
-    }
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @State private var showWhatsNew = false
+    @AppStorage("lastSeenVersion") private var lastSeenVersion: String = ""
 
     var body: some View {
-        AppInfoView(viewModel: viewModel)
+        AppInfoView(
+            viewModel: AppInfoViewModel(
+                appVersion: {
+                    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown"
+                    let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown"
+                    return "\(String(localized: "common.version")) \(version) (\(build))"
+                }(),
+                isProUser: subscriptionManager.isProUser(),
+                onVersionTap: {
+                    showWhatsNew = true
+                }
+            )
+        )
+        .fullScreenCover(isPresented: $showWhatsNew) {
+            ChangelogScreen(
+                color: .white,
+                background: .solidColor(Color(.systemBackground)),
+                sections: AppFlowView.loadAllSections(),
+                strings: {
+                    var strings = AppFlowView.releaseNotesStrings
+                    strings.screenTitle = String(localized: "release-notes.changelog")
+                    return strings
+                }(),
+                onContinue: {
+                    showWhatsNew = false
+                    lastSeenVersion = AppFlowView.appVersion
+                }
+            )
+        }
     }
 }

@@ -1,0 +1,303 @@
+[
+    {
+      "title": "Cairo",
+      "subtitle": "v3",
+      "imageName": "v3",
+      "items": [
+        {
+          "version": "3.0.0",
+          "notes": [
+            {
+              "icon": "square.stack.3d.up",
+              "title": "Home Screen Widgets",
+              "body": "New widgets for your home screen: dhikr counter, next dhikr, weekly streak, articles, and a Control Center widget (iOS 18+).",
+              "iconBackground": "#007AFF"
+            },
+            {
+              "icon": "magnifyingglass",
+              "title": "Spotlight Search",
+              "body": "Search for adhkar, articles, and hadiths right from Spotlight.",
+              "iconBackground": "#5856D6"
+            },
+            {
+              "icon": "hand.point.up.braille",
+              "title": "VoiceOver Support",
+              "body": "Improved VoiceOver accessibility with localized spoken labels across the app.",
+              "iconBackground": "#34C759"
+            },
+            {
+              "icon": "bookmark",
+              "title": "Reading Experience",
+              "body": "Go to Unread button, auto-scroll to first unread zikr, and per-category page indicators.",
+              "iconBackground": "#FF9500"
+            },
+            {
+              "icon": "app.badge",
+              "title": "Dark & Tinted App Icons",
+              "body": "New dark and tinted variants for app icons.",
+              "iconBackground": "#8E8E93"
+            },
+            {
+              "icon": "globe",
+              "title": "Tatar Language",
+              "body": "Added Tatar language support.",
+              "iconBackground": "#30B0C7"
+            }
+          ],
+          "date": "2026-04-08T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "title": "Istanbul",
+      "subtitle": "v2",
+      "imageName": "v2",
+      "items": [
+        {
+          "version": "2.9.7",
+          "notes": [
+            {
+              "icon": "square.and.arrow.up",
+              "title": "Share Updates",
+              "body": "Updated the Share Dhikr section with new fonts and backgrounds.",
+              "iconBackground": "#007AFF"
+            }
+          ],
+          "date": "2025-10-19T00:00:00Z"
+        },
+        {
+          "version": "2.9.5",
+          "notes": [
+            {
+              "icon": "book.closed",
+              "title": "100 Duas Collection",
+              "body": "100 Duas from the Quran and Sunnah available as a separate category.",
+              "iconBackground": "#FF2D55"
+            },
+            {
+              "icon": "paintpalette",
+              "title": "Updated Color Scheme",
+              "body": "Updated default color scheme for a refreshed appearance.",
+              "iconBackground": "#FF7A00"
+            },
+            {
+              "icon": "app.badge",
+              "title": "New Icons",
+              "body": "New icons throughout the app.",
+              "iconBackground": "#5856D6"
+            }
+          ],
+          "date": "2025-06-19T00:00:00Z"
+        },
+        {
+          "version": "2.9",
+          "notes": [
+            {
+              "icon": "paintpalette",
+              "title": "New Themes",
+              "body": "Fresh themes added for a better visual experience.",
+              "iconBackground": "#FF7A00"
+            },
+            {
+              "icon": "textformat",
+              "title": "New Fonts",
+              "body": "List of custom fonts was extended.",
+              "iconBackground": "#AF52DE"
+            },
+            {
+              "icon": "square.and.arrow.up",
+              "title": "Enhanced Sharing",
+              "body": "Now you can include a background image and customize sharing options even more.",
+              "iconBackground": "#007AFF"
+            },
+            {
+              "icon": "hand.tap",
+              "title": "Tap Counter",
+              "body": "Count dhikr with taps while reading.",
+              "iconBackground": "#FF9500"
+            }
+          ],
+          "date": "2025-02-25T00:00:00Z"
+        },
+        {
+          "version": "2.8",
+          "notes": [
+            {
+              "icon": "list.bullet",
+              "title": "Collection Source Picker",
+              "subtitle": "Fortress of Muslim",
+              "body": "Adhkar collection source picker with morning and evening adhkar in Fortress of the Muslim order.",
+              "iconBackground": "#007AFF"
+            }
+          ],
+          "date": "2024-12-18T00:00:00Z"
+        },
+        {
+          "version": "2.6.10",
+          "notes": [
+            {
+              "icon": "book",
+              "title": "Reading Mode",
+              "body": "New Reading Mode option in Text Settings.",
+              "iconBackground": "#FF2D55"
+            },
+            {
+              "icon": "moon.stars",
+              "title": "Dua of Night of Power",
+              "body": "Added Dua of The Night of Power.",
+              "iconBackground": "#5856D6"
+            }
+          ],
+          "date": "2024-03-23T00:00:00Z"
+        },
+        {
+          "version": "2.6.6",
+          "notes": [
+            {
+              "icon": "doc.richtext",
+              "title": "Adhkar Articles",
+              "body": "Adhkar related articles are now available.",
+              "iconBackground": "#FF2D55"
+            }
+          ],
+          "date": "2024-02-25T00:00:00Z"
+        },
+        {
+          "version": "2.6.4",
+          "notes": [
+            {
+              "icon": "text.book.closed",
+              "title": "Ayat-al-Kursi Restored",
+              "body": "Added Ayat-al-Kursi back to morning and evening categories.",
+              "iconBackground": "#FF2D55"
+            }
+          ],
+          "date": "2024-01-09T00:00:00Z"
+        },
+        {
+          "version": "2.6.0",
+          "notes": [
+            {
+              "icon": "magnifyingglass",
+              "title": "Search Functionality",
+              "body": "This version introduces search functionality in the app. Try it from the main menu.",
+              "iconBackground": "#5856D6"
+            }
+          ],
+          "date": "2023-11-12T00:00:00Z"
+        },
+        {
+          "version": "2.5",
+          "notes": [
+            {
+              "icon": "globe",
+              "title": "Support for Additional Languages",
+              "subtitle": "5 languages added",
+              "body": "This version adds translations for Georgian, Ingush, Chechen, Uzbek and Kyrgyz.",
+              "iconBackground": "#007AFF"
+            },
+            {
+              "icon": "rectangle.3.group",
+              "title": "Virtues of Dhikr Widget",
+              "body": "Azkar now has a widget which displays different virtues of remembrance of Allah.",
+              "iconBackground": "#30B0C7"
+            },
+            {
+              "icon": "moon.zzz",
+              "title": "New Bedtime Adhkar Category",
+              "body": "Part of the evening adhkar was split into a new category.",
+              "iconBackground": "#5856D6"
+            },
+            {
+              "icon": "plusminus.circle",
+              "title": "Counter Size Options",
+              "body": "Choose different sizes for the dhikr counter.",
+              "iconBackground": "#FF9500"
+            }
+          ],
+          "date": "2023-09-15T00:00:00Z"
+        },
+        {
+          "version": "2.4",
+          "notes": [
+            {
+              "icon": "waveform",
+              "title": "Audio Text Highlighting",
+              "body": "When audio is playing, Azkar will highlight the text being recited if Smart line-breaks is enabled.",
+              "iconBackground": "#FF9500"
+            }
+          ],
+          "date": "2022-09-04T00:00:00Z"
+        },
+        {
+          "version": "2.3.4",
+          "notes": [
+            {
+              "icon": "plusminus.circle",
+              "title": "Floating Counter",
+              "body": "Dhikr counter as a floating button.",
+              "iconBackground": "#FF9500"
+            }
+          ],
+          "date": "2022-06-12T00:00:00Z"
+        },
+        {
+          "version": "2.3.2",
+          "notes": [
+            {
+              "icon": "square.and.arrow.up",
+              "title": "Share Dhikr",
+              "subtitle": "Text or image",
+              "body": "Share a dhikr as text or image.",
+              "iconBackground": "#007AFF"
+            }
+          ],
+          "date": "2022-04-25T00:00:00Z"
+        },
+        {
+          "version": "2.3.1",
+          "notes": [
+            {
+              "icon": "textformat",
+              "title": "Line Spacing",
+              "body": "Implemented text line spacing adjustment changing option.",
+              "iconBackground": "#AF52DE"
+            }
+          ],
+          "date": "2022-04-18T00:00:00Z"
+        },
+        {
+          "version": "2.3",
+          "notes": [
+            {
+              "icon": "globe",
+              "title": "English Language",
+              "body": "This is the first release of Azkar app in English language.",
+              "iconBackground": "#007AFF"
+            }
+          ],
+          "date": "2021-10-23T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "title": "Chechnya",
+      "subtitle": "v1",
+      "imageName": "v1",
+      "items": [
+        {
+          "version": "1.0",
+          "notes": [
+            {
+              "icon": "moon.stars.fill",
+              "iconBackground": "#FFFFFF",
+              "iconColor": "#EDE21A",
+              "title": "First Release",
+              "body": "The first release of Azkar app."
+            }
+          ],
+          "date": "2020-05-03T00:00:00Z"
+        }
+      ]
+    }
+]

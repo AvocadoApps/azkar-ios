@@ -55,7 +55,7 @@ struct ZikrShareView: View {
     
     var body: some View {
         container
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea()
             .environment(\.colorScheme, customColorScheme)
             .onAppear {
                 AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
@@ -163,7 +163,7 @@ struct ZikrShareView: View {
 
             if includeLogo {
                 VStack {
-                    if let image = UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil) {
+                    if let image = UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil) {
                         Image(uiImage: image)
                             .renderingMode(.template)
                             .resizable()

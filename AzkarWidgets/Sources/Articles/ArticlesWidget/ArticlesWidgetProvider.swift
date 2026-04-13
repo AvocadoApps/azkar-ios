@@ -33,32 +33,16 @@ struct ArticlesWidgetProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<ArticlesWidgetEntry>) -> Void) {
         Task {
             let articles = ArticlesWidgetDataSource.fetchArticles(language: language)
-            let currentDate = Date()
 
-            guard !articles.isEmpty else {
-                let entry = ArticlesWidgetEntry(date: currentDate, article: nil, imageData: nil)
+            guard let article = articles.first else {
+                let entry = ArticlesWidgetEntry(date: Date(), article: nil, imageData: nil)
                 completion(Timeline(entries: [entry], policy: .after(nextUpdate())))
                 return
             }
 
-            let entries = await withTaskGroup(of: ArticlesWidgetEntry.self) { group in
-                for (index, article) in articles.prefix(10).enumerated() {
-                    group.addTask {
-                        let entryDate = Calendar.current.date(byAdding: .hour, value: index, to: currentDate) ?? currentDate
-                        let imageData = await ArticlesWidgetDataSource.loadImageData(from: article)
-                        return ArticlesWidgetEntry(date: entryDate, article: article, imageData: imageData)
-                    }
-                }
-
-                var collectedEntries: [ArticlesWidgetEntry] = []
-                for await entry in group {
-                    collectedEntries.append(entry)
-                }
-
-                return collectedEntries.sorted { $0.date < $1.date }
-            }
-
-            completion(Timeline(entries: entries, policy: .after(nextUpdate())))
+            let imageData = await ArticlesWidgetDataSource.loadImageData(from: article)
+            let entry = ArticlesWidgetEntry(date: Date(), article: article, imageData: imageData)
+            completion(Timeline(entries: [entry], policy: .after(nextUpdate())))
         }
     }
 

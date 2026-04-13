@@ -5,17 +5,12 @@ import ArticleReader
 import Entities
 import AzkarServices
 import PDFKit
+import FactoryKit
 
 final class ArticleShareActionHandler {
 
-    private let preferences: Preferences
-    private let articlesService: ArticlesServiceType
+    @Injected(\.appDependencies) private var dependencies: AppDependencies
     private let mailPresenter = FeedbackMailPresenter()
-
-    init(preferences: Preferences, articlesService: ArticlesServiceType) {
-        self.preferences = preferences
-        self.articlesService = articlesService
-    }
 
     func share(_ article: Article) {
         assert(Thread.isMainThread)
@@ -23,13 +18,16 @@ final class ArticleShareActionHandler {
             return
         }
 
+        let preferences = dependencies.preferences
+        let articlesService = dependencies.articlesService
+
         let composer = ArticlePDFComposer(
             article: article,
             titleFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 45)!,
             textFont: UIFont(name: preferences.preferredTranslationFont.postscriptName, size: 25)!,
             pageMargins: UIEdgeInsets(horizontal: 75, vertical: 65),
             footer: ArticlePDFComposer.Footer(
-                image: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
+                image: UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil),
                 text: String(localized: "share.shared-with-azkar").uppercased(),
                 link: URL(string: "https://apple.co/41O1pzQ")
             )
@@ -49,7 +47,7 @@ final class ArticleShareActionHandler {
         let view = ArticlePDFCoverView(
             article: article,
             maxHeight: 842,
-            logoImage: UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil),
+            logoImage: UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil),
             logoSubtitle: String(localized: "share.shared-with-azkar")
         )
         .frame(width: 595, height: 842)

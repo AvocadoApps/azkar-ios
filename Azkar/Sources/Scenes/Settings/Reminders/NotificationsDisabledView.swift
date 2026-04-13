@@ -104,7 +104,7 @@ struct NotificationsDisabledView: View {
                     .multilineTextAlignment(.leading)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
         }
         .padding(.vertical, 8)
     }

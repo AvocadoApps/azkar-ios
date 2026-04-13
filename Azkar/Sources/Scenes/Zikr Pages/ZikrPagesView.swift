@@ -39,8 +39,7 @@ struct ZikrPagesView: View, Equatable {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigation) {
-                let page = viewModel.pages[viewModel.page]
-                if page != .readingCompletion {
+                if let page = viewModel.pages[safe: viewModel.page], page != .readingCompletion {
                     HStack {
                         Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
                             .accessibilityLabel(Text("common.share"))
@@ -85,7 +84,7 @@ struct ZikrPagesView: View, Equatable {
         }
         .initialPageIndex(viewModel.initialPage)
         .currentPageIndex($viewModel.page.animation(.spring))
-        .edgesIgnoringSafeArea(.bottom)
+        .ignoresSafeArea(edges: .bottom)
         .environment(\.zikrReadingMode, readingMode ?? viewModel.preferences.zikrReadingMode)
         .onReceive(viewModel.preferences.$zikrReadingMode) { newMode in
             readingMode = newMode
@@ -104,7 +103,7 @@ struct ZikrPagesView: View, Equatable {
                     pageIndicator(index: idx, isSelected: isSelected)
                 }
             )
-            .edgesIgnoringSafeArea(.bottom)
+            .ignoresSafeArea(edges: .bottom)
         }
         .opacity(viewModel.page < viewModel.pages.count - 1 ? 1 : 0)
         .frame(maxHeight: pageIndicatorHeight + 8)
