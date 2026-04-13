@@ -295,5 +295,6 @@ extension ZikrShareOptionsView {
         })
         .buttonStyle(.plain)
         .disabled(isDisabled)
+        .accessibilityLabel(Text(increasing ? "+" : "-"))
     }
 }
