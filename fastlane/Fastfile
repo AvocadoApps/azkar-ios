@@ -139,6 +139,7 @@ platform :ios do
       force: true,
       submit_for_review: true,
       skip_screenshots: true,
+      skip_metadata: true,
       run_precheck_before_submit: false,
       submission_information: {
         add_id_info_uses_idfa: false,
@@ -153,7 +154,7 @@ platform :ios do
     testflight(
       api_key: get_api_key,
       distribute_external: true,
-      groups: ['Main'],
+      groups: ['Public Beta', 'Azkar Team'],
       changelog: get_changelog_from_git()
     )
   end
@@ -232,6 +233,7 @@ platform :mac do
       force: true,
       submit_for_review: true,
       skip_screenshots: true,
+      skip_metadata: true,
       run_precheck_before_submit: false,
       submission_information: {
         add_id_info_uses_idfa: false,

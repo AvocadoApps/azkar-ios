@@ -3,7 +3,7 @@
 
 import Foundation
 
-public struct Hadith: Identifiable {
+public struct Hadith: Identifiable, Hashable {
    
     public let id: Int
     public let text: String

@@ -6,32 +6,38 @@
 //  Copyright © 2021 Al Jawziyya. All rights reserved.
 //  
 
-import SwiftUI
 import Combine
+import Entities
 
-final class Deeplinker: ObservableObject {
+@MainActor
+final class Deeplinker {
 
-    @Published var route: Route?
+    static let shared = Deeplinker()
+
+    private let routeSubject = PassthroughSubject<Route, Never>()
+    private var pendingRoute: Route?
 
     enum Route: Hashable {
-        case settings(SettingsRoute)
+        case home
+        case settings(SettingsDestination)
         case azkar(ZikrCategory)
+        case categoryZikr(ZikrCategory, Int)
+        case zikr(Int)
+        case article(Int)
+        case hadith(Int)
     }
-    
-}
 
-struct RouteKey: EnvironmentKey {
-    static var defaultValue: Deeplinker.Route? {
-        return nil
+    var routes: AnyPublisher<Route, Never> {
+        routeSubject.eraseToAnyPublisher()
     }
-}
 
-extension EnvironmentValues {
-    var route: Deeplinker.Route? {
-        get {
-            self[RouteKey.self]
-        } set {
-            self[RouteKey.self] = newValue
-        }
+    func open(_ route: Route) {
+        pendingRoute = route
+        routeSubject.send(route)
+    }
+
+    func takePendingRoute() -> Route? {
+        defer { pendingRoute = nil }
+        return pendingRoute
     }
 }

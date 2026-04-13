@@ -3,7 +3,7 @@ import Library
 
 struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Identifiable & PickableItem {
 
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Binding var selection: SelectionValue
     var header: String?
     let items: [SelectionValue]
@@ -18,6 +18,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                 Text(header)
                     .systemFont(.callout, modification: .smallCaps)
                     .foregroundStyle(.text)
+                    .accessibilityAddTraits(.isHeader)
             }
             
             LazyVStack(spacing: 0) {
@@ -35,6 +36,8 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
 
     var content: some View {
         ForEachIndexed(items) { _, position, item in
+            let isSelected = selection == item
+            let isProtected = isItemProtected(item) && !isSelected
             Button {
                 DispatchQueue.main.async {
                     if item != self.selection {
@@ -42,7 +45,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                     }
                     UISelectionFeedbackGenerator().selectionChanged()
                     if self.dismissOnSelect {
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.dismiss()
                     }
                 }
             } label: {
@@ -54,6 +57,7 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                             .frame(width: 50, height: 50)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+                            .accessibilityHidden(true)
                     }
 
                     Text(item.title)
@@ -65,11 +69,13 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
                             .foregroundStyle(Color.secondary)
                     }
                     
-                    if isItemProtected(item) && selection.hashValue != item.hashValue {
+                    if isProtected {
                         ProBadgeView()
+                            .accessibilityHidden(true)
                     } else {
-                        CheckboxView(isCheked: .constant(selection.hashValue == item.hashValue))
-                            .frame(width: 20, height: 20)                        
+                        CheckboxView(isChecked: .constant(isSelected))
+                            .frame(width: 20, height: 20)
+                            .accessibilityHidden(true)
                     }
                 }
                 .contentShape(Rectangle())
@@ -79,7 +85,25 @@ struct ItemPickerView<SelectionValue>: View where SelectionValue: Hashable & Ide
             .padding()
             .background(.contentBackground)
             .applyTheme(indexPosition: position)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(itemAccessibilityLabel(for: item))
+            .accessibilityValue(itemAccessibilityValue(isSelected: isSelected, isProtected: isProtected))
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
         }
+    }
+
+    private func itemAccessibilityLabel(for item: SelectionValue) -> String {
+        [item.title, item.subtitle]
+            .compactMap { $0 }
+            .joined(separator: ", ")
+    }
+
+    private func itemAccessibilityValue(isSelected: Bool, isProtected: Bool) -> Text {
+        if isProtected {
+            return Text("accessibility.item-picker.locked")
+        }
+
+        return isSelected ? Text("accessibility.common.selected") : Text("accessibility.common.not-selected")
     }
 
 }

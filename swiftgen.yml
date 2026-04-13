@@ -7,16 +7,8 @@ input_dir: Azkar/Resources/
 output_dir: Azkar/Sources/Generated/
 
 
-## Generate constants for your localized strings.
-##   Be sure that SwiftGen only parses ONE locale (typically Base.lproj, or en.lproj, or whichever your development region is); otherwise it will generate the same keys multiple times.
-##   SwiftGen will parse all `.strings` files found in that folder.
-strings:
-  inputs:
-    - en.lproj
-  outputs:
-    - templateName: structured-swift5
-      output: Strings+Generated.swift
-
+## Localized strings are managed directly via Localizable.xcstrings (String Catalog).
+## SwiftGen is used here only for asset catalogs.
 
 ## Generate constants for your Assets Catalogs, including constants for images, colors, ARKit resources, etc.
 ##   This example also shows how to provide additional parameters to your template to customize the output.

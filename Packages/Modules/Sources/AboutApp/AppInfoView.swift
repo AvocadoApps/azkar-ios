@@ -2,18 +2,15 @@
 
 import UIKit
 import SwiftUI
-import SwiftUIIntrospect
-import SwiftUIBackports
 import Library
 import AzkarResources
 
 public struct AppInfoView: View {
 
     @ObservedObject var viewModel: AppInfoViewModel
-    @Environment(\.safariPresenter) var safariPresenter
+    @Environment(\.openURL) private var openURL
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
-    
     public init(viewModel: AppInfoViewModel) {
         self.viewModel = viewModel
     }
@@ -27,9 +24,25 @@ public struct AppInfoView: View {
         }
         .toolbar {
             ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
-                Backport.ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
-                    Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.accent)
+                if #available(iOS 16, *) {
+                    ShareLink(item: URL(string: "https://apps.apple.com/app/id1511423586")!) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.accent)
+                    }
+                } else {
+                    Button {
+                        let url = URL(string: "https://apps.apple.com/app/id1511423586")!
+                        let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        UIApplication.shared.connectedScenes
+                            .compactMap { $0 as? UIWindowScene }
+                            .flatMap { $0.windows }
+                            .first { $0.isKeyWindow }?
+                            .rootViewController?
+                            .present(vc, animated: true)
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.accent)
+                    }
                 }
             }
         }
@@ -127,9 +140,20 @@ public struct AppInfoView: View {
                         }
                     }
                     
-                    Text(viewModel.appVersion)
-                        .font(.subheadline)
-                        .foregroundStyle(Color.secondary)
+                    if let onVersionTap = viewModel.onVersionTap {
+                        Button(action: onVersionTap) {
+                            HStack(spacing: 4) {
+                                Text(viewModel.appVersion)
+                                Image(systemName: "info.circle")
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(Color.secondary)
+                        }
+                    } else {
+                        Text(viewModel.appVersion)
+                            .font(.subheadline)
+                            .foregroundStyle(Color.secondary)
+                    }
                 }
                 
                 Spacer()
@@ -144,7 +168,7 @@ public struct AppInfoView: View {
         color: Color
     ) -> some View {
         Button {
-            safariPresenter.set(url)
+            openURL(url)
         } label: {
             buttonLabel(title, image: image, color: color)
         }
@@ -183,17 +207,33 @@ public struct AppInfoView: View {
             Text("Copyright © 2020-\(currentYear)")
                 .font(.caption)
             
-            HStack {
-                Text("🥜 Al Jawziyya")
-                    .font(Font.title3.weight(.bold).monospaced())
-            }
+            avocadoAppsBrandView
         }
         .padding(20)
-        .opacity(0.5)
         .frame(maxWidth: .infinity)
         .background(.background)
     }
-    
+
+    private var avocadoAppsBrandView: some View {
+        Button {
+            openURL(URL(string: "https://avocadoapps.github.io/")!)
+        } label: {
+            HStack(spacing: 8) {
+                Image("avocado-apps-logo", bundle: azkarResourcesBundle)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+
+                Text("Avocado Apps")
+                    .font(.headline.weight(.bold))
+                    .tracking(-0.4)
+                    .foregroundStyle(.primary)
+                    .opacity(0.75)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+     
 }
 
 #Preview("App Info") {

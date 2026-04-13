@@ -40,11 +40,12 @@ struct ZikrPagesView: View, Equatable {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigation) {
-                let page = viewModel.pages[viewModel.page]
-                if page != .readingCompletion {
+                if let page = viewModel.pages[safe: viewModel.page], page != .readingCompletion {
                     HStack {
                         Button(systemImage: .squareAndArrowUp, action: viewModel.shareCurrentZikr)
+                            .accessibilityLabel(Text("common.share"))
                         Button(systemImage: .textformat, action: viewModel.navigateToTextSettings)
+                            .accessibilityLabel(Text("settings.text.title"))
                     }
                 }
             }
@@ -66,22 +67,25 @@ struct ZikrPagesView: View, Equatable {
                 case .zikr(let zikr):
                     ZikrView(
                         viewModel: zikr,
-                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded
+                        counterFinishedCallback: viewModel.goToNextZikrIfNeeded,
+                        counterTapCallback: viewModel.onCounterTapped
                     )
                 case .readingCompletion:
                     ReadingCompletionView(
                         isCompleted: !viewModel.hasRemainingRepeats,
+                        hasUncompletedAzkar: viewModel.hasUncompletedAzkar,
                         markAsCompleted: {
                             await viewModel.markCurrentCategoryAsCompleted()
-                            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
-                        }
+                            WidgetCenter.reloadAzkarWidgets()
+                        },
+                        goToFirstUncompleted: viewModel.goToFirstUncompletedZikr
                     )
                 }
             }
         }
         .initialPageIndex(viewModel.initialPage)
         .currentPageIndex($viewModel.page.animation(.spring))
-        .edgesIgnoringSafeArea(.bottom)
+        .ignoresSafeArea(edges: .bottom)
         .environment(\.zikrReadingMode, readingMode ?? viewModel.preferences.zikrReadingMode)
         .onReceive(viewModel.preferences.$zikrReadingMode) { newMode in
             readingMode = newMode
@@ -100,7 +104,7 @@ struct ZikrPagesView: View, Equatable {
                     pageIndicator(index: idx, isSelected: isSelected)
                 }
             )
-            .edgesIgnoringSafeArea(.bottom)
+            .ignoresSafeArea(edges: .bottom)
         }
         .opacity(viewModel.page < viewModel.pages.count - 1 ? 1 : 0)
         .frame(maxHeight: pageIndicatorHeight + 8)
@@ -128,6 +132,21 @@ struct ZikrPagesView: View, Equatable {
             .minimumScaleFactor(0.15)
         }
         .glassEffectCompat(.clear, in: RoundedRectangle(cornerRadius: 10))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(format: String(localized: "common.dhikr"), locale: Locale.current, String(index + 1)))
+        .accessibilityValue(pageIndicatorAccessibilityValue(for: viewModel))
+    }
+
+    private func pageIndicatorAccessibilityValue(for viewModel: ZikrViewModel) -> String {
+        guard let remainingRepeatsNumber = viewModel.remainingRepeatsNumber else {
+            return ""
+        }
+
+        if remainingRepeatsNumber == 0 {
+            return String(localized: "remaining-repeats.completed")
+        }
+
+        return String(format: String(localized: "remaining-repeats"), locale: Locale.current, remainingRepeatsNumber)
     }
 
 }

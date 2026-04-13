@@ -19,7 +19,7 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
         switch preferences.contentLanguage {
         case .arabic, .english, .georgian, .turkish: return [.DIN31635]
         case .russian, .chechen: return [.community, .ruScientific, .DIN31635]
-        case .ingush, .kazakh, .kyrgyz, .uzbek: return [.ruScientific, .DIN31635]
+        case .ingush, .kazakh, .kyrgyz, .uzbek, .tatar: return [.ruScientific, .DIN31635]
         }
     }
     
@@ -46,11 +46,14 @@ final class TextSettingsViewModel: SettingsSectionViewModel {
         return FontsViewModel(
             sampleText: sampleText,
             fontsType: fontsType,
-            service: FontsService(),
             subscribeScreenTrigger: { [unowned self] in
-                self.router.trigger(.subscribe(sourceScreen: FontsView.viewName))
+                self.navigator.presentSubscription(sourceScreen: FontsView.viewName)
             }
         )
+    }
+
+    func presentZikrCollectionsOnboarding() {
+        navigator.presentZikrCollectionsOnboarding()
     }
     
     func setContentLanguage(_ language: Language) {

@@ -1,0 +1,253 @@
+#!/bin/bash
+
+set -euo pipefail
+
+BASE_URL="https://localise.biz/api"
+TIMEOUT=30
+
+# Load .env from repo root if present
+REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+if [ -f "${REPO_ROOT}/.env" ]; then
+  set -a
+  . "${REPO_ROOT}/.env"
+  set +a
+fi
+
+API_KEY="${LOCO_API_KEY:?Set LOCO_API_KEY in .env or environment}"
+
+# Load supported languages
+SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+LANGUAGES=()
+while IFS= read -r line; do
+  line="${line%%#*}"
+  line="$(echo "$line" | xargs)"
+  [ -n "$line" ] && LANGUAGES+=("$line")
+done < "${SKILL_DIR}/languages.conf"
+SOURCE_LANG="${LANGUAGES[0]}"
+
+# Parallel arrays for translations: TRANS_LANGS[i] -> TRANS_VALS[i]
+TRANS_LANGS=()
+TRANS_VALS=()
+OTHER_LANGS=()
+OTHER_VALS=()
+
+get_trans() {
+  local lang="$1"
+  local i=0
+  if [ ${#TRANS_LANGS[@]} -eq 0 ]; then return 1; fi
+  for l in "${TRANS_LANGS[@]}"; do
+    if [ "$l" = "$lang" ]; then
+      echo "${TRANS_VALS[$i]}"
+      return 0
+    fi
+    i=$((i + 1))
+  done
+  return 1
+}
+
+get_other() {
+  local lang="$1"
+  local i=0
+  if [ ${#OTHER_LANGS[@]} -eq 0 ]; then return 1; fi
+  for l in "${OTHER_LANGS[@]}"; do
+    if [ "$l" = "$lang" ]; then
+      echo "${OTHER_VALS[$i]}"
+      return 0
+    fi
+    i=$((i + 1))
+  done
+  return 1
+}
+
+usage() {
+  local lang_flags=""
+  for lang in "${LANGUAGES[@]}"; do
+    if [ "$lang" = "$SOURCE_LANG" ]; then
+      lang_flags="${lang_flags} --${lang} \"text\""
+    else
+      lang_flags="${lang_flags} [--${lang} \"text\"]"
+    fi
+  done
+  cat <<EOF
+Usage:
+  .agents/skills/loco/scripts/add-localization-key "key.name"${lang_flags} \\
+    [--plural --${SOURCE_LANG}-other "plural text" ...] \\
+    [--timeout 30]
+
+At minimum, --${SOURCE_LANG} (source language) is required.
+When --plural is set, --${SOURCE_LANG}-other is also required.
+
+Supported languages: ${LANGUAGES[*]}
+EOF
+}
+
+if [ "$#" -lt 1 ]; then
+  usage
+  exit 1
+fi
+
+ASSET_KEY="$1"
+shift
+
+PLURAL=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --plural) PLURAL=true; shift ;;
+    --timeout) TIMEOUT="${2:-}"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    --*-other)
+      lang="${1#--}"
+      lang="${lang%-other}"
+      OTHER_LANGS+=("$lang")
+      OTHER_VALS+=("${2:-}")
+      shift 2
+      ;;
+    --*)
+      lang="${1#--}"
+      TRANS_LANGS+=("$lang")
+      TRANS_VALS+=("${2:-}")
+      shift 2
+      ;;
+    *) echo "Unknown argument: $1"; usage; exit 1 ;;
+  esac
+done
+
+SOURCE_TEXT="$(get_trans "$SOURCE_LANG" || true)"
+if [ -z "$SOURCE_TEXT" ]; then
+  echo "--${SOURCE_LANG} (source language) is required."
+  usage
+  exit 1
+fi
+
+if [ "$PLURAL" = true ]; then
+  SOURCE_OTHER="$(get_other "$SOURCE_LANG" || true)"
+  if [ -z "$SOURCE_OTHER" ]; then
+    echo "--${SOURCE_LANG}-other is required when --plural is set."
+    exit 1
+  fi
+fi
+
+TMP_RESPONSE="$(mktemp)"
+trap 'rm -f "$TMP_RESPONSE"' EXIT
+
+FAILED=false
+
+create_asset() {
+  local asset_id="$1"
+  local source_text="$2"
+
+  if ! STATUS="$(curl -sS -o "$TMP_RESPONSE" -w "%{http_code}" \
+    -X POST "${BASE_URL}/assets" \
+    -H "Authorization: Loco ${API_KEY}" \
+    --data-urlencode "id=${asset_id}" \
+    --data-urlencode "text=${source_text}" \
+    --data-urlencode "type=text" \
+    --max-time "$TIMEOUT")"; then
+    echo "  ❌ Failed to create asset '${asset_id}': request error"
+    return 1
+  fi
+
+  if [ "$STATUS" = "201" ]; then
+    echo "  ✅ Created asset '${asset_id}'"
+    return 0
+  fi
+
+  if [ "$STATUS" = "409" ]; then
+    echo "  ⏭️  Asset '${asset_id}' already exists, skipping creation"
+    return 0
+  fi
+
+  echo "  ❌ Failed to create asset '${asset_id}': HTTP ${STATUS} $(cat "$TMP_RESPONSE")"
+  return 1
+}
+
+add_translation() {
+  local asset_id="$1"
+  local locale="$2"
+  local text="$3"
+
+  if ! STATUS="$(curl -sS -o "$TMP_RESPONSE" -w "%{http_code}" \
+    -X POST "${BASE_URL}/translations/${asset_id}/${locale}" \
+    -H "Authorization: Loco ${API_KEY}" \
+    -H "Content-Type: text/plain" \
+    --data-raw "$text" \
+    --max-time "$TIMEOUT")"; then
+    echo "  ❌ Failed to set [${locale}] translation: request error"
+    return 1
+  fi
+
+  if [[ "$STATUS" == 2* ]]; then
+    echo "  🌐 [${locale}] ${text}"
+    return 0
+  fi
+
+  echo "  ❌ Failed to set [${locale}] translation: HTTP ${STATUS} $(cat "$TMP_RESPONSE")"
+  return 1
+}
+
+create_plural_form() {
+  local base_id="$1"
+  local plural_id="$2"
+  local text="$3"
+
+  if ! create_asset "$plural_id" "$text"; then
+    return 1
+  fi
+
+  if ! STATUS="$(curl -sS -o "$TMP_RESPONSE" -w "%{http_code}" \
+    -X POST "${BASE_URL}/assets/${base_id}/plurals" \
+    -H "Authorization: Loco ${API_KEY}" \
+    --data-urlencode "pid=${plural_id}" \
+    --max-time "$TIMEOUT")"; then
+    echo "  ❌ Failed to link plural form '${plural_id}': request error"
+    return 1
+  fi
+
+  if [[ "$STATUS" == 2* ]]; then
+    echo "  🔗 Linked plural form '${plural_id}' to '${base_id}'"
+    return 0
+  fi
+
+  if [ "$STATUS" = "409" ]; then
+    echo "  ⏭️  Plural form '${plural_id}' already linked, skipping"
+    return 0
+  fi
+
+  echo "  ❌ Failed to link plural form '${plural_id}': HTTP ${STATUS} $(cat "$TMP_RESPONSE")"
+  return 1
+}
+
+# --- Main ---
+
+echo "🔑 Adding key: ${ASSET_KEY}"
+
+if ! create_asset "$ASSET_KEY" "$SOURCE_TEXT"; then
+  exit 1
+fi
+
+for lang in "${LANGUAGES[@]}"; do
+  text="$(get_trans "$lang" || true)"
+  [ -n "$text" ] && { add_translation "$ASSET_KEY" "$lang" "$text" || FAILED=true; }
+done
+
+if [ "$PLURAL" = true ]; then
+  PLURAL_ID="${ASSET_KEY}_other"
+  echo "🔢 Adding plural form: ${PLURAL_ID}"
+
+  if ! create_plural_form "$ASSET_KEY" "$PLURAL_ID" "$SOURCE_OTHER"; then
+    exit 1
+  fi
+
+  for lang in "${LANGUAGES[@]}"; do
+    text="$(get_other "$lang" || true)"
+    [ -n "$text" ] && { add_translation "$PLURAL_ID" "$lang" "$text" || FAILED=true; }
+  done
+fi
+
+if [ "$FAILED" = true ]; then
+  echo "⚠️  Done with errors."
+  exit 1
+fi
+
+echo "✨ Done."

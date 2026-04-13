@@ -9,6 +9,7 @@ import AzkarServices
 
 typealias SearchToken = ZikrCategory
 
+@MainActor
 final class MainMenuViewModel: ObservableObject {
 
     @Published var searchQuery = ""
@@ -17,7 +18,7 @@ final class MainMenuViewModel: ObservableObject {
     
     private let searchQueryPublisher = CurrentValueSubject<String, Never>("")
 
-    let router: UnownedRouteTrigger<RootSection>
+    let navigator: any AppNavigationRouting
     let azkarDatabase: AzkarDatabase
     let preferencesDatabase: PreferencesDatabase
     
@@ -25,14 +26,15 @@ final class MainMenuViewModel: ObservableObject {
         azkarDatabase: azkarDatabase,
         preferencesDatabase: preferencesDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
-        searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher()
+        searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher(),
+        analytics: analytics
     )
     
     private(set) lazy var searchSuggestionsViewModel = SearchSuggestionsViewModel(
         searchQuery: $searchQuery.removeDuplicates().eraseToAnyPublisher(),
         azkarDatabase: azkarDatabase,
         preferencesDatabase: preferencesDatabase,
-        router: router
+        navigator: navigator
     )
 
     let currentYear: String
@@ -58,34 +60,37 @@ final class MainMenuViewModel: ObservableObject {
     let preferences: Preferences
     private let articlesService: ArticlesServiceType
     private let adsService: AdsServiceType
+    private let analytics: AppAnalyticsTracking
 
     private var cancellables = Set<AnyCancellable>()
 
     init(
         databaseService: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,
-        router: UnownedRouteTrigger<RootSection>,
+        navigator: any AppNavigationRouting,
         preferences: Preferences,
         player: Player,
         articlesService: ArticlesServiceType,
-        adsService: AdsServiceType
+        adsService: AdsServiceType,
+        analytics: AppAnalyticsTracking
     ) {
         self.azkarDatabase = databaseService
         self.preferencesDatabase = preferencesDatabase
-        self.router = router
+        self.navigator = navigator
         self.preferences = preferences
         self.player = player
         self.articlesService = articlesService
         self.adsService = adsService
+        self.analytics = analytics
                 
         if Date().isRamadan {
             var adhkar: [ZikrMenuItem] = []
-            if let fastindDua = databaseService.getZikrBeforeBreakingFast() {
+            if let fastingDua = databaseService.getZikrBeforeBreakingFast() {
                 adhkar.append(ZikrMenuItem(
                     color: Color.blue,
                     iconType: IconType.emoji,
                     imageName: "🥛",
-                    zikr: fastindDua
+                    zikr: fastingDua
                 ))
             }
             if let laylatulQadrDua = databaseService.getLaylatulQadrDua() {
@@ -103,44 +108,36 @@ final class MainMenuViewModel: ObservableObject {
             AzkarMenuItem(
                 category: .night,
                 imageName: "categories/night",
-                title: L10n.Category.night,
+                title: String(localized: "category.night"),
                 color: Color.init(uiColor: .systemMint),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .afterSalah,
                 imageName: "categories/after-salah",
-                title: L10n.Category.afterSalah,
+                title: String(localized: "category.after-salah"),
                 color: Color.init(.systemBlue),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .other,
                 imageName: "categories/important-adhkar",
-                title: L10n.Category.other,
+                title: String(localized: "category.other"),
                 color: Color.init(.systemTeal),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
             AzkarMenuItem(
                 category: .hundredDua,
                 imageName: "categories/hundred-dua",
-                title: L10n.Category.hundredDua,
+                title: String(localized: "category.hundred-dua"),
                 color: Color.init(.systemPink),
                 count: nil,
-                iconType: .bundled(resourcesBunbdle)
+                iconType: .bundled(resourcesBundle)
             ),
         ]
-
-        do {
-            if let fadl = try databaseService.getRandomFadl() {
-                print(fadl)
-            }
-        } catch {
-            print(error)
-        }
 
         var year = "\(Date().hijriYear) г.х."
         switch Calendar.current.identifier {
@@ -188,12 +185,6 @@ final class MainMenuViewModel: ObservableObject {
             await loadAds()
         }
         
-        if !didDisplayZikrCollectionsOnboarding, !InstallationDateChecker.isRecentlyInstalled(days: 3) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                router.trigger(.zikrCollectionsOnboarding)
-                self.didDisplayZikrCollectionsOnboarding = true
-            }
-        }
     }
     
     private func loadArticles() async {
@@ -217,33 +208,48 @@ final class MainMenuViewModel: ObservableObject {
             self.ad = ad
         }
     }
-    
+
     func navigateToArticle(_ article: Article) {
-        router.trigger(.article(article))
+        navigator.showArticle(article)
+    }
+
+    func selectSearchSuggestion(_ query: String) {
+        analytics.search.selectedSuggestion(
+            queryLength: query.count,
+            source: .recentQuery
+        )
+        searchQuery = query
     }
     
-    func naviateToSearchResult(_ searchResult: SearchResultZikr) {
-        router.trigger(.searchResult(result: searchResult, searchQuery: searchQuery))
+    func navigateToSearchResult(_ searchResult: SearchResultZikr) {
+        navigator.showSearchResult(searchResult, query: searchQuery)
     }
 
     func navigateToZikr(_ zikr: Zikr) {
-        router.trigger(.zikr(zikr))
+        navigator.showZikr(zikr)
     }
 
     func navigateToCategory(_ category: ZikrCategory) {
-        router.trigger(.category(category))
+        navigator.showCategory(category)
     }
 
     func navigateToSettings() {
-        router.trigger(.settings())
+        navigator.showSettings(initialDestination: nil, presentationStyle: .push)
     }
 
     func navigateToIconPacksList() {
-        router.trigger(.settings(.appearance))
+        navigator.showSettings(initialDestination: .appearance, presentationStyle: .push)
     }
     
-    func hideAd(_ ad: Ad) {
+    func hideAd(_ ad: Ad, permanently: Bool = false) {
         self.ad = nil
+        Task {
+            var hiddenAd = ad
+            if permanently {
+                hiddenAd.isHidden = true
+                try await adsService.saveAd(hiddenAd)
+            }
+        }
         adsService.sendAnalytics(for: ad, action: .hide)
         AnalyticsReporter.reportEvent("azkar_ads_hide", metadata: ["id": ad.id])
     }
@@ -251,6 +257,7 @@ final class MainMenuViewModel: ObservableObject {
     func handleAdSelection(_ ad: Ad) {
         UIApplication.shared.open(ad.actionLink)
         adsService.sendAnalytics(for: ad, action: .open)
+        adsService.markAsSeen(ad: ad)
         AnalyticsReporter.reportEvent("azkar_ads_open", metadata: ["id": ad.id])
     }
     
@@ -267,11 +274,12 @@ extension MainMenuViewModel {
         MainMenuViewModel(
             databaseService: AzkarDatabase(language: Language.getSystemLanguage()),
             preferencesDatabase: MockPreferencesDatabase(),
-            router: .empty,
+            navigator: EmptyAppNavigator(),
             preferences: Preferences.shared,
             player: .test,
             articlesService: DemoArticlesService(),
-            adsService: DemoAdsService()
+            adsService: DemoAdsService(),
+            analytics: NoopAppAnalytics()
         )
     }
     

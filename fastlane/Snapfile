@@ -2,8 +2,7 @@ workspace("Azkar.xcworkspace")
 scheme("AzkarUITests")
 
 devices([
-    "iPhone 16 Pro",
-    # "iPhone 16 Pro Max",
+    "iPhone 17 Pro",
 ])
 
 languages([
@@ -13,10 +12,11 @@ languages([
 
 launch_arguments([
     "DISABLE_LAUNCH_PAYWALL",
-    "ENABLE_PRO", 
+    "ENABLE_PRO",
+    "DISABLE_ANIMATIONS",
 ])
 
-output_directory("./screenshots")
+output_directory("./fastlane/screenshots")
 
 clear_previous_screenshots(true)
 erase_simulator(false)
@@ -24,3 +24,5 @@ concurrent_simulators(true)
 
 # Remove the '#' to set the status bar to 9:41 AM, and show full battery and reception. See also override_status_bar_arguments for custom options.
 override_status_bar(true)
+
+skip_open_summary(true)

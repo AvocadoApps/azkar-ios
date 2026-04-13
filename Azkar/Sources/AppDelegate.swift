@@ -10,33 +10,104 @@ import UIKit
 import AudioPlayer
 import UserNotifications
 import SwiftUI
+import FactoryKit
 import RevenueCat
 import Entities
 import Library
 import FirebaseCore
 import FirebaseMessaging
-import SuperwallKit
+
 import Mixpanel
+import CoreSpotlight
+
+private let quickActionTypePrefix = "io.jawziyya.azkar-app.quick-action."
+
+@MainActor
+@discardableResult
+private func dispatchQuickActionItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+    let type = shortcutItem.type
+    guard type.hasPrefix(quickActionTypePrefix) else { return false }
+    let categoryRawValue = String(type.dropFirst(quickActionTypePrefix.count))
+    guard let category = ZikrCategory(rawValue: categoryRawValue) else { return false }
+    Container.shared.quickActionDispatcher().enqueue(.azkar(category))
+    return true
+}
 
 @MainActor
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let player = AudioPlayer()
-    let notificationsHandler = NotificationsHandler.shared
+    @Injected(\.notificationsHandler) var notificationsHandler: NotificationsHandler
+    private let spotlightIndexer = SpotlightIndexer.shared
+
+    private func buildShortcutItems() -> [UIApplicationShortcutItem] {
+        ZikrCategory.allCases.map { category in
+            UIApplicationShortcutItem(
+                type: quickActionTypePrefix + category.rawValue,
+                localizedTitle: category.title,
+                localizedSubtitle: nil,
+                icon: UIApplicationShortcutIcon(systemImageName: category.systemImageName)
+            )
+        }
+    }
+
+    @discardableResult
+    fileprivate func handleQuickActionItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+        dispatchQuickActionItem(shortcutItem)
+    }
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        if CommandLine.arguments.contains("DISABLE_ANIMATIONS") {
+            DispatchQueue.main.async {
+                UIApplication.shared.connectedScenes
+                    .compactMap { $0 as? UIWindowScene }
+                    .flatMap(\.windows)
+                    .forEach { $0.layer.speed = 100 }
+            }
+        }
         application.beginReceivingRemoteControlEvents()
         application.registerForRemoteNotifications()
+        application.shortcutItems = buildShortcutItems()
         initialize(launchOptions: launchOptions)
+        spotlightIndexer.indexIfNeeded()
         if let launchOptions, let userInfo = launchOptions[.remoteNotification] as? [AnyHashable: Any] {
             notificationsHandler.handleLaunchNotification(userInfo)
         }
         return true
     }
-    
+
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let configuration = UISceneConfiguration(
+            name: nil,
+            sessionRole: connectingSceneSession.role
+        )
+        configuration.delegateClass = QuickActionSceneDelegate.self
+        return configuration
+    }
+
+    func application(
+        _ application: UIApplication,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        completionHandler(handleQuickActionItem(shortcutItem))
+    }
+
+    func application(
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        return false
+    }
+
     func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
@@ -53,17 +124,18 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             .getNotificationsAuthorizationStatus(completion: { status in
                 switch status {
                 case .notDetermined:
-                    NotificationsHandler.shared.requestNotificationsPermission { _ in }
+                    self.notificationsHandler.requestNotificationsPermission { _ in }
                 default:
                     break
                 }
             })
 
         registerUserDefaults()
+        migrateSharedPreferencesIfNeeded()
         ensureValidTransliterationPreference()
         setupRevenueCat()
+        SubscriptionManager.shared.observeSubscriptionStatus()
         setupFirebase()
-        setupSuperwall()
         setupMixpanel(launchOptions: launchOptions)
     }
         
@@ -107,6 +179,22 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UserDefaults.standard.register(defaults: defaults)
     }
+
+    private func migrateSharedPreferencesIfNeeded() {
+        migrateDataPreferenceIfNeeded(Keys.zikrCollectionSource)
+    }
+
+    private func migrateDataPreferenceIfNeeded(_ key: String) {
+        guard UserDefaults.appGroup.object(forKey: key) == nil else {
+            return
+        }
+
+        guard let value = UserDefaults.standard.object(forKey: key) as? Data else {
+            return
+        }
+
+        UserDefaults.appGroup.set(value, forKey: key)
+    }
     
     private func setupRevenueCat() {
         Purchases.logLevel = .debug
@@ -119,18 +207,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         AnalyticsReporter.addTarget(FirebaseAnalyticsTarget.shared)
         AnalyticsReporter.addTarget(MixpanelAnalyticsTarget.shared)
     }
-    
-    private func setupSuperwall() {
-        let options = SuperwallOptions()
-        options.paywalls.shouldPreload = true
-        let purchaseController = SubscriptionManager.shared
-        Superwall.configure(
-            apiKey: readSecret(AzkarSecretKey.SUPERWALL_API_KEY)!,
-            purchaseController: purchaseController,
-            options: options
-        )
-        purchaseController.syncSubscriptionStatus()
-    }
 
     private func setupMixpanel(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         Mixpanel.initialize(
@@ -141,14 +217,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func ensureValidTransliterationPreference() {
-        let preferences = Preferences.shared
+        let preferences = Container.shared.preferences()
         let availableTypes: [ZikrTransliterationType]
         switch preferences.contentLanguage {
         case .arabic, .english, .georgian, .turkish:
             availableTypes = [.DIN31635]
         case .russian, .chechen:
             availableTypes = [.community, .ruScientific, .DIN31635]
-        case .ingush, .kazakh, .kyrgyz, .uzbek:
+        case .ingush, .kazakh, .kyrgyz, .uzbek, .tatar:
             availableTypes = [.ruScientific, .DIN31635]
         }
         
@@ -157,4 +233,28 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+}
+
+@MainActor
+final class QuickActionSceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        guard let shortcutItem = connectionOptions.shortcutItem else {
+            return
+        }
+        _ = dispatchQuickActionItem(shortcutItem)
+    }
+
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        let wasHandled = dispatchQuickActionItem(shortcutItem)
+        completionHandler(wasHandled)
+    }
 }

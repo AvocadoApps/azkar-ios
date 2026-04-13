@@ -32,6 +32,9 @@ enum Keys {
     
     static let transliterationType = "kTransliterationType"
     static let contentLanguage = "kContentLanguage"
+    static let spotlightIndexVersion = "kSpotlightIndexVersion"
+    static let hasCompletedFirstLaunch = "kHasCompletedFirstLaunch"
+    static let firstOpenDate = "kFirstOpenDate"
     
     // MARK: Reminders
     static let enableReminders = "kEnableNotifications"
@@ -53,6 +56,9 @@ enum Keys {
     static let counterSize = "kCounterSize"
     static let counterPosition = "kCounterPosition"
     static let enableGoToNextZikrOnCounterFinished = "kEnableGoToZikrOnCounterFinished"
+    static let pageIndicatorsMode = "kPageIndicatorsMode"
+    static let pageIndicatorsCategories = "kPageIndicatorsCategories"
     static let azkarCounterLastChangeDate = "kAzkarCounterLastChangeDate"
-    
+    static let didDisplayCounterOnboardingTip = "kDidDisplayCounterOnboardingTip"
+    static let lastSeenVersion = "lastSeenVersion"
 }

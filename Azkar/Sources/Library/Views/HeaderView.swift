@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct HeaderView: View {
-    let text: String
+    let text: LocalizedStringKey
+    
     var body: some View {
         Text(text)
             .systemFont(.title3, modification: .smallCaps)

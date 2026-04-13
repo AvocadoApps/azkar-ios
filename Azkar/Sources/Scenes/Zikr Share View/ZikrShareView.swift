@@ -55,7 +55,7 @@ struct ZikrShareView: View {
     
     var body: some View {
         container
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea()
             .environment(\.colorScheme, customColorScheme)
             .onAppear {
                 AnalyticsReporter.reportScreen("Zikr Share", className: viewName)
@@ -163,14 +163,14 @@ struct ZikrShareView: View {
 
             if includeLogo {
                 VStack {
-                    if let image = UIImage(named: "ink-icon", in: resourcesBunbdle, compatibleWith: nil) {
+                    if let image = UIImage(named: "ink-icon", in: resourcesBundle, compatibleWith: nil) {
                         Image(uiImage: image)
                             .renderingMode(.template)
                             .resizable()
                             .frame(width: 25, height: 25)
                             .cornerRadius(6)
                     }
-                    Text(L10n.Share.sharedWithAzkar)
+                    Text("share.shared-with-azkar")
                         .font(Font.system(size: 8, weight: .regular, design: .rounded).smallCaps())
                 }
                 .foregroundStyle(.text)
@@ -259,7 +259,7 @@ struct ZikrShareView: View {
             }
             .background {
                 if isBackgroundImage {
-                    if #available(iOS 26, *) { } else {
+                    if #unavailable(iOS 26) {
                         Rectangle()
                             .fill(.ultraThinMaterial)
                     }

@@ -3,6 +3,7 @@
 import SwiftUI
 import NukeUI
 import Nuke
+import FactoryKit
 import Library
 
 struct ZikrShareBackgroundPickerView: View {
@@ -77,6 +78,7 @@ struct ZikrShareBackgroundPickerView: View {
 struct ZikrShareBackgroundCardView: View {
     let item: ZikrShareBackgroundItem
     let isSelected: Bool
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
     @Environment(\.colorScheme) var colorScheme
@@ -103,7 +105,7 @@ struct ZikrShareBackgroundCardView: View {
     }
     
     private var displayProBadge: Bool {
-        SubscriptionManager.shared.isProUser() == false && item.isProItem
+        subscriptionManager.isProUser() == false && item.isProItem
     }
     
     @ViewBuilder

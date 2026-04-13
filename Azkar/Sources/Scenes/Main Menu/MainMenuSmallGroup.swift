@@ -10,12 +10,39 @@ struct MainMenuSmallGroup: View {
     @State private var isCompleted = false
     @EnvironmentObject var counter: ZikrCounter
 
+    private var checkmarkColor: Color {
+        guard let category = (item as? AzkarMenuItem)?.category else {
+            return .secondary
+        }
+
+        switch category {
+        case .morning:
+            return .orange
+        case .evening:
+            return .blue
+        default:
+            return .secondary
+        }
+    }
+
+    private var accessibilityLabel: String {
+        isCompleted
+            ? String(
+                format: String(localized: "accessibility.common.item-completed"),
+                locale: Locale.current,
+                item.title
+            )
+            : item.title
+    }
+
 	var body: some View {
 		HStack {
             image
             title
         }
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
         .task {
             guard let category = (item as? AzkarMenuItem)?.category else { return }
             isCompleted = await counter.isCategoryCompleted(category)
@@ -34,6 +61,7 @@ struct MainMenuSmallGroup: View {
                     .padding(.vertical, 8)
                     .frame(width: 40, height: 40)
                     .foregroundStyle(item.color)
+                    .accessibilityHidden(true)
             }
         case .emoji:
             Text(item.imageName)
@@ -41,6 +69,7 @@ struct MainMenuSmallGroup: View {
                 .font(Font.largeTitle)
                 .padding(.vertical, 4)
                 .frame(width: 40, height: 40)
+                .accessibilityHidden(true)
         }
     }
 
@@ -53,8 +82,9 @@ struct MainMenuSmallGroup: View {
             
             if isCompleted {
                 Image(systemName: "checkmark")
-                    .foregroundStyle(.secondaryText)
+                    .foregroundStyle(checkmarkColor)
                     .font(.caption2)
+                    .accessibilityHidden(true)
             }
         }
         .environment(\.layoutDirection, flip ? .rightToLeft : .leftToRight)

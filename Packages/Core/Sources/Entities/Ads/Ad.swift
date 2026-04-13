@@ -1,18 +1,19 @@
 import Foundation
 import SwiftUI
 
-public enum AdSize: String, Codable, Hashable {
-    case minimal
-    case regular
-}
-
 public enum AdImageMode: String, Codable, Hashable {
     case icon, background
 }
 
+public enum AdPresentationType: String, Codable, Hashable {
+    case bannerMinimal = "banner_minimal"
+    case bannerRegular = "banner_regular"
+    case bottomSheet = "bottom_sheet"
+}
+
 public struct Ad: Identifiable, Codable, Hashable {
     public let id: Int
-    public let size: AdSize
+    public var presentationType: AdPresentationType = .bannerRegular
     public var title: String?
     public var body: String?
     public var actionTitle: String?
@@ -27,13 +28,15 @@ public struct Ad: Identifiable, Codable, Hashable {
     public var updatedAt = Date()
     public var beginDate = Date()
     public var expireDate = Date()
+    public var isHidden: Bool? = false
+    public var groupId: Int? = nil
 }
 
 public extension Ad {
     static var telegramBotDemo: Ad {
         Ad(
             id: Int.random(in: -100 ... 0),
-            size: .regular,
+            presentationType: .bannerRegular,
             title: "Did you hear about our bot?",
             body: "We created a Telegram bot which helps you download free books",
             actionLink: URL(string: "https://t.me/kutubist_bot")!,
@@ -45,7 +48,7 @@ public extension Ad {
     static var hotelsDemo: Ad {
         Ad(
             id: Int.random(in: -100 ... 0),
-            size: .minimal,
+            presentationType: .bannerMinimal,
             title: "Are you traveling?",
             body: "Consider using our hotel room search service",
             actionTitle: "Find Hotel",
@@ -58,10 +61,23 @@ public extension Ad {
     static var ticketsDemo: Ad {
         Ad(
             id: Int.random(in: -100 ... 0),
-            size: .minimal,
+            presentationType: .bannerMinimal,
             title: "Are you traveling?",
             body: "Consider using our ticket search service",
             actionLink: URL(string: "https://t.me/kutubist_bot")!
+        )
+    }
+    
+    static var bottomSheetDemo: Ad {
+        Ad(
+            id: Int.random(in: -100 ... 0),
+            presentationType: .bottomSheet,
+            title: "Support Our Project",
+            body: "If you like our app, please consider supporting us by subscribing to our premium features. This helps us keep the app free for everyone.",
+            actionTitle: "Support Now",
+            actionLink: URL(string: "https://azkar.app/support")!,
+            imageLink: URL(string: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=3271&auto=format&fit=crop"),
+            imageMode: .background
         )
     }
 }

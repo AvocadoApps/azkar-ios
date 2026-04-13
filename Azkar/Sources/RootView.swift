@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 import Library
 
+@MainActor
 final class RootViewModel: ObservableObject {
     var mainMenuViewModel: MainMenuViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -17,7 +18,7 @@ final class RootViewModel: ObservableObject {
     ) {
         self.mainMenuViewModel = mainMenuViewModel
         
-        let appName = L10n.appName
+        let appName = String(localized: "app-name")
         let title = "\(appName)"
         mainMenuViewModel.preferences
             .$enableFunFeatures
@@ -43,7 +44,7 @@ struct RootView: View {
             viewModel: viewModel.mainMenuViewModel
         )
         .environmentObject(ZikrCounter.shared)
-        .navigationBarTitle(appName)
+        .navigationTitle(appName)
         .navigationTitleMode(.large)
         .searchable(
             text: $viewModel.mainMenuViewModel.searchQuery,

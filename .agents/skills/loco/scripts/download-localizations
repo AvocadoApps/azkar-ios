@@ -1,0 +1,89 @@
+#!/bin/bash
+
+set -euo pipefail
+
+BASE_URL="https://localise.biz"
+TIMEOUT=60
+
+# Load .env from repo root if present
+REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+if [ -f "${REPO_ROOT}/.env" ]; then
+  set -a
+  . "${REPO_ROOT}/.env"
+  set +a
+fi
+
+EXPORT_KEY="${LOCO_EXPORT_KEY:?Set LOCO_EXPORT_KEY in .env or environment}"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  .agents/skills/loco/scripts/download-localizations [--resources-dir "DIR"] [--namespace "widget."] [--timeout 60]
+
+Downloads .xcstrings catalog from Localise.biz and saves to the specified directory.
+Defaults to Azkar/Resources if --resources-dir is not provided.
+EOF
+}
+
+RESOURCES_DIR="Azkar/Resources"
+PREFIX=""
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --resources-dir)
+      RESOURCES_DIR="${2:-}"
+      shift 2
+      ;;
+    --timeout)
+      TIMEOUT="${2:-}"
+      shift 2
+      ;;
+    --namespace)
+      PREFIX="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $1"
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+TARGET_PATH="${RESOURCES_DIR}/Localizable.xcstrings"
+mkdir -p "$RESOURCES_DIR"
+
+echo "📥 Downloading .xcstrings catalog from Localise.biz..."
+
+URL="${BASE_URL}/api/export/all.xcstrings?key=${EXPORT_KEY}&no-comments=true&order=id"
+
+TMP_RESPONSE="$(mktemp)"
+trap 'rm -f "$TMP_RESPONSE"' EXIT
+
+if ! STATUS="$(curl -sS -o "$TMP_RESPONSE" -w "%{http_code}" "$URL" --max-time "$TIMEOUT")"; then
+  echo "❌ Failed to download catalog: request error"
+  exit 1
+fi
+
+if [[ "$STATUS" != 2* ]]; then
+  echo "❌ Failed to download catalog: HTTP ${STATUS}"
+  cat "$TMP_RESPONSE"
+  exit 1
+fi
+
+mv "$TMP_RESPONSE" "$TARGET_PATH"
+echo "💾 Saved ${TARGET_PATH}"
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [ -n "$PREFIX" ]; then
+  echo "🧹 Filtering catalog to prefix ${PREFIX}..."
+  python3 "${SCRIPT_DIR}/filter-xcstrings" "$TARGET_PATH" "$PREFIX"
+fi
+
+echo "🔄 Post-processing plural substitutions..."
+python3 "${SCRIPT_DIR}/postprocess-xcstrings" "$TARGET_PATH"

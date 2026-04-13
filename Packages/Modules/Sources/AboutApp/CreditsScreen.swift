@@ -4,7 +4,7 @@ import Library
 public struct CreditsScreen: View {
     
     let viewModel: CreditsViewModel
-    @Environment(\.safariPresenter) var safariPresenter
+    @Environment(\.openURL) private var openURL
     @Environment(\.colorTheme) var colorTheme
     
     public init(viewModel: CreditsViewModel) {
@@ -27,7 +27,7 @@ public struct CreditsScreen: View {
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
         .listStyle(.grouped)
-        .navigationBarTitle("credits.title")
+        .navigationTitle("credits.title")
         .removeSaturationIfNeeded()
     }
     
@@ -39,7 +39,9 @@ public struct CreditsScreen: View {
     
     private func viewForItem(_ item: SourceInfo.Item) -> some View {
         Button(action: {
-            safariPresenter.set(URL(string: item.link))
+            if let url = URL(string: item.link) {
+                openURL(url)
+            }
         }, label: {
             HStack {
                 Text(item.title)
@@ -51,7 +53,7 @@ public struct CreditsScreen: View {
             .background(.contentBackground)
             .clipShape(Rectangle())
         })
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
     }

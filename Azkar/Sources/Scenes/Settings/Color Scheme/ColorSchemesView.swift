@@ -2,23 +2,18 @@
 
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 
 final class ColorSchemesViewModel: ObservableObject {
-    
-    var preferences: Preferences
-    
+
+    @Injected(\.preferences) var preferences: Preferences
+    @Injected(\.subscriptionManager) var subscriptionManager: SubscriptionManagerType
+
     private var cancellables = Set<AnyCancellable>()
-    let subscriptionManager: SubscriptionManagerType
     private let subscribeScreenTrigger: Action
     
-    init(
-        preferences: Preferences,
-        subscriptionManager: SubscriptionManagerType = SubscriptionManagerFactory.create(),
-        subscribeScreenTrigger: @escaping Action
-    ) {
-        self.preferences = preferences
-        self.subscriptionManager = subscriptionManager
+    init(subscribeScreenTrigger: @escaping Action) {
         self.subscribeScreenTrigger = subscribeScreenTrigger
         preferences
             .storageChangesPublisher()
@@ -53,10 +48,7 @@ final class ColorSchemesViewModel: ObservableObject {
     }
     
     static var placeholder: ColorSchemesViewModel {
-        ColorSchemesViewModel(
-            preferences: Preferences.shared,
-            subscribeScreenTrigger: {}
-        )
+        ColorSchemesViewModel(subscribeScreenTrigger: {})
     }
     
     func isThemeProtected(_ theme: AppTheme) -> Bool {
@@ -104,7 +96,7 @@ struct ColorSchemesView: View {
                         dismissOnSelect: false
                     )
                 } footer: {
-                    FooterView(text: viewModel.preferences.theme.description)
+                    FooterView(text: LocalizedStringKey(viewModel.preferences.theme.description))
                 }
                 
                 Section {
@@ -122,7 +114,7 @@ struct ColorSchemesView: View {
                         isItemProtected: { _ in false }
                     )
                 } header: {
-                    HeaderView(text: L10n.Settings.Appearance.ColorTheme.header)
+                    HeaderView(text: "settings.appearance.color-theme.header")
                 }
                  
                 Section {
@@ -152,7 +144,7 @@ struct ColorSchemesView: View {
                             if viewModel.subscriptionManager.isProUser() == false && isProItemSelected {
                                 Image(systemName: "lock.fill")
                             }
-                            Text(L10n.Common.done)
+                            Text("common.done")
                         }
                     })
                     .transition(.opacity)

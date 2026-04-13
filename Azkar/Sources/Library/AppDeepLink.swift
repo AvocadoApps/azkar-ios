@@ -1,0 +1,238 @@
+import Foundation
+import Entities
+
+enum AppDeepLink: Equatable {
+    case home
+    case category(ZikrCategory)
+    case categoryZikr(ZikrCategory, Int)
+    case zikr(Int)
+    case article(Int)
+    case hadith(Int)
+
+    private static let scheme = "azkar"
+    private static let searchableIdentifierNamespace = "io.jawziyya.azkar-app.spotlight"
+    private static let searchableIdentifierSeparator = "|"
+
+    private static let homeToken = "home"
+    private static let categoryTokenPrefix = "category:"
+    private static let zikrTokenPrefix = "zikr:"
+    private static let articleTokenPrefix = "article:"
+    private static let hadithTokenPrefix = "hadith:"
+    private static let tagTokenPrefix = "tag:"
+
+    init?(url: URL) {
+        guard url.scheme?.lowercased() == Self.scheme else {
+            return nil
+        }
+
+        let host = (url.host ?? "").lowercased()
+        var pathComponents = url.pathComponents
+            .filter { $0 != "/" }
+            .map { $0.lowercased() }
+
+        let routeComponent: String
+        if host.isEmpty {
+            guard let first = pathComponents.first else {
+                return nil
+            }
+            routeComponent = first
+            pathComponents.removeFirst()
+        } else {
+            routeComponent = host
+        }
+
+        switch routeComponent {
+        case "home":
+            self = .home
+
+        case "category":
+            guard
+                let rawValue = pathComponents.first,
+                let category = ZikrCategory(rawValue: rawValue)
+            else {
+                return nil
+            }
+            if let zikrID = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?
+                .first(where: { $0.name == "zikr" })?
+                .value
+                .flatMap(Int.init), zikrID > 0 {
+                self = .categoryZikr(category, zikrID)
+                return
+            }
+            self = .category(category)
+
+        case "zikr":
+            guard
+                let idString = pathComponents.first,
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            self = .zikr(id)
+
+        case "article":
+            guard
+                let idString = pathComponents.first,
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            self = .article(id)
+
+        case "hadith":
+            guard
+                let idString = pathComponents.first,
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            self = .hadith(id)
+
+        default:
+            return nil
+        }
+    }
+
+    init?(searchableIdentifier: String) {
+        let candidate = searchableIdentifier
+            .components(separatedBy: Self.searchableIdentifierSeparator)
+            .last ?? searchableIdentifier
+
+        if let link = Self.parseSearchableToken(candidate) {
+            self = link
+            return
+        }
+
+        return nil
+    }
+
+    var url: URL {
+        let value: String
+        switch self {
+        case .home:
+            value = "\(Self.scheme)://home"
+        case .category(let category):
+            value = "\(Self.scheme)://category/\(category.rawValue)"
+        case .categoryZikr(let category, let id):
+            value = "\(Self.scheme)://category/\(category.rawValue)?zikr=\(id)"
+        case .zikr(let id):
+            value = "\(Self.scheme)://zikr/\(id)"
+        case .article(let id):
+            value = "\(Self.scheme)://article/\(id)"
+        case .hadith(let id):
+            value = "\(Self.scheme)://hadith/\(id)"
+        }
+        return URL(string: value)!
+    }
+
+    var searchableToken: String {
+        switch self {
+        case .home:
+            return Self.homeToken
+        case .category(let category):
+            return Self.categoryTokenPrefix + category.rawValue
+        case .categoryZikr(let category, let id):
+            return Self.categoryTokenPrefix + category.rawValue + ":zikr:" + String(id)
+        case .zikr(let id):
+            return Self.zikrTokenPrefix + String(id)
+        case .article(let id):
+            return Self.articleTokenPrefix + String(id)
+        case .hadith(let id):
+            return Self.hadithTokenPrefix + String(id)
+        }
+    }
+
+    var searchableIdentifier: String {
+        searchableToken
+    }
+
+    func scopedSearchableIdentifier(scope: String) -> String {
+        [
+            Self.searchableIdentifierNamespace,
+            scope,
+            searchableToken
+        ]
+        .joined(separator: Self.searchableIdentifierSeparator)
+    }
+
+    var route: Deeplinker.Route {
+        switch self {
+        case .home:
+            return .home
+        case .category(let category):
+            return .azkar(category)
+        case .categoryZikr(let category, let id):
+            return .categoryZikr(category, id)
+        case .zikr(let id):
+            return .zikr(id)
+        case .article(let id):
+            return .article(id)
+        case .hadith(let id):
+            return .hadith(id)
+        }
+    }
+
+    static func parseSearchableToken(_ token: String) -> AppDeepLink? {
+        if token == homeToken {
+            return .home
+        }
+
+        if token.hasPrefix(categoryTokenPrefix) {
+            let rawValue = String(token.dropFirst(categoryTokenPrefix.count))
+            let components = rawValue.components(separatedBy: ":zikr:")
+            if components.count == 2,
+               let category = ZikrCategory(rawValue: components[0]),
+               let id = Int(components[1]),
+               id > 0 {
+                return .categoryZikr(category, id)
+            }
+            guard let category = ZikrCategory(rawValue: rawValue) else {
+                return nil
+            }
+            return .category(category)
+        }
+
+        if token.hasPrefix(zikrTokenPrefix) {
+            let idString = String(token.dropFirst(zikrTokenPrefix.count))
+            guard
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            return .zikr(id)
+        }
+
+        if token.hasPrefix(articleTokenPrefix) {
+            let idString = String(token.dropFirst(articleTokenPrefix.count))
+            guard
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            return .article(id)
+        }
+
+        if token.hasPrefix(hadithTokenPrefix) {
+            let idString = String(token.dropFirst(hadithTokenPrefix.count))
+            guard
+                let id = Int(idString),
+                id > 0
+            else {
+                return nil
+            }
+            return .hadith(id)
+        }
+
+        if token.hasPrefix(tagTokenPrefix) {
+            return .home
+        }
+
+        return nil
+    }
+}

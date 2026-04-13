@@ -11,34 +11,26 @@ import Combine
 import UIKit
 import UserNotifications
 import Entities
+import FactoryKit
 import Library
 
+@MainActor
 final class SettingsViewModel: ObservableObject {
-    
-    private let notificationsHandler: NotificationsHandler
-    
-    private let formatter: DateFormatter
 
-    var preferences: Preferences
-    private let databaseService: AzkarDatabase
+    @Injected(\.notificationsHandler) private var notificationsHandler: NotificationsHandler
+    @Injected(\.preferences) var preferences: Preferences
+
+    private let formatter: DateFormatter
     
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
     }
 
     private var cancellables = Set<AnyCancellable>()
-    private let router: UnownedRouteTrigger<SettingsRoute>
+    private let navigator: any SettingsNavigationRouting
 
-    init(
-        databaseService: AzkarDatabase,
-        preferences: Preferences,
-        notificationsHandler: NotificationsHandler = .shared,
-        router: UnownedRouteTrigger<SettingsRoute>
-    ) {
-        self.databaseService = databaseService
-        self.preferences = preferences
-        self.notificationsHandler = notificationsHandler
-        self.router = router
+    init(navigator: any SettingsNavigationRouting) {
+        self.navigator = navigator
 
         let formatter = DateFormatter()
         formatter.dateStyle = .none
@@ -58,23 +50,23 @@ final class SettingsViewModel: ObservableObject {
     }
     
     func navigateToAppearanceSettings() {
-        router.trigger(.appearance)
+        navigator.show(.appearance)
     }
     
     func navigateToTextSettings() {
-        router.trigger(.text)
+        navigator.show(.text)
     }
     
     func navigateToCounterSettings() {
-        router.trigger(.counter)
+        navigator.show(.counter)
     }
     
     func navigateToRemindersSettings() {
-        router.trigger(.reminders)
+        navigator.show(.reminders)
     }
     
     func navigateToAboutAppScreen() {
-        router.trigger(.aboutApp)
+        navigator.show(.aboutApp)
     }
 
     /// Observes some preferences to reschedule notifications if needed.

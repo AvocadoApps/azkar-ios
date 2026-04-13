@@ -3,17 +3,23 @@ import Components
 
 struct ReadingCompletionView: View {
     let isCompleted: Bool
+    let hasUncompletedAzkar: Bool
     @Environment(\.colorTheme) var colorTheme
     let markAsCompleted: () async -> Void
-    
+    let goToFirstUncompleted: () -> Void
+
     @State var isAnimating = false
-    
+
     init(
         isCompleted: Bool,
-        markAsCompleted: @escaping () async -> Void
+        hasUncompletedAzkar: Bool,
+        markAsCompleted: @escaping () async -> Void,
+        goToFirstUncompleted: @escaping () -> Void
     ) {
         self.isCompleted = isCompleted
+        self.hasUncompletedAzkar = hasUncompletedAzkar
         self.markAsCompleted = markAsCompleted
+        self.goToFirstUncompleted = goToFirstUncompleted
     }
     
     var body: some View {
@@ -34,15 +40,17 @@ struct ReadingCompletionView: View {
                     }
                 }
                 .frame(width: 200, height: 200)
+                .accessibilityHidden(true)
                 
-                Text(L10n.ReadingCompletion.title)
+                Text("reading_completion.title")
                     .systemFont(.title, weight: .bold)
+                    .accessibilityAddTraits(.isHeader)
                 
-                Text(L10n.ReadingCompletion.subtitle)
+                Text("reading_completion.subtitle")
                     .systemFont(.body)
                     .foregroundColor(.secondary)
             } else {
-                Text(L10n.ReadingCompletion.trackYourProgress)
+                Text("reading_completion.track_your_progress")
                     .systemFont(.body)
                     .foregroundColor(colorTheme.getColor(.secondaryText))
                     .padding(.horizontal)
@@ -51,8 +59,8 @@ struct ReadingCompletionView: View {
                     Task {
                         await markAsCompleted()
                     }
-                }) {
-                    Text(L10n.ReadingCompletion.markAsCompleted)
+                }, label: {
+                    Text("reading_completion.mark_as_completed")
                         .systemFont(.body, weight: .semibold)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -60,8 +68,13 @@ struct ReadingCompletionView: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                         .padding(.horizontal)
-                }
+                })
                 .padding(.top, 8)
+                .accessibilityHint(Text("accessibility.reading-completion.mark-completed-hint"))
+
+                if hasUncompletedAzkar {
+                    goToUncompletedButton
+                }
             }
         }
         .padding(30)
@@ -74,14 +87,27 @@ struct ReadingCompletionView: View {
         }
     }
     
+    private var goToUncompletedButton: some View {
+        Button(action: goToFirstUncompleted) {
+            Text("reading_completion.go_to_uncompleted")
+                .systemFont(.body, weight: .semibold)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(colorTheme.getColor(.contentBackground))
+                .foregroundColor(colorTheme.getColor(.accent))
+                .cornerRadius(12)
+                .padding(.horizontal)
+        }
+        .accessibilityHint(Text("accessibility.reading-completion.go-to-uncompleted-hint"))
+    }
 }
 
 struct ReadingCompletionView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ReadingCompletionView(isCompleted: false, markAsCompleted: {})
+            ReadingCompletionView(isCompleted: false, hasUncompletedAzkar: true, markAsCompleted: {}, goToFirstUncompleted: {})
                 .previewDisplayName("Not Completed")
-            ReadingCompletionView(isCompleted: true, markAsCompleted: {})
+            ReadingCompletionView(isCompleted: true, hasUncompletedAzkar: false, markAsCompleted: {}, goToFirstUncompleted: {})
                 .previewDisplayName("Completed")
         }
         .previewLayout(.sizeThatFits)

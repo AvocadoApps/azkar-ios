@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftUIX
 import Entities
 import Library
+import Extensions
 
 struct SearchSuggestionsView: View {
     
@@ -39,7 +40,7 @@ struct SearchSuggestionsView: View {
     
     var suggestedSearchQueriesSection: some View {
         Section {
-            ForEachIndexed(viewModel.suggestedQueries) { idx, position, query in
+            ForEachIndexed(viewModel.suggestedQueries) { _, position, query in
                 Button {
                     onSearchSuggestionSelection(query)
                 } label: {
@@ -52,6 +53,8 @@ struct SearchSuggestionsView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(query)
+                .accessibilityHint(Text("accessibility.search.search-hint"))
                 .padding()
                 .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -66,15 +69,18 @@ struct SearchSuggestionsView: View {
     
     var suggestedAzkarSection: some View {
         Section {
-            ForEachIndexed(viewModel.suggestedAzkar) { idx, position, zikr in
+            ForEachIndexed(viewModel.suggestedAzkar) { _, position, zikr in
                 let text = zikr.title ?? zikr.translation ?? zikr.text
                 NavigationButton(
-                    title: text.prefix(50) + "...",
+                    title: LocalizedStringKey(text.prefix(50) + "..."),
                     applyVerticalPadding: false,
                     action: {
                         viewModel.navigateToZikr(zikr.id)
                     }
                 )
+                .accessibilityLabel(text)
+                .accessibilityHint(Text("accessibility.common.open-dhikr"))
+                .applyAccessibilityLanguage(zikr.language.id)
                 .padding()
                 .foregroundStyle(.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -91,23 +97,11 @@ struct SearchSuggestionsView: View {
         Text(label)
             .foregroundStyle(.secondaryText)
             .systemFont(.title3, modification: .smallCaps)
+            .accessibilityAddTraits(.isHeader)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .background(.background)
             .padding(.top, 6)
-    }
-    
-    func clearAllMenu(action: @escaping () -> Void) -> some View {
-        Menu {
-            Text("Please confirm this action")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Button(role: .destructive, action: action) {
-                Label("Clear", systemImage: "trash")
-            }
-        } label: {
-            Text("Clear All")
-        }
     }
     
 }

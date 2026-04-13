@@ -16,5 +16,5 @@ public protocol AppFont {
     var postscriptName: String { get }
     var sizeAdjustment: Float? { get }
     var lineAdjustment: Float? { get }
-    var isStandartPackFont: Bool? { get }
+    var isStandardPackFont: Bool? { get }
 }

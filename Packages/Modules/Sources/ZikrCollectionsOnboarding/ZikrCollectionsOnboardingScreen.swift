@@ -24,6 +24,7 @@ struct ZikrCollectionsOnboardingScreen: View {
                 }
                 .opacity(0.5)
                 .buttonStyle(.plain)
+                .accessibilityLabel(Text("common.cancel"))
                 .padding()                
             }
         }

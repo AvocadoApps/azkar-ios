@@ -1,0 +1,40 @@
+Azkar, çeşitli dua ve ezkarları (sabah, akşam ve namaz sonrası) okumak ve ezberlemek için bir uygulamadır.
+
+EZKARLAR VE DUA
+• Sabah ve akşam ezkarları (Hisnü'l-Müslim ve Azkar.ru koleksiyonları)
+• Namaz sonrası ezkarlar
+• "Kur'an ve Sünnetten 100 Dua"
+• Doğru telaffuz için sesli okuma
+• Tercüme ile rahat çalışma için iki okuma modu
+• Bir sonraki zikre otomatik geçişli tekrar sayacı
+• DIN 31635 standardında transliterasyon
+
+GÖRÜNÜM
+• 6 renk teması ve karanlık mod
+• 11 uygulama simgesi seçeneği
+• Arapça metin ve tercüme için çeşitli yazı tipleri
+• Ayarlanabilir metin boyutu
+• Harekeler (teşkil) göster/gizle
+
+HATIRLATMALAR
+• Sabah ve akşam ezkarları için bildirimler
+• Cuma günü hatırlatması
+• Özel bildirim sesleri
+
+WİDGET VE ENTEGRASYON
+• Ana ekran widget'ları
+• Spotlight araması
+• Zikri resim veya metin olarak paylaş
+
+11 DİL
+• Türkçe
+• Arapça (العربية)
+• Rusça (Русский)
+• İngilizce (English)
+• Çeçence (Нохчийн)
+• İnguşça (ГӀалгӀай)
+• Gürcüce
+• Özbekçe (O'zbekcha)
+• Kazakça (Қазақша)
+• Kırgızca (Кыргызча)
+• Tatarca (Татарча)

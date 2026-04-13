@@ -84,6 +84,22 @@ struct NotificationsRowViewModel {
     let body: String?
     let date: String
     let details: String
+
+    var accessibilitySummary: String {
+        [
+            String(
+                format: String(localized: "accessibility.notifications.item-number"),
+                locale: Locale.current,
+                row + 1
+            ),
+            title,
+            body,
+            date,
+            details
+        ]
+        .compactMap { $0 }
+        .joined(separator: ", ")
+    }
 }
 
 private struct NotificationsRowView: View {
@@ -120,6 +136,8 @@ private struct NotificationsRowView: View {
         .padding(16)
         .cornerRadius(15)
         .padding(.horizontal, 16)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(vm.accessibilitySummary)
     }
 }
 
@@ -149,6 +167,7 @@ struct NotificationsListView: View {
                             Button(action: viewModel.removeScheduledNotifications, label: {
                                 Image(systemName: "trash")
                             })
+                            .accessibilityLabel(Text("accessibility.notifications.remove-scheduled"))
                             .disabled(viewModel.notifications.isEmpty)
                         }
                         .padding()
@@ -170,7 +189,7 @@ struct NotificationsListView: View {
         .background(.background, ignoreSafeArea: .all)
         .background(
             Text("This view is only visible in test builds")
-                .edgesIgnoringSafeArea(.bottom)
+                .ignoresSafeArea(edges: .bottom)
                 .foregroundStyle(.secondary)
             ,
             alignment: .bottom

@@ -16,7 +16,7 @@ struct CounterView: View {
         .applyThemedToggleStyle()
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.Counter.title)
+        .navigationTitle("settings.counter.title")
         .animation(.smooth, value: viewModel.preferences.counterType)
     }
     
@@ -28,7 +28,7 @@ struct CounterView: View {
             
             if viewModel.preferences.counterType == .floatingButton {
                 HStack {
-                    Text(L10n.Settings.Counter.CounterSize.title)
+                    Text("settings.counter.counter-size.title")
                     Spacer()
                     Picker(
                         CounterSize.allCases,
@@ -44,7 +44,7 @@ struct CounterView: View {
                 Divider()
                 
                 HStack {
-                    Text(L10n.Settings.Counter.CounterPosition.title)
+                    Text("settings.counter.counter-position.title")
                     Spacer()
                     Picker(
                         CounterPosition.allCases,
@@ -60,34 +60,29 @@ struct CounterView: View {
                 Divider()
             }
 
-            Toggle(L10n.Settings.Counter.counterTicker, isOn: $viewModel.preferences.enableCounterTicker)
+            Toggle("settings.counter.counter-ticker", isOn: $viewModel.preferences.enableCounterTicker)
                 .padding(.vertical, 3)
 
             Divider()
             
-            Toggle(L10n.Settings.Counter.counterHaptics, isOn: $viewModel.preferences.enableCounterHapticFeedback)
+            Toggle("settings.counter.counter-haptics", isOn: $viewModel.preferences.enableCounterHapticFeedback)
                 .padding(.vertical, 3)
 
             Divider()
-            
-            Toggle(isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished) {
+
+            HStack(spacing: 12) {
                 HStack {
-                    Text(L10n.Settings.Counter.goToNextDhikr)
+                    Text("settings.counter.go-to-next-dhikr")
 
-                    Spacer()
-
-                    Templates.Menu {
-                        Text(L10n.Settings.Counter.goToNextDhikrTip)
-                            .padding()
-                            .cornerRadius(10)
-                            .foregroundStyle(.text)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.counter.go-to-next-dhikr-tip")
                 }
-                .padding(.vertical, 3)
+                Spacer()
+
+                Toggle("", isOn: $viewModel.preferences.enableGoToNextZikrOnCounterFinished)
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.counter.go-to-next-dhikr"))
             }
+            .padding(.vertical, 3)
         }
         .systemFont(.body)
         .foregroundStyle(.text)
@@ -98,17 +93,10 @@ struct CounterView: View {
     
     private var typePicker: some View {
         HStack {
-            Text(L10n.Settings.Counter.CounterType.title)
+            Text("settings.counter.counter-type.title")
             Spacer()
 
-            Templates.Menu {
-                Text(L10n.Settings.Counter.CounterType.info)
-                    .padding()
-                    .cornerRadius(10)
-            } label: { _ in
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.accent, opacity: 0.75)
-            }
+            infoButton("settings.counter.counter-type.info")
 
             Picker(
                 CounterType.allCases,
@@ -122,13 +110,26 @@ struct CounterView: View {
         }
         .padding(.vertical, 3)
     }
+
+    private func infoButton(_ text: LocalizedStringKey) -> some View {
+        Templates.Menu {
+            Text(text)
+                .padding()
+                .cornerRadius(10)
+                .foregroundStyle(.text)
+        } label: { _ in
+            Image(systemName: "info.circle")
+                .foregroundStyle(.accent, opacity: 0.75)
+        }
+        .accessibilityLabel(Text("accessibility.common.more-info"))
+    }
     
 }
 
 #Preview {
     CounterView(
         viewModel: CounterViewModel(
-            router: .empty
+            navigator: EmptySettingsNavigator()
         )
     )
 }

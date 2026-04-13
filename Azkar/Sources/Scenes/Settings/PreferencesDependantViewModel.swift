@@ -3,13 +3,14 @@
 
 import SwiftUI
 import Combine
+import FactoryKit
 
 /// Base view model which sends update signal on any preferneces changes.
 class PreferencesDependantViewModel: ObservableObject {
-    var preferences: Preferences
+    @Injected(\.preferences) var preferences: Preferences
     private var cancellables = Set<AnyCancellable>()
-    init(preferences: Preferences) {
-        self.preferences = preferences
+
+    init() {
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)

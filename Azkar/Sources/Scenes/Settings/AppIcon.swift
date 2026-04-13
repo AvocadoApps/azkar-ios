@@ -18,7 +18,7 @@ enum AppIconPack: String, CaseIterable, Identifiable, Codable {
 
     var title: String {
         switch self {
-        case .standard: return L10n.IconPack.Standard.title
+        case .standard: return String(localized: "icon_pack.standard.title")
         case .pro: return "PRO"
         }
     }
@@ -47,7 +47,7 @@ enum AppIcon: String, Codable, CaseIterable, Identifiable, Hashable {
     case midjourney001
     case azure, cookie
     
-    case light, crescent, spring, vibrantMoon = "vibrantMoon", serpentine, adhkar
+    case light, crescent, spring, vibrantMoon, serpentine, adhkar
 
     static var standardIcons: [AppIcon] {
         [gold, ink, midjourney001, azure, cookie]

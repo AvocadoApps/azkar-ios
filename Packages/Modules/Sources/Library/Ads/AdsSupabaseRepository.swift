@@ -64,6 +64,10 @@ final class AdsSupabaseRepository: AdsRepository {
     func getAd(_ id: Ad.ID) async throws -> Ad? {
         fatalError("Not supported for remote repository")
     }
+
+    func isAdSeen(_ ad: Ad) async throws -> Bool {
+        fatalError("Not supported for remote repository")
+    }
     
     func saveAd(_ ad: Ad) async throws {
         fatalError("Not supported for remote repository")
@@ -72,5 +76,9 @@ final class AdsSupabaseRepository: AdsRepository {
     func saveAds(_ ads: [Ad]) async throws {
         fatalError("Not supported for remote repository")
     }
-    
+
+    func markAsSeen(ad: Ad) async throws {
+        fatalError("Not supported for remote repository")
+    }
+
 }

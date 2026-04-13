@@ -14,6 +14,8 @@ import CoreMedia
 extension AudioPlayer {
     /// Resumes the player.
     public func resume() {
+        setAudioSession(active: true)
+
         //Ensure pause flag is no longer set
         pausedForInterruption = false
         

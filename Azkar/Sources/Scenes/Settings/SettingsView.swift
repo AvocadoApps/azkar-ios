@@ -1,7 +1,6 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 
 import SwiftUI
-import Popovers
 import Entities
 import Library
 import Components
@@ -41,11 +40,12 @@ struct SettingsView: View {
                 Button(action: viewModel.navigateToAboutAppScreen) {
                     Image(systemName: "info.circle")
                 }
+                .accessibilityLabel(Text("about.title"))
             }
         }
         .customScrollContentBackground()
         .background(.background, ignoreSafeArea: .all)
-        .navigationTitle(L10n.Settings.title)
+        .navigationTitle("settings.title")
         .onAppear {
             AnalyticsReporter.reportScreen("Settings", className: viewName)
         }
@@ -64,8 +64,8 @@ struct SettingsView: View {
     }
         
     func getSectionButton(
-        _ title: String,
-        subtitle: String?,
+        _ title: LocalizedStringKey,
+        subtitle: LocalizedStringKey?,
         image: String,
         imageBackground: Color,
         action: @escaping () -> Void
@@ -102,13 +102,15 @@ struct SettingsView: View {
             .padding(4)
             .multilineTextAlignment(.leading)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(Text("common.open"))
     }
     
     // MARK: - Appearance
     var appearanceSection: some View {
         getSectionButton(
-            L10n.Settings.Appearance.title,
-            subtitle: L10n.Settings.Appearance.subtitle,
+            "settings.appearance.title",
+            subtitle: "settings.appearance.subtitle",
             image: "paintbrush.fill",
             imageBackground: Color(.systemTeal),
             action: viewModel.navigateToAppearanceSettings
@@ -117,8 +119,8 @@ struct SettingsView: View {
     
     var counterSection: some View {
         getSectionButton(
-            L10n.Settings.Counter.title,
-            subtitle: L10n.Settings.Counter.subtitle,
+            "settings.counter.title",
+            subtitle: "settings.counter.subtitle",
             image: "arrow.counterclockwise",
             imageBackground: Color(.systemIndigo),
             action: viewModel.navigateToCounterSettings
@@ -128,8 +130,8 @@ struct SettingsView: View {
     // MARK: - Content Size
     var textSettingsSection: some View {
         getSectionButton(
-            L10n.Settings.Text.title,
-            subtitle: L10n.Settings.Text.subtitle,
+            "settings.text.title",
+            subtitle: "settings.text.subtitle",
             image: "bold.italic.underline",
             imageBackground: Color(.systemBlue),
             action: viewModel.navigateToTextSettings
@@ -138,8 +140,8 @@ struct SettingsView: View {
     
     var remindersSection: some View {
         getSectionButton(
-            L10n.Settings.Reminders.title,
-            subtitle: L10n.Settings.Reminders.subtitle,
+            "settings.reminders.title",
+            subtitle: "settings.reminders.subtitle",
             image: "bell.fill",
             imageBackground: Color(.systemGreen),
             action: viewModel.navigateToRemindersSettings
@@ -163,9 +165,7 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView(
                 viewModel: SettingsViewModel(
-                    databaseService: AzkarDatabase(language: .english),
-                    preferences: Preferences.shared,
-                    router: .empty
+                    navigator: EmptySettingsNavigator()
                 )
             )
         }

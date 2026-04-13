@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "skills": {
+    "ab-test-store-listing": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "a146d36a8725cee8a93893d8399dcc7eebd9889849aea2ce5eb033da7db0cad3"
+    },
+    "app-analytics": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "d448c0b063be9aaf8a50e34e396708a705cf5a03553ecd7d6a09d621b6e11cc4"
+    },
+    "app-launch": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "8297e9160f591268bc6005c6f8996efd8dbfc2000811ffe5b1a79c75ebd9123d"
+    },
+    "app-marketing-context": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "190347fce5aee1aad7c946d954289547c0475b325d46359cbde83323f3d5fb02"
+    },
+    "app-store-featured": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "775924f2040d0895ab321cf726adb45a2130420351d9ae26c7ca1e1801a59395"
+    },
+    "aso-audit": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "3d2eb475a58f5913bb78802491f6845f713da3bbf1d5581e2a2c54f0ae540941"
+    },
+    "competitor-analysis": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "0cb970b55d107547a5edd9eb833d06644fd27f9c6aef6126b7c3fe5cd045ef0e"
+    },
+    "keyword-research": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "16189d57cc4e195b71ddc82445b3a16e8b2f9090669e01fb39e8c8d094f6a06c"
+    },
+    "localization": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "279d66d00f89289182335e62a3bb780058c9daf0944c1584676501df66aeb2a5"
+    },
+    "market-movers": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "a80f5778b19cce22278923e653dd7f69b2463f25de46c0ccb2926e72b5ceb638"
+    },
+    "market-pulse": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "2a118a484a70877347bc1f28699ac8451ee64d6e148b41b7c234147557cef47f"
+    },
+    "metadata-optimization": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "16ad5203b36914d9b19b46f67c394931c9c2eb82fa45c3d3d0f46c1c994c80fd"
+    },
+    "monetization-strategy": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "7b175044a2f7c1e5e747a0c3c8a24f5e2f74c1e52ef8b3fbd463a3badf150fb5"
+    },
+    "retention-optimization": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "396b63944c41a206b6c1971a74266ce75ef086a679d72f8054d0f531bf4afc25"
+    },
+    "review-management": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "3bf51fff1800b1a8b7984cd232c89ee62f58a1d4b2c2cd88107d1260acfbe21d"
+    },
+    "screenshot-optimization": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "c48beb6c88a9a56d89fc302d5c1dfe2c48929cad719136edf0029d9d4577d244"
+    },
+    "ua-campaign": {
+      "source": "eronred/aso-skills",
+      "sourceType": "github",
+      "computedHash": "fd7e9079c30e86943060ab7da00d3ef36034b9c318820d28dd53b8424fc7b96d"
+    }
+  }
+}

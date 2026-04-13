@@ -9,11 +9,33 @@ struct MainCategoryView: View {
     
     @State private var isCompleted = false
     @EnvironmentObject var counter: ZikrCounter
+
+    private var checkmarkColor: Color {
+        switch category {
+        case .morning:
+            return .orange
+        case .evening:
+            return .blue
+        default:
+            return .secondary
+        }
+    }
+
+    private var accessibilityLabel: String {
+        isCompleted
+            ? String(
+                format: String(localized: "accessibility.common.item-completed"),
+                locale: Locale.current,
+                category.title
+            )
+            : category.title
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             imageView
                 .frame(width: 50, height: 50)
+                .accessibilityHidden(true)
 
             HStack {
                 Text(category.title)
@@ -24,12 +46,16 @@ struct MainCategoryView: View {
                 
                 if isCompleted {
                     Image(systemName: "checkmark")
-                        .foregroundStyle(.secondaryText)
+                        .foregroundStyle(checkmarkColor)
                         .font(.caption)
+                        .accessibilityHidden(true)
                 }
             }
         }
         .padding(15)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAddTraits(.isButton)
         .task {
             isCompleted = await counter.isCategoryCompleted(category)
         }

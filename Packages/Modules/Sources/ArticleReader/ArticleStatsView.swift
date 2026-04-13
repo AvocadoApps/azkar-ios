@@ -20,24 +20,32 @@ struct ArticleStatsView: View {
     let abbreviatedNumber: String
     let number: Int
     let imageName: String
-    @State var showNumber = false
+    @State private var showNumber = false
+
+    private var canShowPopover: Bool {
+        number.description != abbreviatedNumber
+    }
+
+    private func togglePopover() {
+        guard canShowPopover else { return }
+        withAnimation(.spring) {
+            showNumber.toggle()
+        }
+    }
     
     var body: some View {
-        HStack {
-            Image(systemName: imageName)
-//                .resizable()
-//                .aspectRatio(contentMode: .fit)
-//                .frame(width: 15, height: 15)
-            Text(abbreviatedNumber)
-                .applyNumericTransition(Double(number))
-        }
-        .font(Font.caption)
-        .onTapGesture {
-            guard number.description != abbreviatedNumber else { return }
-            withAnimation(.spring) {
-                showNumber.toggle()
+        Button(action: togglePopover) {
+            HStack {
+                Image(systemName: imageName)
+                    .accessibilityHidden(true)
+                Text(abbreviatedNumber)
+                    .applyNumericTransition(Double(number))
             }
         }
+        .buttonStyle(.plain)
+        .font(Font.caption)
+        .accessibilityValue(Text(number.description))
+        .disabled(canShowPopover == false)
         .popover(
             present: $showNumber,
             view: {

@@ -28,36 +28,6 @@
       "productID" : "io.jawziyya.azkar_app.premium_one_time",
       "referenceName" : "Azkar Pro One-Time",
       "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "1565861046",
-      "localizations" : [
-        {
-          "description" : "Набор значков «Хранители веры»",
-          "displayName" : "Набор значков «Хранители веры»",
-          "locale" : "ru"
-        }
-      ],
-      "productID" : "io.jawziyya.azkar_app.darsigova_icon_pack",
-      "referenceName" : "darsigova pack",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "1553666914",
-      "localizations" : [
-        {
-          "description" : "Набор значков в стиле иллюстраций",
-          "displayName" : "Набор значков «Иллюстрации»",
-          "locale" : "ru"
-        }
-      ],
-      "productID" : "io.jawziyya.azkar_app.maccinz_icon_pack",
-      "referenceName" : "maccinz pack",
-      "type" : "NonConsumable"
     }
   ],
   "settings" : {

@@ -1,0 +1,93 @@
+#!/bin/bash
+
+set -euo pipefail
+
+BASE_URL="https://localise.biz/api"
+TIMEOUT=30
+
+# Load .env from repo root if present
+REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
+if [ -f "${REPO_ROOT}/.env" ]; then
+  set -a
+  . "${REPO_ROOT}/.env"
+  set +a
+fi
+
+API_KEY="${LOCO_API_KEY:?Set LOCO_API_KEY in .env or environment}"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  .agents/skills/loco/scripts/delete-localization-key "asset.key" [--timeout 30]
+
+Warning:
+  This permanently deletes the asset and all of its translations across locales.
+EOF
+}
+
+if [ "$#" -lt 1 ]; then
+  usage
+  exit 1
+fi
+
+ASSET_KEY="$1"
+shift
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --timeout)
+      TIMEOUT="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $1"
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "❌ Missing required tool: python3"
+  exit 1
+fi
+
+TMP_RESPONSE="$(mktemp)"
+trap 'rm -f "$TMP_RESPONSE"' EXIT
+
+ENCODED_KEY="$(python3 - <<'PY' "$ASSET_KEY"
+import sys
+import urllib.parse
+
+print(urllib.parse.quote(sys.argv[1], safe=""))
+PY
+)"
+
+URL="${BASE_URL}/assets/${ENCODED_KEY}.json?key=${API_KEY}"
+
+echo "🗑️  Deleting key: ${ASSET_KEY}"
+
+if ! STATUS="$(curl -sS -o "$TMP_RESPONSE" -w "%{http_code}" -X DELETE "$URL" --max-time "$TIMEOUT")"; then
+  echo "  ❌ Request failed while deleting '${ASSET_KEY}'"
+  exit 1
+fi
+
+if [[ "$STATUS" == 2* ]]; then
+  echo "  ✅ Deleted '${ASSET_KEY}'"
+  cat "$TMP_RESPONSE"
+  exit 0
+fi
+
+if [ "$STATUS" = "404" ]; then
+  echo "  ⏭️  Key '${ASSET_KEY}' was not found (already deleted)"
+  cat "$TMP_RESPONSE"
+  exit 0
+fi
+
+echo "  ❌ Failed to delete '${ASSET_KEY}': HTTP ${STATUS}"
+cat "$TMP_RESPONSE"
+exit 1

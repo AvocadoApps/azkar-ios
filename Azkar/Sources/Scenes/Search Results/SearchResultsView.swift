@@ -39,7 +39,7 @@ struct SearchResultsView: View {
                     speed: 1.0
                 )
                 .frame(height: 150)
-                Text(L10n.Common.noSearchResults)
+                Text("common.no-search-results")
                     .systemFont(.title3)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondaryText)
@@ -75,12 +75,15 @@ struct SearchResultsView: View {
             HStack {
                 if let image = section.image {
                     Image(systemName: image)
+                        .accessibilityHidden(true)
                 }
                 if let title = section.title {
                     Text(title)
                         .systemFont(.title3, modification: .smallCaps)
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .foregroundStyle(.secondaryText)
@@ -95,6 +98,8 @@ struct SearchResultsView: View {
         } label: {
             SearchResultsItemView(result: result)
         }
+        .buttonStyle(.plain)
+        .accessibilityHint(Text("accessibility.common.open-dhikr"))
     }
     
 }

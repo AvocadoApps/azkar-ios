@@ -44,7 +44,7 @@ public final class AdsSQLiteRepository: AdsRepository {
                 t.column("foreground_color", .text)
                 t.column("accent_color", .text)
                 
-                t.column("size", .text).notNull()
+                t.column("presentation_type", .text).notNull()
                 t.column("image_mode", .text).notNull()
                 t.column("language", .text).notNull()
                 
@@ -52,6 +52,35 @@ public final class AdsSQLiteRepository: AdsRepository {
                 t.column("updated_at", .datetime).notNull()
                 t.column("begin_date", .datetime).notNull()
                 t.column("expire_date", .datetime).notNull()
+                t.column("is_hidden", .boolean).defaults(to: false)
+            }
+        }
+        migrator.registerMigration("Add is_hidden column") { db in
+            if try db.tableExists("ads"), try !db.columns(in: "ads").map(\.name).contains("is_hidden") {
+                try db.alter(table: "ads") { t in
+                    t.add(column: "is_hidden", .boolean).defaults(to: false)
+                }
+            }
+        }
+        migrator.registerMigration("Add presentation_type column") { db in
+            if try db.tableExists("ads"), try !db.columns(in: "ads").map(\.name).contains("presentation_type") {
+                try db.alter(table: "ads") { t in
+                    t.add(column: "presentation_type", .text).defaults(to: "banner_regular")
+                }
+            }
+        }
+        migrator.registerMigration("Add group_id column") { db in
+            if try db.tableExists("ads"), try !db.columns(in: "ads").map(\.name).contains("group_id") {
+                try db.alter(table: "ads") { t in
+                    t.add(column: "group_id", .integer)
+                }
+            }
+        }
+        migrator.registerMigration("Create seen_ads table") { db in
+            if try !db.tableExists("seen_ads") {
+                try db.create(table: "seen_ads") { t in
+                    t.column("group_key", .text).primaryKey()
+                }
             }
         }
         migrator.eraseDatabaseOnSchemaChange = true
@@ -96,10 +125,31 @@ public final class AdsSQLiteRepository: AdsRepository {
                 return try query
                     .filter(sql: "begin_date < ?", arguments: [formattedDate])
                     .filter(sql: "expire_date > ?", arguments: [formattedDate])
+                    .filter(sql: "is_hidden = ?", arguments: [false])
+                    .filter(sql: "NOT EXISTS (SELECT 1 FROM seen_ads WHERE group_key = 'a:' || CAST(ads.id AS TEXT) OR (ads.group_id IS NOT NULL AND group_key = 'g:' || CAST(ads.group_id AS TEXT)))")
                     .order(sql: "created_at DESC")
                     .limit(limit)
                     .fetchAll(db)
             }
+    }
+
+    public func isAdSeen(_ ad: Ad) async throws -> Bool {
+        let seenKeys = Self.seenKeys(for: ad)
+        return try await databasePool.read { db in
+            if seenKeys.count == 2 {
+                return try Int.fetchOne(
+                    db,
+                    sql: "SELECT 1 FROM seen_ads WHERE group_key = ? OR group_key = ? LIMIT 1",
+                    arguments: [seenKeys[0], seenKeys[1]]
+                ) != nil
+            }
+
+            return try Int.fetchOne(
+                db,
+                sql: "SELECT 1 FROM seen_ads WHERE group_key = ? LIMIT 1",
+                arguments: [seenKeys[0]]
+            ) != nil
+        }
     }
     
     public func getAd(_ id: Ad.ID) async throws -> Ad? {
@@ -124,5 +174,25 @@ public final class AdsSQLiteRepository: AdsRepository {
             try ad.save(db)
         }
     }
-    
+
+    public func markAsSeen(ad: Ad) async throws {
+        let seenKeys = Self.seenKeys(for: ad)
+        try await databasePool.write { db in
+            for seenKey in seenKeys {
+                try db.execute(
+                    sql: "INSERT OR REPLACE INTO seen_ads (group_key) VALUES (?)",
+                    arguments: [seenKey]
+                )
+            }
+        }
+    }
+
+    private static func seenKeys(for ad: Ad) -> [String] {
+        var seenKeys = ["a:\(ad.id)"]
+        if let groupId = ad.groupId {
+            seenKeys.append("g:\(groupId)")
+        }
+        return seenKeys
+    }
+
 }

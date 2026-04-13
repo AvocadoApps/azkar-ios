@@ -30,7 +30,7 @@ struct ExtraTextSettingsScreen: View {
             }, set: { newValue in
                 viewModel.preferences.showTashkeel = newValue
             })) {
-                Text(L10n.Settings.Text.showTashkeel)
+                Text("settings.text.show-tashkeel")
                     .padding(.vertical, 8)
                     .systemFont(.body)
             }
@@ -38,41 +38,33 @@ struct ExtraTextSettingsScreen: View {
             
             Divider()
 
-            Toggle(isOn: $viewModel.preferences.enableLineBreaks) {
+            HStack(spacing: 12) {
                 HStack {
-                    Text(L10n.Settings.Breaks.title)
+                    Text("settings.breaks.title")
                         .systemFont(.body)
-                    Spacer()
-                    Templates.Menu {
-                        Text(L10n.Settings.Breaks.info)
-                            .padding()
-                            .cornerRadius(10)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.breaks.info")
                 }
-                .padding(.vertical, 8)
+                Spacer()
+                Toggle("", isOn: $viewModel.preferences.enableLineBreaks)
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.breaks.title"))
             }
+            .padding(.vertical, 8)
             
             Divider()
             
-            Toggle(isOn: $viewModel.preferences.useSystemFontSize.animation(.smooth)) {
+            HStack(spacing: 12) {
                 HStack {
-                    Text(L10n.Settings.Text.useSystemFontSize)
+                    Text("settings.text.use-system-font-size")
                         .systemFont(.body)
-                    Spacer()
-                    Templates.Menu {
-                        Text(L10n.Settings.Text.useSystemFontSizeTip)
-                            .padding()
-                            .cornerRadius(10)
-                    } label: { _ in
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.accent, opacity: 0.75)
-                    }
+                    infoButton("settings.text.use_system_font_size_tip")
                 }
-                .padding(.vertical, 8)
+                Spacer()
+                Toggle("", isOn: $viewModel.preferences.useSystemFontSize)
+                    .labelsHidden()
+                    .accessibilityLabel(Text("settings.text.use-system-font-size"))
             }
+            .padding(.vertical, 8)
             
             Divider()
 
@@ -93,7 +85,7 @@ struct ExtraTextSettingsScreen: View {
     var sizePicker: some View {
         Picker(
             selection: $viewModel.preferences.sizeCategory,
-            label: Text(L10n.Settings.Text.fontSize)
+            label: Text("settings.text.font-size")
                 .systemFont(.body)
                 .padding(.vertical, 8)
         ) {
@@ -106,25 +98,37 @@ struct ExtraTextSettingsScreen: View {
         .pickerStyle(.segmented)
         .padding(.vertical, 8)
     }
+
+    private func infoButton(_ text: LocalizedStringKey) -> some View {
+        Templates.Menu {
+            Text(text)
+                .padding()
+                .cornerRadius(10)
+        } label: { _ in
+            Image(systemName: "info.circle")
+                .foregroundStyle(.accent, opacity: 0.75)
+        }
+        .accessibilityLabel(Text("accessibility.common.more-info"))
+    }
     
     var lineSpacingView: some View {
         NavigationLink {
             List {
                 Group {
-                    Section(L10n.Settings.Text.arabicLineSpacing) {
+                    Section("settings.text.arabic-line-spacing") {
                         lineSpacingPicker
                     }
-                    Section(L10n.Settings.Text.translationLineSpacing) {
+                    Section("settings.text.translation-line-spacing") {
                         translationLineSpacingPicker
                     }
                 }
                 .listRowBackground(colorTheme.getColor(.contentBackground))
             }
             .customScrollContentBackground()
-            .navigationBarTitle(L10n.Settings.Text.lineSpacing)
+            .navigationTitle("settings.text.line-spacing")
             .background(.background, ignoreSafeArea: .all)
         } label: {
-            NavigationLabel(title: L10n.Settings.Text.lineSpacing)
+            NavigationLabel(title: "settings.text.line-spacing")
         }
     }
 
@@ -163,9 +167,9 @@ struct ExtraTextSettingsScreen: View {
                 mode: $viewModel.preferences.zikrReadingMode,
                 player: .test
             )
-            .navigationTitle(L10n.Settings.Text.ReadingMode.title)
+            .navigationTitle("settings.text.reading_mode.title")
         } label: {
-            NavigationLabel(title: L10n.Settings.Text.ReadingMode.title)
+            NavigationLabel(title: "settings.text.reading_mode.title")
         }
     }
     
@@ -174,7 +178,7 @@ struct ExtraTextSettingsScreen: View {
 #Preview {
     NavigationView {
         ExtraTextSettingsScreen(
-            viewModel: TextSettingsViewModel(router: .empty)
+            viewModel: TextSettingsViewModel(navigator: EmptySettingsNavigator())
         )
     }
 }

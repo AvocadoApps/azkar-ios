@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import FactoryKit
 import Library
 
 private let minScale = 0.45
@@ -15,13 +16,14 @@ struct ZikrReadingModeSelectionScreen: View {
         mode: Binding<ZikrReadingMode>,
         player: Player
     ) {
+        let preferences = Container.shared.preferences()
         self.zikr = zikr
         _mode = mode
         zikrViewModel = ZikrViewModel(
             zikr: zikr,
             isNested: false,
             hadith: nil,
-            preferences: Preferences.shared,
+            preferences: preferences,
             player: player
         )
     }

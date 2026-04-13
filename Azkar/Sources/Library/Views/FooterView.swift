@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FooterView: View {
-    let text: String
+    let text: LocalizedStringKey
     var body: some View {
         Text(text)
             .systemFont(.caption)
@@ -13,4 +13,3 @@ struct FooterView: View {
             .padding(.bottom)
     }
 }
-

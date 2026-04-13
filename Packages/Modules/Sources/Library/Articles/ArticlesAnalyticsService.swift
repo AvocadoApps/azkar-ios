@@ -1,6 +1,7 @@
 import Foundation
 import Supabase
 import Entities
+import AzkarServices
 
 final class ArticlesAnalyticsService {
     
@@ -10,21 +11,27 @@ final class ArticlesAnalyticsService {
     private var observationStreams: [Article.ID: AsyncStream<AnyAction>] = [:]
     
     init(
-        supabaseClient: SupabaseClient
+        supabaseClient: SupabaseClient,
+        analyticsDatabase: AnalyticsDatabaseService?
     ) {
         self.supabaseClient = supabaseClient
-        self.analyticsService = AnalyticsService(supabaseClient: supabaseClient)
+        self.analyticsService = AnalyticsService(
+            supabaseClient: supabaseClient,
+            analyticsDatabase: analyticsDatabase
+        )
     }
-    
+
     func sendAnalyticsEvent(
         _ type: AnalyticsRecord.ActionType,
         articleId: Article.ID
     ) {
-        analyticsService.sendAnalyticsEvent(
-            objectId: articleId,
-            recordType: .article,
-            actionType: type
-        )
+        Task {
+            await analyticsService.sendAnalyticsEvent(
+                objectId: articleId,
+                recordType: .article,
+                actionType: type
+            )
+        }
     }
     
     func getArticleAnalyticsCount(_ articleId: Article.ID) async -> ArticleAnalytics? {

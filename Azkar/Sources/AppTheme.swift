@@ -7,17 +7,17 @@ extension ColorTheme: PickableItem {
     var title: String {
         switch self {
         case .sea:
-            return L10n.Settings.Appearance.ColorTheme.sea
+            return String(localized: "settings.appearance.color-theme.sea")
         case .purpleRose:
-            return L10n.Settings.Appearance.ColorTheme.purpleRose
+            return String(localized: "settings.appearance.color-theme.purple-rose")
         case .ink:
-            return L10n.Settings.Appearance.ColorTheme.ink
+            return String(localized: "settings.appearance.color-theme.ink")
         case .roseQuartz:
-            return L10n.Settings.Appearance.ColorTheme.roseQuartz
+            return String(localized: "settings.appearance.color-theme.rose-quartz")
         case .forest:
-            return L10n.Settings.Appearance.ColorTheme.forest
+            return String(localized: "settings.appearance.color-theme.forest")
         case .default:
-            return L10n.Common.default
+            return String(localized: "common.default")
         }
     }
 }
@@ -27,15 +27,15 @@ extension AppTheme: PickableItem {
     var title: String {
         switch self {
         case .reader:
-            return L10n.Settings.Appearance.AppTheme.reader
+            return String(localized: "settings.appearance.app-theme.reader")
         case .code:
             return "c0de"
         case .flat:
-            return L10n.Settings.Appearance.AppTheme.flat
+            return String(localized: "settings.appearance.app-theme.flat")
         case .neomorphic:
             return "Neomorphic"
         case .default:
-            return L10n.Common.default
+            return String(localized: "common.default")
         }
     }
 

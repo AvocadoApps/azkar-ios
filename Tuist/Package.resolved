@@ -28,6 +28,24 @@
       }
     },
     {
+      "identity" : "changelogkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/av0c0der/ChangelogKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "bc7c0965b3f4f04a0f696046715aba1db6add7c2"
+      }
+    },
+    {
+      "identity" : "factory",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hmlongco/Factory",
+      "state" : {
+        "revision" : "ccc898f21992ebc130bc04cc197460a5ae230bcf",
+        "version" : "2.5.3"
+      }
+    },
+    {
       "identity" : "fakery",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vadymmarkov/Fakery",
@@ -194,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RevenueCat/purchases-ios.git",
       "state" : {
-        "revision" : "d9302bb5fe60e791eae06ab6504355e921784425",
-        "version" : "4.43.8"
+        "revision" : "abb0d68c3e7ba97b16ab51c38fcaca16b0e358c8",
+        "version" : "5.66.0"
       }
     },
     {
@@ -208,39 +226,12 @@
       }
     },
     {
-      "identity" : "stinsen",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rundfunk47/stinsen",
-      "state" : {
-        "revision" : "91ddedb7d86c7d3aa2d0dd281f1113ebae256324",
-        "version" : "2.0.13"
-      }
-    },
-    {
       "identity" : "supabase-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/supabase-community/supabase-swift",
       "state" : {
         "revision" : "d7fb6517eaff9cdcc105367a43068d6c0a49a5c9",
         "version" : "2.35.0"
-      }
-    },
-    {
-      "identity" : "superscript-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/superwall/Superscript-iOS",
-      "state" : {
-        "revision" : "59227a3450de9b06857986bc317be387bca3ed4b",
-        "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "superwall-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/superwall-me/Superwall-iOS",
-      "state" : {
-        "revision" : "8f9c4879f43bf46e6fcb0d378b8d32465d7653ff",
-        "version" : "4.8.3"
       }
     },
     {

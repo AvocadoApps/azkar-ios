@@ -77,15 +77,18 @@ final class SearchResultsViewModel: ObservableObject {
     }
     
     private let azkarDatabase: AzkarDatabase
+    private let analytics: AppAnalyticsTracking
     private var cancellables = Set<AnyCancellable>()
     
     init(
         azkarDatabase: AzkarDatabase,
         preferencesDatabase: PreferencesDatabase,
         searchTokens: AnyPublisher<[SearchToken], Never>,
-        searchQuery: AnyPublisher<String, Never>
+        searchQuery: AnyPublisher<String, Never>,
+        analytics: AppAnalyticsTracking
     ) {
         self.azkarDatabase = azkarDatabase
+        self.analytics = analytics
         searchTokens.assign(to: &$selectedTokens)
         searchQuery.map { _ in [] }.assign(to: &$searchResults)
         configureSearch(
@@ -146,6 +149,18 @@ final class SearchResultsViewModel: ObservableObject {
                         await preferencesDatabase.storeSearchQuery(query)
                     }
                 }
+
+                guard query.count >= 3 else {
+                    return
+                }
+
+                let resultCount = results.reduce(0) { $0 + $1.results.count }
+                self.analytics.search.performed(
+                    queryLength: query.count,
+                    selectedTokenCount: self.selectedTokens.count,
+                    sectionCount: results.count,
+                    resultCount: resultCount
+                )
             })
             .store(in: &cancellables)
         
@@ -166,7 +181,8 @@ extension SearchResultsViewModel {
             azkarDatabase: .init(language: Language.english),
             preferencesDatabase: MockPreferencesDatabase(),
             searchTokens: Empty().eraseToAnyPublisher(),
-            searchQuery: Empty().eraseToAnyPublisher()
+            searchQuery: Empty().eraseToAnyPublisher(),
+            analytics: NoopAppAnalytics()
         )
         vm.searchResults = [
             .init(title: "Placeholder", image: "book", results: [

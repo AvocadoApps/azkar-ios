@@ -2,45 +2,52 @@
 // All Rights Reserved.
 
 import SwiftUI
+import FactoryKit
 import Library
 import Entities
-import AudioPlayer
-import Stinsen
 import StoreKit
+import CoreSpotlight
+import Combine
 
+@MainActor
 @main
 struct AzkarApp: App {
-    
+
+    private static var hasHandledLaunchPaywall = false
+
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
-    
-    let preferences = Preferences.shared
-    let deepLinker = Deeplinker()
-    
+
+    @Injected(\.preferences) private var preferences: Preferences
+    @Injected(\.deeplinker) private var deepLinker: Deeplinker
+    @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
+    @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @Injected(\.localAnalytics) private var localAnalytics: AppAnalyticsTracking
+
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+        applyWindowBackground(colorTheme: preferences.colorTheme)
     }
-        
+
     var body: some Scene {
         WindowGroup {
-            NavigationViewCoordinator(
-                RootCoordinator(
-                    preferences: Preferences.shared,
-                    deeplinker: deepLinker,
-                    player: Player(player: AudioPlayer())
-                )
-            )
-            .view()
-            .task { await presentPaywall() }
+            AppFlowView()
+            .task {
+                localAnalytics.start()
+                await presentPaywall()
+            }
             .connectAppTheme()
             .connectCustomFonts()
-            .attachEnvironmentOverrides(onChange: { change in
+            .attachEnvironmentOverrides(onChange: { _ in
                 setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
+                applyWindowBackground(colorTheme: preferences.colorTheme)
             })
             .onReceive(preferences.$appTheme) { newTheme in
                 setNavigationBarFont(theme: newTheme, colorTheme: preferences.colorTheme)
+                applyWindowBackground(colorTheme: preferences.colorTheme)
             }
             .onReceive(preferences.$colorTheme) { colorTheme in
                 setNavigationBarFont(theme: preferences.appTheme, colorTheme: colorTheme)
+                applyWindowBackground(colorTheme: colorTheme)
             }
             .onReceive(preferences.$theme) { theme in
                 let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
@@ -55,13 +62,99 @@ struct AzkarApp: App {
                 case .evening: category = .evening
                 case .jumua: category = .hundredDua
                 }
-                self.deepLinker.route = .azkar(category)
+                localAnalytics.entrypoint.used(
+                    source: .notification,
+                    target: .category(category)
+                )
+                self.deepLinker.open(.azkar(category))
+            }
+            .onReceive(quickActionDispatcher.routes) { route in
+                localAnalytics.entrypoint.used(
+                    source: .quickAction,
+                    target: route.analyticsTarget
+                )
+                deepLinker.open(route)
+            }
+            .onOpenURL { url in
+                handleIncomingURL(url)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                handlePendingQuickAction()
+                handleControlCenterDeepLink()
+            }
+            .onContinueUserActivity(CSSearchableItemActionType) { userActivity in
+                handleSearchActivity(userActivity)
             }
         }
+    }
+
+    private func handleControlCenterDeepLink() {
+        let defaults = UserDefaults(suiteName: "group.io.jawziyya.azkar-app")
+        guard let urlString = defaults?.string(forKey: "controlCenterDeepLink"),
+              let url = URL(string: urlString)
+        else {
+            return
+        }
+        defaults?.removeObject(forKey: "controlCenterDeepLink")
+        localAnalytics.entrypoint.used(
+            source: .controlCenter,
+            target: .raw(url.host ?? "unknown")
+        )
+        handleIncomingURL(url)
+    }
+
+    private func handlePendingQuickAction() {
+        guard let route = quickActionDispatcher.takePendingRoute() else {
+            return
+        }
+        localAnalytics.entrypoint.used(
+            source: .quickAction,
+            target: route.analyticsTarget
+        )
+        deepLinker.open(route)
+    }
+
+    private func handleIncomingURL(_ url: URL) {
+        guard let deepLink = AppDeepLink(url: url) else {
+            return
+        }
+        localAnalytics.entrypoint.used(
+            source: .deeplink,
+            target: deepLink.analyticsTarget
+        )
+        deepLinker.open(deepLink.route)
+    }
+
+    private func handleSearchActivity(_ userActivity: NSUserActivity) {
+        guard
+            let searchableIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
+            let deepLink = AppDeepLink(searchableIdentifier: searchableIdentifier)
+        else {
+            return
+        }
+        localAnalytics.entrypoint.used(
+            source: .spotlight,
+            target: deepLink.analyticsTarget
+        )
+        deepLinker.open(deepLink.route)
     }
     
     private func getColor(_ type: ColorType, theme: ColorTheme) -> Color {
         return Color.getColor(type.rawValue, theme: theme)
+    }
+
+    private func applyWindowBackground(colorTheme: ColorTheme) {
+        let backgroundColor = UIColor(getColor(.background, theme: colorTheme))
+
+        guard let scenes = UIApplication.shared.connectedScenes as? Set<UIWindowScene> else {
+            return
+        }
+
+        scenes.forEach { scene in
+            scene.windows.forEach { window in
+                window.backgroundColor = backgroundColor
+            }
+        }
     }
     
     private func setNavigationBarFont(theme: AppTheme, colorTheme: ColorTheme) {
@@ -94,7 +187,7 @@ struct AzkarApp: App {
         
         scrollEdgeAppearance.titleTextAttributes = titleTextAttributes
         scrollEdgeAppearance.largeTitleTextAttributes = largeTitleTextAttributes
-        if #available(iOS 26, *) {} else {
+        if #unavailable(iOS 26) {
             scrollEdgeAppearance.backgroundColor = UIColor(getColor(.background, theme: colorTheme))
         }
 
@@ -132,8 +225,7 @@ struct AzkarApp: App {
         navigationController.navigationBar.scrollEdgeAppearance = scrollEdgeAppearance
         navigationController.navigationBar.tintColor = tintColor
     }
-        
-    
+
     private func getFont(customName: String?, style: UIFont.TextStyle, design: UIFontDescriptor.SystemDesign) -> UIFont {
         let systemFont = UIFont.preferredFont(forTextStyle: style)
         let font: UIFont
@@ -161,10 +253,25 @@ struct AzkarApp: App {
     }
     
     private func presentPaywall() async {
-        guard SubscriptionManager.shared.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
+        guard Self.hasHandledLaunchPaywall == false else {
             return
         }
-        SubscriptionManager.shared.presentPaywall(
+        Self.hasHandledLaunchPaywall = true
+
+        if preferences.hasCompletedFirstLaunch == false {
+            preferences.hasCompletedFirstLaunch = true
+            return
+        }
+
+        let lastSeenVersion = UserDefaults.standard.string(forKey: "lastSeenVersion") ?? ""
+        if lastSeenVersion != AppFlowView.appVersion {
+            return
+        }
+
+        guard subscriptionManager.isProUser() == false && CommandLine.arguments.contains("DISABLE_LAUNCH_PAYWALL") == false else {
+            return
+        }
+        subscriptionManager.presentPaywall(
             presentationType: .appLaunch,
             completion: {
                 requestAppReview()
@@ -172,6 +279,50 @@ struct AzkarApp: App {
         )
     }
     
+}
+
+private extension AppDeepLink {
+
+    var analyticsTarget: AppAnalyticsEntrypointTarget {
+        switch self {
+        case .home:
+            return .home
+        case .category(let category):
+            return .category(category)
+        case .categoryZikr(let category, _):
+            return .categoryZikr(category)
+        case .zikr:
+            return .zikr
+        case .article:
+            return .article
+        case .hadith:
+            return .hadith
+        }
+    }
+
+}
+
+private extension Deeplinker.Route {
+
+    var analyticsTarget: AppAnalyticsEntrypointTarget {
+        switch self {
+        case .home:
+            return .home
+        case .settings:
+            return .settings
+        case .azkar(let category):
+            return .category(category)
+        case .categoryZikr(let category, _):
+            return .categoryZikr(category)
+        case .zikr:
+            return .zikr
+        case .article:
+            return .article
+        case .hadith:
+            return .hadith
+        }
+    }
+
 }
 
 // Extension to get all child view controllers recursively

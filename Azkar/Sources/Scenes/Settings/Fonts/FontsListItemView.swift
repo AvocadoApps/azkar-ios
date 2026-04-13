@@ -38,14 +38,14 @@ struct FontsListItemView: View {
             
             if let imageURL = vm.imageURL {
                 FontsListItemView.fontImageView(imageURL, isRedacted: isRedacted)
-                    .accentColor(colorTheme.getColor(.accent))
+                    .tint(colorTheme.getColor(.accent))
                     .frame(width: 100, height: 40)
                     .foregroundStyle(.accent)
                     .onTapGesture(perform: selectionCallback)
             }
             
             if hasAccessToFont || isSelectedFont {
-                CheckboxView(isCheked: .constant(isSelectedFont))
+                CheckboxView(isChecked: .constant(isSelectedFont))
                     .frame(width: 20, height: 20)
             } else {
                 ProBadgeView()

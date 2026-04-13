@@ -4,6 +4,7 @@ import NukeUI
 import Fakery
 import RoughSwift
 import Library
+import Extensions
 
 struct PatternView: View {
     var body: some View {
@@ -29,22 +30,26 @@ struct PatternView: View {
 public struct ArticleCellView: View {
     
     let title: String
+    let language: Language?
     let imageType: Article.ImageType?
     let maxHeight: CGFloat
     @Environment(\.appTheme) var appTheme
     
     public init(
         title: String,
+        language: Language? = nil,
         imageType: Article.ImageType?,
         maxHeight: CGFloat
     ) {
         self.title = title
+        self.language = language
         self.imageType = imageType
         self.maxHeight = maxHeight
     }
     
     public init(article: Article, imageMaxHeight: CGFloat) {
         title = article.title
+        language = article.language
         imageType = article.coverImage?.imageType
         maxHeight = imageMaxHeight
     }
@@ -84,6 +89,7 @@ public struct ArticleCellView: View {
                 }
             }
             .clipped()
+            .applyAccessibilityLanguage(language?.id)
     }
     
     @MainActor @ViewBuilder

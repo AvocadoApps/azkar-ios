@@ -36,7 +36,7 @@ struct AppFontViewModel: Identifiable, Equatable, Hashable {
             langIdSuffix = ""
             supportsTashkeel = arabicFont.hasTashkeelSupport
         } else if let translationFont = font as? TranslationFont {
-            supportsCyrillicCharacters = translationFont.supportsCyryllicCharacters
+            supportsCyrillicCharacters = translationFont.supportsCyrillicCharacters
             switch language {
             case .arabic: langIdSuffix = "_en"
             default: langIdSuffix = "_" + language.id

@@ -58,7 +58,7 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     
     static var shared = Preferences()
     
-    @Preference(Keys.zikrCollectionSource, defaultValue: ZikrCollectionSource.azkarRU)
+    @Preference(Keys.zikrCollectionSource, defaultValue: ZikrCollectionSource.azkarRU, userDefaults: .appGroup)
     var zikrCollectionSource: ZikrCollectionSource
 
     @Preference(Keys.enableFunFeatures, defaultValue: true)
@@ -146,6 +146,21 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.enableGoToNextZikrOnCounterFinished, defaultValue: true)
     var enableGoToNextZikrOnCounterFinished: Bool
 
+    @Preference(Keys.pageIndicatorsMode, defaultValue: PageIndicatorsMode.all)
+    var pageIndicatorsMode: PageIndicatorsMode
+
+    @Preference(Keys.pageIndicatorsCategories, defaultValue: Set(ZikrCategory.allCases))
+    var pageIndicatorsCategories: Set<ZikrCategory>
+
+    func showPageIndicators(for category: ZikrCategory) -> Bool {
+        switch pageIndicatorsMode {
+        case .all:
+            return true
+        case .custom:
+            return pageIndicatorsCategories.contains(category)
+        }
+    }
+
     @Preference(Keys.enableLineBreaks, defaultValue: true)
     var enableLineBreaks
     
@@ -158,7 +173,10 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
         userDefaults: .appGroup
     )
     var contentLanguage: Language
-    
+
+    @Preference(Keys.hasCompletedFirstLaunch, defaultValue: false)
+    var hasCompletedFirstLaunch: Bool
+     
     private func getFont<T: AppFont & Decodable>(_ key: String) -> T? {
         guard
             let data = defaults.data(forKey: key),

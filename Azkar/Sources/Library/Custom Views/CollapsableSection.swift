@@ -17,13 +17,14 @@ struct CollapsableSection: View, Equatable {
     
     @Environment(\.colorTheme) var colorTheme
     
-    var title: String?
+    var title: LocalizedStringKey?
     let text: String
     let highlightPattern: String?
     let isArabicText: Bool
     @Binding var isExpanded: Bool
     let font: AppFont
     var lineSpacing: CGFloat
+    var accessibilityLanguage: String?
     var sizeCategory: ContentSizeCategory? = Preferences.shared.sizeCategory
     var tintColor: Color {
         colorTheme.getColor(.accent)
@@ -42,7 +43,7 @@ struct CollapsableSection: View, Equatable {
                     isExpandable: expandingCallback != nil
                 )
             })
-            .buttonStyle(BorderlessButtonStyle())
+            .buttonStyle(.plain)
             .zIndex(1)
 
             ZStack {
@@ -52,7 +53,8 @@ struct CollapsableSection: View, Equatable {
                         highlightPattern: highlightPattern,
                         isArabicText: isArabicText,
                         font: font,
-                        lineSpacing: lineSpacing
+                        lineSpacing: lineSpacing,
+                        accessibilityLanguage: accessibilityLanguage
                     )
                     .clipped()
                     .transition(.move(edge: .top).combined(with: .opacity))
@@ -72,7 +74,7 @@ struct CollapsableSection: View, Equatable {
     let zikr = Zikr.placeholder()
     
     CollapsableSection(
-        title: zikr.title ?? "Zikr",
+        title: LocalizedStringKey(zikr.title ?? "Zikr"),
         text: zikr.translation ?? "",
         highlightPattern: "Zikr",
         isArabicText: false,

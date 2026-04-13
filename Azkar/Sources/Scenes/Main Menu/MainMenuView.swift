@@ -5,6 +5,7 @@ import Entities
 import ArticleReader
 import Library
 import AzkarResources
+import ChangelogKit
 
 private extension View {
     func applyMenuPadding() -> some View {
@@ -21,7 +22,13 @@ struct MainMenuView: View {
     @Environment(\.isSearching) var isSearching
     @Environment(\.dismissSearch) var dismissSearch
     @EnvironmentObject var counter: ZikrCounter
+
     @State private var showAd = true
+    @State private var didShowBottomSheetAdThisSession = false
+    @State private var showAdBottomSheet = false
+    @State private var adBottomSheetHeight: CGFloat = 0
+    @State private var showWhatsNew = false
+    @AppStorage("lastSeenVersion") private var lastSeenVersion: String = ""
     
     private let articleCellHeight: CGFloat = 230
     private let borderWidth: CGFloat = 2
@@ -29,11 +36,47 @@ struct MainMenuView: View {
         Color.accentColor.opacity(0.5)
     }
 
+    private var hasUnseenChangelog: Bool {
+        lastSeenVersion != AppFlowView.appVersion
+    }
+
     var body: some View {
         displayContent
             .textInputAutocapitalization(.never)
             .onAppear {
                 AnalyticsReporter.reportScreen("Main Menu", className: viewName)
+                if let ad = viewModel.ad, ad.presentationType == .bottomSheet, didShowBottomSheetAdThisSession == false {
+                    showAdBottomSheet = true
+                    didShowBottomSheetAdThisSession = true
+                }
+            }
+            .onChange(of: viewModel.ad) { newAd in
+                if let newAd, newAd.presentationType == .bottomSheet, didShowBottomSheetAdThisSession == false {
+                    showAdBottomSheet = true
+                    didShowBottomSheetAdThisSession = true
+                }
+            }
+            .sheet(isPresented: $showAdBottomSheet) {
+                if let ad = viewModel.ad {
+                    AdBottomSheetView(
+                        item: AdButtonItem(ad: ad),
+                        onAction: {
+                            viewModel.handleAdSelection(ad)
+                            showAdBottomSheet = false
+                        },
+                        onDismiss: {
+                            showAdBottomSheet = false
+                        },
+                        onDontShowAgain: {
+                            viewModel.hideAd(ad, permanently: true)
+                            showAdBottomSheet = false
+                        }
+                    )
+                    .onPreferenceChange(HeightPreferenceKey.self) { height in
+                        adBottomSheetHeight = height
+                    }
+                    .applyPresentationDetents(height: adBottomSheetHeight)
+                }
             }
             .background(
                 GeometryReader { proxy in
@@ -63,18 +106,50 @@ struct MainMenuView: View {
         }
         .overlay(alignment: .bottom) {
             ZStack {
-                if let ad = viewModel.ad {
+                if let ad = viewModel.ad, ad.presentationType != .bottomSheet {
                     adView(ad)
                 }
             }
         }
         .customScrollContentBackground()
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Group {
+                    if hasUnseenChangelog {
+                        Button {
+                            showWhatsNew = true
+                        } label: {
+                            Image(systemName: "sparkles")
+                                .overlay(alignment: .topTrailing) {
+                                    Circle()
+                                        .fill(.red)
+                                        .frame(width: 8, height: 8)
+                                        .offset(x: 2, y: -2)
+                                }
+                        }
+                        .accessibilityLabel(Text("release-notes.whats-new"))
+                    }
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: viewModel.navigateToSettings) {
                     Image(systemName: "gear")
                 }
+                .accessibilityLabel(Text("settings.title"))
             }
+        }
+        .fullScreenCover(isPresented: $showWhatsNew) {
+            ChangelogScreen(
+                color: .white,
+                background: .solidColor(Color(.systemBackground)),
+                sections: AppFlowView.loadAllSections(),
+                lastSeenVersion: AppFlowView.boundaryVersion(for: lastSeenVersion),
+                strings: AppFlowView.releaseNotesStrings,
+                onContinue: {
+                    showWhatsNew = false
+                    lastSeenVersion = AppFlowView.appVersion
+                }
+            )
         }
         .background(
             colorTheme.getColor(.background)
@@ -85,7 +160,7 @@ struct MainMenuView: View {
                             Image("eid_background")
                                 .resizable()
                                 .aspectRatio(contentMode: ContentMode.fill)
-                                .edgesIgnoringSafeArea(.all)
+                                .ignoresSafeArea()
                                 .blendMode(.overlay)
                         }
                     }
@@ -97,14 +172,12 @@ struct MainMenuView: View {
         if viewModel.searchQuery.isEmpty {
             SearchSuggestionsView(
                 viewModel: viewModel.searchSuggestionsViewModel,
-                onSearchSuggestionSelection: { query in
-                    viewModel.searchQuery = query
-                }
+                onSearchSuggestionSelection: viewModel.selectSearchSuggestion(_:)
             )
         } else {
             SearchResultsView(
                 viewModel: viewModel.searchViewModel,
-                onSelect: viewModel.naviateToSearchResult(_:)
+                onSelect: viewModel.navigateToSearchResult(_:)
             )
         }
     }
@@ -121,7 +194,7 @@ struct MainMenuView: View {
             articlesView
         }
         
-        if let ad = viewModel.ad {
+        if let ad = viewModel.ad, ad.presentationType != .bottomSheet {
             // Placeholder for proper scroll insets.
             adView(ad)
                 .opacity(0)
@@ -241,6 +314,7 @@ struct MainMenuView: View {
                         imageMaxHeight: articleCellHeight
                     )
                 })
+                .accessibilityLabel(article.title)
                 .applyTheme()
                 .padding(.horizontal, 20)
             }
@@ -264,6 +338,7 @@ struct MainMenuView: View {
             }
         }
         .applyMenuPadding()
+        .removeSaturationIfNeeded()
         .transition(.asymmetric(
             insertion: .move(edge: .top).combined(with: .opacity),
             removal: .move(edge: .bottom).combined(with: .opacity)

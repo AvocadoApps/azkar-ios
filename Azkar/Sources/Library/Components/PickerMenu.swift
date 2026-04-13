@@ -4,7 +4,7 @@
 import SwiftUI
 
 public struct PickerMenu<T: Identifiable & Hashable>: View {
-    let title: String
+    let title: LocalizedStringKey
     @Binding var selection: T
     let items: [T]
     let itemTitle: (T) -> String
@@ -14,7 +14,7 @@ public struct PickerMenu<T: Identifiable & Hashable>: View {
     let labelAccessory: PickerMenuAccessory?
     
     public init(
-        title: String,
+        title: LocalizedStringKey,
         selection: Binding<T>,
         items: [T],
         itemTitle: @escaping (T) -> String,

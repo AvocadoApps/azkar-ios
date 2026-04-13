@@ -4,7 +4,7 @@ import SwiftUI
 
 struct CollapsableSectionHeaderView: View {
 
-    let title: String?
+    let title: LocalizedStringKey?
     let isExpanded: Bool
     let isExpandable: Bool
 
@@ -14,14 +14,17 @@ struct CollapsableSectionHeaderView: View {
                 Text(title)
                     .systemFont(.caption, modification: .smallCaps)
                     .foregroundStyle(.tertiaryText)
+                    .accessibilityAddTraits(.isHeader)
             }
             if isExpandable {
                 Spacer()
                 Image(systemName: "chevron.down")
                     .foregroundStyle(.accent)
                     .rotationEffect(.init(degrees: isExpanded ? 180 : 0))
+                    .accessibilityHidden(true)
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
 }

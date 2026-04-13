@@ -1,9 +1,24 @@
 import SwiftUI
+import Extensions
 
 struct SearchResultsItemView: View {
     
     let result: SearchResultZikr
     @Environment(\.colorTheme) var colorTheme
+
+    var accessibilitySummary: String {
+        [
+            result.title,
+            result.text,
+            result.translation,
+            result.caption,
+            result.caption2,
+            result.footnote,
+            result.language.title
+        ]
+        .compactMap { summaryPart($0) }
+        .joined(separator: ", ")
+    }
     
     var body: some View {
         HStack(alignment: .top) {
@@ -17,7 +32,11 @@ struct SearchResultsItemView: View {
                 .background(.secondaryBackground)
                 .foregroundStyle(.secondaryText)
                 .cornerRadius(3)
+                .accessibilityHidden(true)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilitySummary)
+        .applyAccessibilityLanguage(result.language.id)
     }
     
     var content: some View {
@@ -76,6 +95,15 @@ struct SearchResultsItemView: View {
         }
 
         return attributedString
+    }
+
+    private func summaryPart(_ text: String?) -> String? {
+        guard let text else {
+            return nil
+        }
+
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedText.isEmpty ? nil : trimmedText
     }
     
 }

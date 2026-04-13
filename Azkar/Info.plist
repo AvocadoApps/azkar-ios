@@ -8,6 +8,17 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>io.jawziyya.azkar-app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>azkar</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -15,9 +26,9 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.9.8</string>
+	<string>3.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>87</string>
+	<string>88</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
@@ -28,6 +39,31 @@
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>kMDItemKeywords</key>
+	<array>
+		<string>azkar</string>
+		<string>adhkar</string>
+		<string>dhikr</string>
+		<string>zikr</string>
+		<string>dua</string>
+		<string>prayer</string>
+		<string>supplication</string>
+		<string>muslim</string>
+		<string>islam</string>
+		<string>quran</string>
+		<string>sunnah</string>
+		<string>morning adhkar</string>
+		<string>evening adhkar</string>
+		<string>اذكار</string>
+		<string>أذكار</string>
+		<string>ذكر</string>
+		<string>دعاء</string>
+		<string>азкары</string>
+		<string>зикр</string>
+		<string>дуа</string>
+	</array>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.reference</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -38,7 +74,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
+	<string>Azkar App requires write-only access to add Dhikr image to Photo Library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Marhey-Regular.ttf</string>
@@ -48,6 +84,18 @@
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).QuickActionSceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>

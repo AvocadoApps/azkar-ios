@@ -1,13 +1,12 @@
 import SwiftUI
 
 public struct NavigationLabel: View {
-        
-    let title: String
+    let title: LocalizedStringKey
     let label: String?
     let applyVerticalPadding: Bool
     
     public init(
-        title: String,
+        title: LocalizedStringKey,
         label: String? = nil,
         applyVerticalPadding: Bool = true
     ) {
@@ -30,10 +29,12 @@ public struct NavigationLabel: View {
             }
             Image(systemName: "chevron.right")
                 .foregroundStyle(.secondaryText)
+                .accessibilityHidden(true)
         }
         .contentShape(Rectangle())
         .systemFont(.body)
         .padding(.vertical, applyVerticalPadding ? 8 : 0)
+        .accessibilityElement(children: .combine)
     }
     
 }

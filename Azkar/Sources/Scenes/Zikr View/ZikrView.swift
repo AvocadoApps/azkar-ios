@@ -1,11 +1,11 @@
 //  Copyright © 2020 Al Jawziyya. All rights reserved.
 
 import SwiftUI
-import Combine
 import Extensions
 import Library
 import Components
 import WidgetKit
+import Entities
 
 /**
  This view shows contents of Zikr object:
@@ -16,7 +16,7 @@ import WidgetKit
  */
 struct ZikrView: View {
     
-    @AppStorage("kDidDisplayCounterOnboardingTip", store: UserDefaults.standard)
+    @AppStorage(Keys.didDisplayCounterOnboardingTip, store: UserDefaults.standard)
     var didDisplayCounterOnboardingTip: Bool?
 
     @ObservedObject var viewModel: ZikrViewModel
@@ -25,6 +25,7 @@ struct ZikrView: View {
     @Environment(\.colorTheme) var colorTheme
 
     var counterFinishedCallback: Action?
+    var counterTapCallback: Action?
 
     @State var counterFeedbackCompleted = false
     @Namespace var counterButtonAnimationNamespace
@@ -34,17 +35,18 @@ struct ZikrView: View {
         viewModel.preferences.sizeCategory
     }
 
-    private var dividerColor: Color {
+    var dividerColor: Color {
         colorTheme.getColor(.accent, opacity: 0.1)
     }
-    private let dividerHeight: CGFloat = 1
+    let dividerHeight: CGFloat = 1
 
     func incrementZikrCounter() {
+        counterTapCallback?()
         Task {
             await viewModel.incrementZikrCount()
-            WidgetCenter.shared.reloadTimelines(ofKind: "AzkarCompletionWidgets")
+            WidgetCenter.reloadAzkarWidgets()
         }
-        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber,  remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
+        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber, remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
             HapticGenerator.performFeedback(.impact(flexibility: .soft))
         }
     }
@@ -64,13 +66,11 @@ struct ZikrView: View {
         }
         .onAppear {
             AnalyticsReporter.reportScreen("Zikr Reading", className: viewName)
-        }
-        .environment(\.highlightPattern, viewModel.highlightPattern)
-        .onAppear {
             Task {
                 await viewModel.updateRemainingRepeats()
             }
         }
+        .environment(\.highlightPattern, viewModel.highlightPattern)
         .onDisappear(perform: viewModel.pausePlayer)
         .removeSaturationIfNeeded()
         .background(.background, ignoreSafeArea: .all)
@@ -88,8 +88,7 @@ struct ZikrView: View {
                     viewModel.preferences.counterType == .floatingButton,
                     viewModel.showCounterButton,
                     let remainingRepeatNumber = viewModel.remainingRepeatsNumber,
-                    remainingRepeatNumber > 0
-                {
+                    remainingRepeatNumber > 0 {
                     counterButton(remainingRepeatNumber.description)
                 }
             }
@@ -118,19 +117,15 @@ struct ZikrView: View {
     func counterButton(_ repeats: String) -> some View {
         Menu {
             Button(action: {
-                Task {
-                    await viewModel.resetCounter()
-                }
+                resetCounter()
             }, label: {
-                Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
+                Label("common.reset-counter", systemImage: "arrow.counterclockwise")
             })
-            
+
             Button(action: {
-                Task {
-                    await viewModel.completeCounter()
-                }
+                completeCounter()
             }, label: {
-                Label(L10n.Common.complete, systemImage: "checkmark")
+                Label("common.complete", systemImage: "checkmark")
             })
         } label: {
             counterText(repeats)
@@ -152,9 +147,7 @@ struct ZikrView: View {
                 .clipShape(Circle())
                 .padding(.horizontal)
         } primaryAction: {
-            Task {
-                await viewModel.incrementZikrCount()
-            }
+            incrementZikrCounter()
         }
         .frame(
             width: viewModel.preferences.counterSize.value,
@@ -163,6 +156,15 @@ struct ZikrView: View {
         .matchedGeometryEffect(id: counterButtonAnimationId, in: counterButtonAnimationNamespace)
         .padding(.horizontal)
         .padding(.bottom, Constants.windowSafeAreaInsets.bottom)
+        .accessibilityLabel(counterAccessibilityLabel)
+        .accessibilityValue(counterAccessibilityValue(repeats))
+        .accessibilityHint(Text("accessibility.zikr.counter-increment-hint"))
+        .accessibilityAction(named: Text("common.reset-counter")) {
+            resetCounter()
+        }
+        .accessibilityAction(named: Text("common.complete")) {
+            completeCounter()
+        }
     }
 
     private func getContent() -> some View {
@@ -297,6 +299,14 @@ struct ZikrView: View {
                     }
                     .padding()
                     .buttonStyle(.plain)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(lineAccessibilityLabel(
+                        index: idx,
+                        arabicText: text,
+                        translation: translation,
+                        transliteration: transliteration
+                    ))
+                    .accessibilityHint(Text("accessibility.zikr.play-line-hint"))
                     
                     Divider()
                 }
@@ -310,228 +320,32 @@ struct ZikrView: View {
         }
     }
 
-    // MARK: - Title
-    private func titleView(_ title: String) -> some View {
-        Text(title)
-            .equatable()
-            .systemFont(.headline)
-            .foregroundStyle(.secondaryText)
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding()
-    }
-
-    @ViewBuilder
-    private func getReadingTextView(
-        text: [String],
-        isArabicText: Bool
-    ) -> some View {
-        let prefs = viewModel.preferences
-        let spacing = isArabicText ? prefs.arabicLineAdjustment : prefs.translationLineAdjustment
-        let lines = Array(zip(text.indices, text))
-        VStack(spacing: spacing) {
-            ForEach(lines, id: \.0) { idx, line in
-                let label = getReadingTextLine(
-                    line,
-                    isArabicText: isArabicText,
-                    prefs: prefs,
-                    spacing: spacing,
-                    idx: idx,
-                    backgroundColor: Color.accentColor.opacity(0.15)
-                )
-                if viewModel.preferences.enableLineBreaks {
-                    Button(action: {
-                        HapticGenerator.performFeedback(.selection)
-                        viewModel.playAudio(at: idx)
-                    }, label: {
-                        label
-                    })
-                    .buttonStyle(.plain)
-                } else {
-                    label
-                }
-            }
-        }
-    }
-    
-    private func getReadingTextLine(
-        _ line: String,
-        isArabicText: Bool,
-        prefs: Preferences,
-        spacing: CGFloat,
-        idx: Int,
-        backgroundColor: Color = Color.clear
-    ) -> some View {
-        ReadingTextView(
-            text: line,
-            highlightPattern: viewModel.highlightPattern,
-            isArabicText: isArabicText,
-            font: isArabicText ? prefs.preferredArabicFont : prefs.preferredTranslationFont,
-            lineSpacing: prefs.enableLineBreaks ? spacing : 0
-        )
-        .background(
-            Group {
-                if idx == viewModel.indexToHighlight, viewModel.highlightCurrentIndex {
-                    backgroundColor
-                        .padding(-10)
-                        .cornerRadius(6)
-                }
-            }
-        )
-        .frame(maxWidth: .infinity, alignment: isArabicText ? .trailing : .leading)
-    }
-
-    // MARK: - Text
-    private var textView: some View {
-        VStack(spacing: 10) {
-            getReadingTextView(text: viewModel.text, isArabicText: true)
-                .id(viewModel.textSettingsToken)
-                .padding([.leading, .trailing, .bottom])
-
-            viewModel.playerViewModel.flatMap { vm in
-                self.playerView(viewModel: vm)
-            }
-        }
-    }
-
-    // MARK: - Translation
-    private func getTranslationView(text: [String]) -> some View {
-        CollapsableView(
-            isExpanded: .init(get: {
-                viewModel.expandTranslation
-            }, set: { newValue in
-                withAnimation(Animation.spring()) {
-                    viewModel.preferences.expandTranslation = newValue
-                }
-            }),
-            header: {
-                CollapsableSectionHeaderView(
-                    title: L10n.Read.translation,
-                    isExpanded: viewModel.expandTranslation,
-                    isExpandable: true
-                )
-            },
-            content: {
-                getReadingTextView(text: text, isArabicText: false)
-            }
-        )
-        .id(viewModel.textSettingsToken)
-        .padding()
-    }
-
-    // MARK: - Transliteration
-    private func getTransliterationView(text: [String]) -> some View {
-        CollapsableView(
-            isExpanded: .init(get: {
-                viewModel.expandTransliteration
-            }, set: { newValue in
-                withAnimation(Animation.spring()) {
-                    viewModel.preferences.expandTransliteration = newValue
-                }
-            }),
-            header: {
-                CollapsableSectionHeaderView(
-                    title: L10n.Read.transcription,
-                    isExpanded: viewModel.expandTransliteration,
-                    isExpandable: true
-                )
-            },
-            content: {
-                getReadingTextView(text: text, isArabicText: false)
-            }
-        )
-        .id(viewModel.textSettingsToken)
-        .padding()
-    }
-    
-    @ViewBuilder private var repeatsNumber: some View {
+    @ViewBuilder var repeatsNumber: some View {
         if viewModel.zikr.repeats > 0, let remainingRepeatsFormatted = viewModel.remainingRepeatsFormatted {
-            getInfoStack(label: L10n.Read.repeats, text: remainingRepeatsFormatted)
+            getInfoStack(label: String(localized: "read.repeats"), text: remainingRepeatsFormatted)
                 .onTapGesture(perform: viewModel.toggleCounterFormat)
                 .padding(.horizontal)
                 .padding(.vertical, 10)
                 .contextMenu {
                     Button(action: {
-                        Task {
-                            await viewModel.resetCounter()
-                        }
-                    }) {
-                        Label(L10n.Common.resetCounter, systemImage: "arrow.counterclockwise")
-                    }
+                        resetCounter()
+                    }, label: {
+                        Label("common.reset-counter", systemImage: "arrow.counterclockwise")
+                    })
                 }
                 .animation(.smooth, value: remainingRepeatsFormatted)
-        }
-    }
-
-    // MARK: - Info
-    private var infoView: some View {
-        HStack(alignment: .center) {
-            if #available(iOS 16, *) {
-                repeatsNumber.contentTransition(.numericText())
-            } else {
-                repeatsNumber
-            }
-
-            viewModel.source?.textOrNil.flatMap { text in
-                NavigationLink(destination: hadithView, label: {
-                    getInfoStack(
-                        label: L10n.Read.source,
-                        text: text,
-                        underline: viewModel.hadithViewModel != nil
-                    )
-                    .hoverEffect(HoverEffect.highlight)
-                })
-                .disabled(viewModel.hadithViewModel == nil)
-                .padding(.horizontal)
-                .padding(.vertical, 10)
-            }
-        }
-        .systemFont(.caption)
-        .padding(.vertical, 10)
-    }
-
-    private var hadithView: some View {
-        LazyView(
-            ZStack {
-                if let vm = viewModel.hadithViewModel {
-                    HadithView(viewModel: vm)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(counterAccessibilityLabel)
+                .accessibilityValue(counterAccessibilityValue(remainingRepeatsFormatted))
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint(Text("accessibility.zikr.counter-format-hint"))
+                .accessibilityAction {
+                    viewModel.toggleCounterFormat()
                 }
-            }
-        )
-    }
-
-    private func getInfoStack(label: String, text: String, underline: Bool = false) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            self.getCaption(label)
-            Text(getAttributedString(text))
-                .if(underline) { text in
-                    text.underline()
+                .accessibilityAction(named: Text("common.reset-counter")) {
+                    resetCounter()
                 }
-                .foregroundStyle(.text)
-                .systemFont(.caption, weight: .medium, modification: .smallCaps)
         }
-    }
-
-    private func getDivider() -> some View {
-        dividerColor.frame(height: dividerHeight)
-    }
-
-    private func getCaption(_ text: String) -> some View {
-        Text(getAttributedString(text))
-            .systemFont(.caption2, modification: .smallCaps)
-            .foregroundStyle(.tertiaryText)
-    }
-
-    private func getAttributedString(_ text: String) -> AttributedString {
-        attributedString(text, highlighting: viewModel.highlightPattern)
-    }
-
-    private func playerView(viewModel: PlayerViewModel) -> some View {
-        PlayerView(
-            viewModel: viewModel,
-            progressBarHeight: dividerHeight
-        )
-        .equatable()
     }
 
 }
@@ -566,4 +380,57 @@ private struct ZikrViewPreview: View {
 #Preview("Ink") {
     ZikrViewPreview(theme: .reader)
         .environment(\.zikrReadingMode, .lineByLine)
+}
+
+private extension ZikrView {
+    var counterAccessibilityLabel: String {
+        String(localized: "read.repeats")
+    }
+
+    func resetCounter() {
+        Task {
+            await viewModel.resetCounter()
+            WidgetCenter.reloadAzkarWidgets()
+        }
+    }
+
+    func completeCounter() {
+        Task {
+            await viewModel.completeCounter()
+            WidgetCenter.reloadAzkarWidgets()
+        }
+    }
+
+    func counterAccessibilityValue(_ repeats: String) -> String {
+        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber, viewModel.zikr.repeats > 0 {
+            return String(
+                format: String(localized: "accessibility.zikr.remaining-total"),
+                locale: Locale.current,
+                remainingRepeatsNumber,
+                viewModel.zikr.repeats
+            )
+        }
+        return repeats
+    }
+
+    func lineAccessibilityLabel(index: Int, arabicText: String, translation: String?, transliteration: String?) -> String {
+        var parts = [
+            String(
+                format: String(localized: "accessibility.zikr.line-number"),
+                locale: Locale.current,
+                index + 1
+            ),
+            String(localized: "accessibility.zikr.arabic-text")
+        ]
+
+        if let translation, !translation.isEmpty, viewModel.expandTranslation {
+            parts.append(String(localized: "read.translation"))
+        }
+
+        if let transliteration, !transliteration.isEmpty, viewModel.expandTransliteration {
+            parts.append(String(localized: "read.transcription"))
+        }
+
+        return parts.joined(separator: ", ")
+    }
 }

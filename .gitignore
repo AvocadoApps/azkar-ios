@@ -29,6 +29,7 @@ build/
 xcuserdata
 *.xccheckout
 *.moved-aside
+**/Derived/*
 DerivedData
 *.hmap
 *.ipa
@@ -44,3 +45,6 @@ fastlane/Preview.html
 fastlane/.env
 .env
 Azkar/Resources/Secrets.plist
+.claude/settings.local.json
+fastlane/screenshots
+*.p8

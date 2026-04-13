@@ -33,7 +33,7 @@ struct HadithView: View {
         .onAppear {
             AnalyticsReporter.reportScreen("Hadith View", className: viewName)
         }
-        .background(colorTheme.getColor(.background).edgesIgnoringSafeArea(.all))
+        .background(colorTheme.getColor(.background).ignoresSafeArea())
     }
 
     private func getContent() -> some View {
@@ -52,6 +52,7 @@ struct HadithView: View {
                     .systemFont(.caption, weight: .medium, modification: .smallCaps)
                     .foregroundStyle(.text)
             }
+            .accessibilityElement(children: .combine)
         }
     }
 
@@ -67,7 +68,8 @@ struct HadithView: View {
             isArabicText: true,
             isExpanded: .constant(true),
             font: viewModel.preferences.preferredArabicFont,
-            lineSpacing: viewModel.preferences.arabicLineAdjustment
+            lineSpacing: viewModel.preferences.arabicLineAdjustment,
+            accessibilityLanguage: "ar"
         )
     }
 
@@ -80,7 +82,8 @@ struct HadithView: View {
             isArabicText: false,
             isExpanded: .constant(true),
             font: viewModel.preferences.preferredTranslationFont,
-            lineSpacing: viewModel.preferences.translationLineAdjustment
+            lineSpacing: viewModel.preferences.translationLineAdjustment,
+            accessibilityLanguage: viewModel.preferences.contentLanguage.id
         )
     }
 

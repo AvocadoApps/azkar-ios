@@ -5,12 +5,12 @@ import Foundation
 public enum FontsType {
     case arabic, translation
     
-    public var url: String {
+    public var url: URL {
         switch self {
         case .arabic:
-            return "https://storage.yandexcloud.net/azkar/fonts/arabic_fonts.json"
+            return URL(string: "https://storage.yandexcloud.net/azkar/fonts/arabic_fonts.json")!
         case .translation:
-            return "https://storage.yandexcloud.net/azkar/fonts/translation_fonts.json"
+            return URL(string: "https://storage.yandexcloud.net/azkar/fonts/translation_fonts.json")!
         }
     }
 }

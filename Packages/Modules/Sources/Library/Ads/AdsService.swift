@@ -4,6 +4,8 @@ import AzkarServices
 import DatabaseInteractors
 
 public final class AdsService: AdsServiceType {
+
+    private let remoteAdsFetchLimit = 10
     
     let localStorageRepository: AdsRepository
     let remoteStorageRepository: AdsRepository
@@ -11,7 +13,8 @@ public final class AdsService: AdsServiceType {
     
     public init(
         databasePath: String,
-        language: Language
+        language: Language,
+        analyticsDatabase: AnalyticsDatabaseService?
     ) throws {
         let supabaseClient = try getSupabaseClient()
         localStorageRepository = try AdsSQLiteRepository(
@@ -22,7 +25,10 @@ public final class AdsService: AdsServiceType {
             supabaseClient: supabaseClient,
             language: language
         )
-        analyticsService = AnalyticsService(supabaseClient: supabaseClient)
+        analyticsService = AnalyticsService(
+            supabaseClient: supabaseClient,
+            analyticsDatabase: analyticsDatabase
+        )
     }
     
     public func getAd() -> AsyncStream<Ad> {
@@ -45,11 +51,14 @@ public final class AdsService: AdsServiceType {
                     let remoteAds = try await remoteStorageRepository.getAds(
                         newerThan: createdDate,
                         orUpdatedAfter: updatedDate,
-                        limit: 1
+                        limit: remoteAdsFetchLimit
                     )
-                    if let ad = remoteAds.first {
-                        try await localStorageRepository.saveAd(ad)
-                        continuation.yield(ad)
+                    for ad in remoteAds {
+                        if try await localStorageRepository.isAdSeen(ad) == false {
+                            try await localStorageRepository.saveAd(ad)
+                            continuation.yield(ad)
+                            break
+                        }
                     }
                     
                     continuation.finish()
@@ -60,12 +69,24 @@ public final class AdsService: AdsServiceType {
         }
     }
     
-    public func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {
-        analyticsService.sendAnalyticsEvent(
-            objectId: ad.id,
-            recordType: .ad,
-            actionType: action
-        )
+    public func saveAd(_ ad: Ad) async throws {
+        try await localStorageRepository.saveAd(ad)
     }
     
+    public func sendAnalytics(for ad: Ad, action: AnalyticsRecord.ActionType) {
+        Task {
+            await analyticsService.sendAnalyticsEvent(
+                objectId: ad.id,
+                recordType: .ad,
+                actionType: action
+            )
+        }
+    }
+
+    public func markAsSeen(ad: Ad) {
+        Task {
+            try await localStorageRepository.markAsSeen(ad: ad)
+        }
+    }
+
 }
