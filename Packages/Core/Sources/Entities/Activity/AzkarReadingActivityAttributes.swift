@@ -1,4 +1,4 @@
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
 import ActivityKit
 import Foundation
 
@@ -71,4 +71,4 @@ public struct AzkarReadingActivityAttributes: ActivityAttributes {
         self.categoryImageName = categoryImageName
     }
 }
-#endif
+#endif // canImport(ActivityKit) && !targetEnvironment(macCatalyst)

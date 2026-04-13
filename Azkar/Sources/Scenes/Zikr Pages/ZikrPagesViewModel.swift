@@ -3,7 +3,7 @@ import Combine
 import Library
 import AzkarServices
 import Entities
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
 import ActivityKit
 #endif
 
@@ -106,7 +106,7 @@ final class ZikrPagesViewModel: ObservableObject {
     /// Called from the view when the user taps the counter button.
     /// Starts the live activity on the first tap.
     func onCounterTapped() {
-        #if canImport(ActivityKit)
+        #if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
         guard category != .other else { return }
         if #available(iOS 16.2, *) {
             Task { [weak self] in
@@ -145,7 +145,7 @@ final class ZikrPagesViewModel: ObservableObject {
     }
 
     private func observePageChangesForLiveActivity() {
-        #if canImport(ActivityKit)
+        #if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
         guard category != .other else { return }
         $page
             .dropFirst()
@@ -201,7 +201,7 @@ final class ZikrPagesViewModel: ObservableObject {
     }
 
     func endLiveActivity(completed: Bool) {
-        #if canImport(ActivityKit)
+        #if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
         if #available(iOS 16.2, *) {
             liveActivityUpdateTask?.cancel()
             liveActivityUpdateTask = nil
@@ -259,7 +259,7 @@ final class ZikrPagesViewModel: ObservableObject {
                     return
                 }
                 // Update live activity progress if already running
-                #if canImport(ActivityKit)
+                #if canImport(ActivityKit) && !targetEnvironment(macCatalyst)
                 if #available(iOS 16.2, *) {
                     self.refreshLiveActivityState()
                 }
