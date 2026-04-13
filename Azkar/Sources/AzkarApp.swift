@@ -21,6 +21,7 @@ struct AzkarApp: App {
     @Injected(\.deeplinker) private var deepLinker: Deeplinker
     @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @Injected(\.localAnalytics) private var localAnalytics: AppAnalyticsTracking
 
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
@@ -30,7 +31,10 @@ struct AzkarApp: App {
     var body: some Scene {
         WindowGroup {
             AppFlowView()
-            .task { await presentPaywall() }
+            .task {
+                localAnalytics.start()
+                await presentPaywall()
+            }
             .connectAppTheme()
             .connectCustomFonts()
             .attachEnvironmentOverrides(onChange: { _ in
@@ -58,9 +62,17 @@ struct AzkarApp: App {
                 case .evening: category = .evening
                 case .jumua: category = .hundredDua
                 }
+                localAnalytics.entrypoint.used(
+                    source: .notification,
+                    target: .category(category)
+                )
                 self.deepLinker.open(.azkar(category))
             }
             .onReceive(quickActionDispatcher.routes) { route in
+                localAnalytics.entrypoint.used(
+                    source: .quickAction,
+                    target: route.analyticsTarget
+                )
                 deepLinker.open(route)
             }
             .onOpenURL { url in
@@ -84,6 +96,10 @@ struct AzkarApp: App {
             return
         }
         defaults?.removeObject(forKey: "controlCenterDeepLink")
+        localAnalytics.entrypoint.used(
+            source: .controlCenter,
+            target: .raw(url.host ?? "unknown")
+        )
         handleIncomingURL(url)
     }
 
@@ -91,6 +107,10 @@ struct AzkarApp: App {
         guard let route = quickActionDispatcher.takePendingRoute() else {
             return
         }
+        localAnalytics.entrypoint.used(
+            source: .quickAction,
+            target: route.analyticsTarget
+        )
         deepLinker.open(route)
     }
 
@@ -98,6 +118,10 @@ struct AzkarApp: App {
         guard let deepLink = AppDeepLink(url: url) else {
             return
         }
+        localAnalytics.entrypoint.used(
+            source: .deeplink,
+            target: deepLink.analyticsTarget
+        )
         deepLinker.open(deepLink.route)
     }
 
@@ -108,6 +132,10 @@ struct AzkarApp: App {
         else {
             return
         }
+        localAnalytics.entrypoint.used(
+            source: .spotlight,
+            target: deepLink.analyticsTarget
+        )
         deepLinker.open(deepLink.route)
     }
     
@@ -251,6 +279,50 @@ struct AzkarApp: App {
         )
     }
     
+}
+
+private extension AppDeepLink {
+
+    var analyticsTarget: AppAnalyticsEntrypointTarget {
+        switch self {
+        case .home:
+            return .home
+        case .category(let category):
+            return .category(category)
+        case .categoryZikr(let category, _):
+            return .categoryZikr(category)
+        case .zikr:
+            return .zikr
+        case .article:
+            return .article
+        case .hadith:
+            return .hadith
+        }
+    }
+
+}
+
+private extension Deeplinker.Route {
+
+    var analyticsTarget: AppAnalyticsEntrypointTarget {
+        switch self {
+        case .home:
+            return .home
+        case .settings:
+            return .settings
+        case .azkar(let category):
+            return .category(category)
+        case .categoryZikr(let category, _):
+            return .categoryZikr(category)
+        case .zikr:
+            return .zikr
+        case .article:
+            return .article
+        case .hadith:
+            return .hadith
+        }
+    }
+
 }
 
 // Extension to get all child view controllers recursively

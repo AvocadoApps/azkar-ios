@@ -9,8 +9,8 @@ final class ZikrShareActionHandler {
     @Injected(\.preferences) private var preferences: Preferences
     @Injected(\.player) private var player: Player
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @Injected(\.localAnalytics) private var analytics: AppAnalyticsTracking
     private let mailPresenter = FeedbackMailPresenter()
-
     func handle(_ options: ZikrShareOptionsView.ShareOptions, for zikr: Zikr) {
         if options.containsProItem, subscriptionManager.isProUser() == false {
             subscriptionManager.presentPaywall(
@@ -53,6 +53,7 @@ private extension ZikrShareActionHandler {
 
         if options.actionType == .copyText {
             UIPasteboard.general.string = text
+            analytics.sharing.sharedZikr(id: zikr.id, shareType: .text, action: .copy)
         } else if options.actionType == .sheet {
             let activityController = UIActivityViewController(
                 activityItems: [text],
@@ -64,6 +65,13 @@ private extension ZikrShareActionHandler {
             activityController.excludedActivityTypes = [
                 .init(rawValue: "com.apple.reminders.sharingextension")
             ]
+
+            activityController.completionWithItemsHandler = { _, completed, _, _ in
+                guard completed else {
+                    return
+                }
+                self.analytics.sharing.sharedZikr(id: zikr.id, shareType: .text, action: .sheet)
+            }
 
             rootViewController.present(activityController, animated: true)
         }
@@ -106,6 +114,7 @@ private extension ZikrShareActionHandler {
 
         if options.actionType == .saveImage {
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            analytics.sharing.sharedZikr(id: zikr.id, shareType: .image, action: .save)
             return
         }
 
@@ -129,6 +138,13 @@ private extension ZikrShareActionHandler {
         activityController.excludedActivityTypes = [
             .init(rawValue: "com.apple.reminders.sharingextension")
         ]
+
+        activityController.completionWithItemsHandler = { _, completed, _, _ in
+            guard completed else {
+                return
+            }
+            self.analytics.sharing.sharedZikr(id: zikr.id, shareType: .image, action: .sheet)
+        }
 
         rootViewController.present(activityController, animated: true)
     }

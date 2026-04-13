@@ -172,9 +172,7 @@ struct MainMenuView: View {
         if viewModel.searchQuery.isEmpty {
             SearchSuggestionsView(
                 viewModel: viewModel.searchSuggestionsViewModel,
-                onSearchSuggestionSelection: { query in
-                    viewModel.searchQuery = query
-                }
+                onSearchSuggestionSelection: viewModel.selectSearchSuggestion(_:)
             )
         } else {
             SearchResultsView(

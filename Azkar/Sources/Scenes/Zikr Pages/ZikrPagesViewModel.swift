@@ -9,7 +9,6 @@ import ActivityKit
 
 @MainActor
 final class ZikrPagesViewModel: ObservableObject {
-    
     enum PageType: Hashable, Identifiable {
         var id: String {
             switch self {
@@ -17,7 +16,6 @@ final class ZikrPagesViewModel: ObservableObject {
             case .readingCompletion: return "readingCompletion"
             }
         }
-        
         case zikr(ZikrViewModel)
         case readingCompletion
     }
@@ -27,11 +25,10 @@ final class ZikrPagesViewModel: ObservableObject {
     let title: String
     let azkar: [ZikrViewModel]
     let pages: [PageType]
-    let preferences: Preferences
+    let preferences: Preferences; let analytics: AppAnalyticsTracking
     let zikrCounter: ZikrCounterType
     let selectedPage: AnyPublisher<Int, Never>
     let initialPage: Int
-    
     @Published var page = 0
     @Published var hasRemainingRepeats = true
     @Published var counterPosition: CounterPosition
@@ -46,8 +43,7 @@ final class ZikrPagesViewModel: ObservableObject {
     private var liveActivityUpdateTask: Task<Void, Never>?
     private var liveActivitySessionID: UUID?
     private var liveActivityUpdateSequence = 0
-    private var completedRepeatsInCategory = 0
-    private var totalRepeatsInCategory: Int { azkar.reduce(0) { $0 + $1.zikr.repeats } }
+    private var completedRepeatsInCategory = 0; private var totalRepeatsInCategory: Int { azkar.reduce(0) { $0 + $1.zikr.repeats } }
 
     init(
         navigator: any AppNavigationRouting,
@@ -55,6 +51,7 @@ final class ZikrPagesViewModel: ObservableObject {
         title: String,
         azkar: [ZikrViewModel],
         preferences: Preferences,
+        analytics: AppAnalyticsTracking,
         zikrCounter: ZikrCounterType = ZikrCounter.shared,
         selectedPagePublisher: AnyPublisher<Int, Never>,
         initialPage: Int
@@ -63,6 +60,7 @@ final class ZikrPagesViewModel: ObservableObject {
         self.category = category
         self.title = title
         self.preferences = preferences
+        self.analytics = analytics
         self.zikrCounter = zikrCounter
         self.azkar = azkar
         self.selectedPage = selectedPagePublisher
@@ -252,6 +250,10 @@ final class ZikrPagesViewModel: ObservableObject {
                 let hasRemainingRepeats = count < totalCount
                 setHasRemainingRepeats(hasRemainingRepeats)
                 if !hasRemainingRepeats {
+                    self.analytics.category.completed(
+                        category,
+                        totalRepeats: totalCount
+                    )
                     Task {
                         try await zikrCounter.markCategoryAsCompleted(category)
                     }
@@ -330,6 +332,7 @@ final class ZikrPagesViewModel: ObservableObject {
             title: ZikrCategory.morning.title,
             azkar: [.demo()],
             preferences: Preferences.shared,
+            analytics: NoopAppAnalytics(),
             selectedPagePublisher: PassthroughSubject<Int, Never>().eraseToAnyPublisher(),
             initialPage: 0
         )

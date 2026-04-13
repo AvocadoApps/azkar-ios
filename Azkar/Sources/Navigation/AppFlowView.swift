@@ -205,6 +205,7 @@ private struct CategoryRouteView: View {
                 title: category.title,
                 azkar: dependencies.azkar(for: category),
                 preferences: dependencies.preferences,
+                analytics: dependencies.analytics,
                 selectedPagePublisher: navigator.selectedPagePublisher,
                 initialPage: initialPage
             )
@@ -240,6 +241,7 @@ private struct StandaloneZikrRouteView: View {
                 title: "",
                 azkar: [zikrViewModel],
                 preferences: dependencies.preferences,
+                analytics: dependencies.analytics,
                 selectedPagePublisher: Empty().eraseToAnyPublisher(),
                 initialPage: 0
             )

@@ -11,6 +11,7 @@ final class AppDependencies {
     let preferences: Preferences
     let player: Player
     let preferencesDatabase: PreferencesDatabase
+    let analytics: AppAnalyticsTracking
     let analyticsDatabase: AnalyticsDatabaseService?
     let articlesService: ArticlesServiceType
     let adsService: AdsServiceType
@@ -19,17 +20,19 @@ final class AppDependencies {
         AzkarDatabase(language: preferences.contentLanguage)
     }
 
-    init(preferences: Preferences, player: Player) {
+    init(
+        preferences: Preferences,
+        player: Player,
+        analytics: AppAnalyticsTracking,
+        analyticsDatabase: AnalyticsDatabaseService?
+    ) {
         self.preferences = preferences
         self.player = player
+        self.analytics = analytics
 
         let appGroupFolder = FileManager.default.appGroupContainerURL
         let language = preferences.contentLanguage.fallbackLanguage
-        let analyticsDatabasePath = appGroupFolder
-            .appendingPathComponent("analytics.db")
-            .absoluteString
-
-        analyticsDatabase = try? AnalyticsSQLiteDatabaseService(databasePath: analyticsDatabasePath)
+        self.analyticsDatabase = analyticsDatabase
 
         let services: (ArticlesServiceType, AdsServiceType, PreferencesDatabase)
 

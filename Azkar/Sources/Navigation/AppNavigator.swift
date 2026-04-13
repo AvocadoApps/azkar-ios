@@ -16,14 +16,20 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
 
     private let dependencies: AppDependencies
     private let deeplinker: Deeplinker
+    private let analytics: AppAnalyticsTracking
     private let selectedZikrPageIndex = CurrentValueSubject<Int, Never>(0)
 
     private var cancellables = Set<AnyCancellable>()
     private var currentCategoryContext: ZikrCategory?
 
-    init(dependencies: AppDependencies, deeplinker: Deeplinker) {
+    init(
+        dependencies: AppDependencies,
+        deeplinker: Deeplinker,
+        analytics: AppAnalyticsTracking
+    ) {
         self.dependencies = dependencies
         self.deeplinker = deeplinker
+        self.analytics = analytics
         observeDeepLinks()
         handlePendingDeepLinkIfNeeded()
     }
@@ -40,34 +46,47 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
 
     func showCategory(_ category: ZikrCategory) {
         selectedZikrPageIndex.send(0)
+        analytics.navigation.openedCategory(
+            category,
+            source: .mainMenu,
+            initialPage: nil
+        )
         stack.append(.category(category))
     }
 
     func showCategoryReader(category: ZikrCategory, initialPage: Int) {
         selectedZikrPageIndex.send(initialPage)
+        analytics.navigation.openedCategory(
+            category,
+            source: .categoryReader,
+            initialPage: initialPage
+        )
         stack.append(.categoryReader(.init(category: category, initialPage: initialPage)))
     }
 
     func showZikr(_ zikr: Zikr) {
-        selectedZikrPageIndex.send(0)
-        storeOpenedZikr(zikr.id, language: zikr.language)
-        stack.append(.standaloneZikr(.init(
-            zikrId: zikr.id,
-            language: zikr.language,
-            highlightPattern: nil,
-            isNested: true
-        )))
+        showZikr(zikr, source: .mainMenu)
     }
 
     func showRecentZikr(id: Zikr.ID) {
         guard let zikr = try? dependencies.databaseService.getZikr(id, language: dependencies.preferences.contentLanguage) else {
             return
         }
-        showZikr(zikr)
+        showZikr(zikr, source: .recent)
     }
 
     func showSearchResult(_ result: SearchResultZikr, query: String) {
         selectedZikrPageIndex.send(0)
+        analytics.search.openedResult(
+            id: result.zikrId,
+            language: result.language,
+            queryLength: query.count
+        )
+        analytics.navigation.openedZikr(
+            id: result.zikrId,
+            language: result.language,
+            source: .search
+        )
         storeOpenedZikr(result.zikrId, language: result.language)
         stack.append(.standaloneZikr(.init(
             zikrId: result.zikrId,
@@ -78,6 +97,7 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
     }
 
     func showArticle(_ article: Article) {
+        analytics.navigation.openedArticle(id: article.id, source: .mainMenu)
         stack.append(.article(article))
         dependencies.articlesService.sendAnalyticsEvent(.view, articleId: article.id)
     }
@@ -88,6 +108,17 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
     ) {
         selectedZikrPageIndex.send(0)
         currentCategoryContext = nil
+        let source: AppAnalyticsSource
+        switch presentationStyle {
+        case .push:
+            source = .push
+        case .sheet:
+            source = .sheet
+        }
+        analytics.settings.opened(
+            source: source,
+            destination: initialDestination?.analyticsName ?? .root
+        )
 
         let context = SettingsFlowContext(initialDestination: initialDestination)
         switch presentationStyle {
@@ -116,6 +147,22 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
 
 private extension AppNavigator {
 
+    func showZikr(_ zikr: Zikr, source: AppAnalyticsSource) {
+        selectedZikrPageIndex.send(0)
+        analytics.navigation.openedZikr(
+            id: zikr.id,
+            language: zikr.language,
+            source: source
+        )
+        storeOpenedZikr(zikr.id, language: zikr.language)
+        stack.append(.standaloneZikr(.init(
+            zikrId: zikr.id,
+            language: zikr.language,
+            highlightPattern: nil,
+            isNested: true
+        )))
+    }
+
     func observeDeepLinks() {
         deeplinker.routes
             .receive(on: DispatchQueue.main)
@@ -143,12 +190,21 @@ private extension AppNavigator {
             resetToRoot()
 
         case .settings(let destination):
+            analytics.settings.opened(
+                source: .deeplink,
+                destination: destination.analyticsName
+            )
             replaceStackForDeepLink(with: .settings(.init(initialDestination: destination)))
 
         case .azkar(let category):
             guard currentCategoryContext != category else {
                 return
             }
+            analytics.navigation.openedCategory(
+                category,
+                source: .deeplink,
+                initialPage: nil
+            )
             replaceStackForDeepLink(with: .category(category))
 
         case .categoryZikr(let category, let id):
@@ -156,12 +212,22 @@ private extension AppNavigator {
             guard let index = azkar.firstIndex(where: { $0.zikr.id == id }) else {
                 return
             }
+            analytics.navigation.openedCategory(
+                category,
+                source: .deeplink,
+                initialPage: index
+            )
             replaceStackForDeepLink(with: .categoryReader(.init(category: category, initialPage: index)))
 
         case .zikr(let id):
             guard (try? dependencies.databaseService.getZikr(id, language: dependencies.preferences.contentLanguage)) != nil else {
                 return
             }
+            analytics.navigation.openedZikr(
+                id: id,
+                language: dependencies.preferences.contentLanguage,
+                source: .deeplink
+            )
             replaceStackForDeepLink(with: .standaloneZikr(.init(
                 zikrId: id,
                 language: dependencies.preferences.contentLanguage,
@@ -175,6 +241,10 @@ private extension AppNavigator {
                     return
                 }
                 await MainActor.run {
+                    self.analytics.navigation.openedArticle(
+                        id: article.id,
+                        source: .deeplink
+                    )
                     self.replaceStackForDeepLink(with: .article(article))
                     self.dependencies.articlesService.sendAnalyticsEvent(.view, articleId: article.id)
                 }

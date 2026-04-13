@@ -49,6 +49,7 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
 
     @Injected(\.preferences) private var preferences: Preferences
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
+    @Injected(\.localAnalytics) private var analytics: AppAnalyticsTracking
 
     init(initialDestination: SettingsDestination? = nil) {
         if let initialDestination {
@@ -57,6 +58,7 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
     }
 
     func show(_ destination: SettingsDestination) {
+        analytics.settings.openedDetail(destination.analyticsName)
         stack.append(destination)
     }
 
@@ -72,4 +74,27 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
             preselectedCollection: preferences.zikrCollectionSource
         ))
     }
+}
+
+extension SettingsDestination {
+
+    var analyticsName: AppAnalyticsSettingsDestination {
+        switch self {
+        case .notificationsList:
+            return .notificationsList
+        case .appearance:
+            return .appearance
+        case .text:
+            return .text
+        case .counter:
+            return .counter
+        case .reminders:
+            return .reminders
+        case .soundPicker:
+            return .soundPicker
+        case .aboutApp:
+            return .aboutApp
+        }
+    }
+
 }

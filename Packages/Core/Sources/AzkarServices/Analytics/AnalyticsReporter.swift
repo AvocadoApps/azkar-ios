@@ -6,9 +6,21 @@ import Extensions
 
 /// Protocol that defines the required methods for any analytics reporting target.
 public protocol AnalyticsTarget {
+    var deliveryPolicy: AnalyticsTargetDeliveryPolicy { get }
     func reportEvent(name: String, metadata: [String: Any]?)
     func reportScreen(screenName: String, className: String?)
     func setUserAttribute(_ type: UserAttributeType, value: String)
+}
+
+public enum AnalyticsTargetDeliveryPolicy {
+    case always
+    case whenAnalyticsEnabled
+}
+
+public extension AnalyticsTarget {
+    var deliveryPolicy: AnalyticsTargetDeliveryPolicy {
+        .whenAnalyticsEnabled
+    }
 }
 
 // MARK: - UserAttributeType Enum
@@ -79,11 +91,20 @@ public final class AnalyticsReporter {
     ///   - metadata: Optional dictionary containing additional information about the event.
     public static func reportEvent(_ name: String, metadata: [String: Any]? = nil) {
         shared.serialQueue.sync {
-            if UIApplication.shared.shouldSendAnalytics {
-                for target in shared.targets {
-                    target.reportEvent(name: name, metadata: metadata)
-                }
-            } else {
+            let deliverableTargets = shared.targets.filter {
+                $0.deliveryPolicy == .always || UIApplication.shared.shouldSendAnalytics
+            }
+
+            if deliverableTargets.isEmpty {
+                shared.logEvent(name: name, metadata: metadata)
+                return
+            }
+
+            for target in deliverableTargets {
+                target.reportEvent(name: name, metadata: metadata)
+            }
+
+            if UIApplication.shared.shouldSendAnalytics == false {
                 shared.logEvent(name: name, metadata: metadata)
             }
         }
@@ -95,11 +116,20 @@ public final class AnalyticsReporter {
     ///   - className: The name of the class.
     public static func reportScreen(_ screenName: String, className: String? = nil) {
         shared.serialQueue.sync {
-            if UIApplication.shared.shouldSendAnalytics {
-                for target in shared.targets {
-                    target.reportScreen(screenName: screenName, className: className)
-                }
-            } else {
+            let deliverableTargets = shared.targets.filter {
+                $0.deliveryPolicy == .always || UIApplication.shared.shouldSendAnalytics
+            }
+
+            if deliverableTargets.isEmpty {
+                shared.logScreen(screenName: screenName, className: className)
+                return
+            }
+
+            for target in deliverableTargets {
+                target.reportScreen(screenName: screenName, className: className)
+            }
+
+            if UIApplication.shared.shouldSendAnalytics == false {
                 shared.logScreen(screenName: screenName, className: className)
             }
         }
@@ -111,11 +141,20 @@ public final class AnalyticsReporter {
     ///   - value: The value of the user attribute.
     public static func setUserAttribute(_ type: UserAttributeType, value: String) {
         shared.serialQueue.sync {
-            if UIApplication.shared.shouldSendAnalytics {
-                for target in shared.targets {
-                    target.setUserAttribute(type, value: value)
-                }
-            } else {
+            let deliverableTargets = shared.targets.filter {
+                $0.deliveryPolicy == .always || UIApplication.shared.shouldSendAnalytics
+            }
+
+            if deliverableTargets.isEmpty {
+                shared.logUserAttribute(type, value: value)
+                return
+            }
+
+            for target in deliverableTargets {
+                target.setUserAttribute(type, value: value)
+            }
+
+            if UIApplication.shared.shouldSendAnalytics == false {
                 shared.logUserAttribute(type, value: value)
             }
         }
