@@ -91,18 +91,23 @@ struct ArticleHeaderView: View {
     func getTitleView(
         _ fontSize: CGFloat = 30,
         lineLimit: Int = 3,
-        tagsforegroundStyle: Color = Color.secondary
+        tagsforegroundStyle: Color = Color.secondary,
+        titleColor: UIColor = .label
     ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .font(Font.system(size: fontSize, weight: .black, design: .serif))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .multilineTextAlignment(.leading)
-                .dynamicTypeSize(.accessibility5)
-                .lineLimit(lineLimit)
-                .minimumScaleFactor(0.25)
-                .applyAccessibilityLanguage(language)
-                .accessibilityAddTraits(.isHeader)
+            SelectableTextView(
+                text: title,
+                fontOverride: {
+                    let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title1)
+                        .withDesign(.serif)?
+                        .addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: UIFont.Weight.black]])
+                    ?? .preferredFontDescriptor(withTextStyle: .title1)
+                    return UIFont(descriptor: descriptor, size: fontSize)
+                }(),
+                foregroundColor: titleColor
+            )
+            .applyAccessibilityLanguage(language)
+            .accessibilityAddTraits(.isHeader)
             
             if #available(iOS 16, *) {
                 ScrollView(.horizontal) {
@@ -167,7 +172,8 @@ struct ArticleHeaderView: View {
                 getTitleView(
                     40,
                     lineLimit: 2,
-                    tagsforegroundStyle: Color.white.opacity(0.55)
+                    tagsforegroundStyle: Color.white.opacity(0.55),
+                    titleColor: .white
                 )
                 .foregroundStyle(Color.white)
                 .padding(.vertical)
