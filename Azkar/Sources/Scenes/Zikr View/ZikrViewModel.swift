@@ -250,25 +250,28 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
 
     @MainActor
     func incrementZikrCount() async {
-        guard remainingRepeatsNumber != nil else {
+        guard let current = remainingRepeatsNumber, current > 0 else {
             return
         }
         showRemainingCounter = true
-        do {
-            try await counter.incrementCounter(for: zikr)
-        } catch {
-            return
-        }
-        guard let remainingRepeatsNumber = await counter.getRemainingRepeats(for: zikr) else {
-            return
-        }
-        
+
+        // Update UI immediately with the expected value before awaiting DB.
+        let expected = current - 1
         withAnimation(.smooth.speed(1.5)) {
-            self.remainingRepeatsNumber = remainingRepeatsNumber
+            self.remainingRepeatsNumber = expected
         }
 
         if preferences.enableCounterTicker, !player.isPlaying {
             playTickerSound()
+        }
+
+        do {
+            try await counter.incrementCounter(for: zikr)
+        } catch {
+            // Revert on failure.
+            withAnimation(.smooth.speed(1.5)) {
+                self.remainingRepeatsNumber = current
+            }
         }
     }
 

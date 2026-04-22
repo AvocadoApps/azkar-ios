@@ -7,25 +7,25 @@ import GRDB
 import AzkarServices
 
 public final class DatabaseZikrCounter: ZikrCounterType {
-    
-    private let databasePath: String
+
     private let getKey: () -> Int
-    
+    private let dbQueue: DatabaseQueue?
+
     private var completedRepeatsPublishers: [ZikrCategory: CurrentValueSubject<Int, Never>] = [:]
-    
+
     public init(
         databasePath: String,
         getKey: @escaping () -> Int
     ) {
-        self.databasePath = databasePath
         self.getKey = getKey
-        
+
         do {
-            let tableName = ZikrCounter.databaseTableName
-            
-            var migrator = DatabaseMigrator()
             let queue = try DatabaseQueue(path: databasePath)
-            
+
+            let tableName = ZikrCounter.databaseTableName
+
+            var migrator = DatabaseMigrator()
+
             if DatabaseHelper.tableExists(tableName, databaseQueue: queue) == false {
                 try queue.write { db in
                     try db.create(table: tableName) { t in
@@ -36,7 +36,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     }
                 }
             }
-            
+
             migrator.registerMigration("create_completion_marks") { db in
                 try db.create(table: "completion_marks") { t in
                     t.autoIncrementedPrimaryKey("id").notNull()
@@ -44,22 +44,20 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                     t.column("category", .text).notNull()
                 }
             }
-            
-            try migrator.migrate(queue)
-        } catch {
-            // TODO: Handle errors.
-            print(error)
-        }
-    }
 
-    private func getDatabaseQueue() throws -> DatabaseQueue {
-        return try DatabaseQueue(path: databasePath)
+            try migrator.migrate(queue)
+            self.dbQueue = queue
+        } catch {
+            print("Failed to initialize counter database, falling back to in-memory only: \(error)")
+            self.dbQueue = nil
+        }
     }
         
     public func getRemainingRepeats(for zikr: Zikr) async -> Int? {
+        guard let dbQueue else { return nil }
         let key = getKey()
         do {
-            return try await getDatabaseQueue().read { db in
+            return try await dbQueue.read { db in
                 if let category = zikr.category, let row = try Row.fetchOne(
                     db,
                     sql: "SELECT COUNT(*) as count FROM counters WHERE key = ? AND zikr_id = ? AND category = ?",
@@ -76,8 +74,9 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
     
     public func markCategoryAsCompleted(_ category: ZikrCategory) async throws {
+        guard let dbQueue else { return }
         let key = getKey()
-        try await getDatabaseQueue().write { db in
+        try await dbQueue.write { db in
             try db.execute(
                 sql: "INSERT INTO completion_marks (key, category) VALUES (?, ?)",
                 arguments: [key, category.rawValue]
@@ -86,9 +85,10 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
     
     public func isCategoryCompleted(_ category: ZikrCategory) async -> Bool {
+        guard let dbQueue else { return false }
         let key = getKey()
         do {
-            return try await getDatabaseQueue().read { db in
+            return try await dbQueue.read { db in
                 let count = try Int.fetchOne(
                     db,
                     sql: "SELECT COUNT(*) FROM completion_marks WHERE key = ? AND category = ?",
@@ -107,45 +107,43 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
     
     public func incrementCounter(for zikr: Zikr, by count: Int) async throws {
+        guard let dbQueue else { return }
         let key = getKey()
         let newRecords = Array(repeating: ZikrCounter(key: key, zikrId: zikr.id, category: zikr.category), count: count)
-        try await getDatabaseQueue().inTransaction { db in
+
+        // Perform insert + read in a single write transaction to avoid extra round-trips.
+        let categoryCount: Int? = try await dbQueue.write { db in
             for record in newRecords {
                 try record.insert(db)
             }
-            return .commit
+            // Read category-level completed count while we still hold the connection.
+            guard let category = zikr.category else { return nil }
+            return try Int.fetchOne(
+                db,
+                sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
+                arguments: [key, category.rawValue]
+            ) ?? 0
         }
-        
-        let remainingRepeats = await getRemainingRepeats(for: zikr)
-        
-        // Also update the completed repeats publisher if this zikr has a category
-        if let category = zikr.category, let publisher = completedRepeatsPublishers[category] {
-            do {
-                let count = try await getDatabaseQueue().read { db in
-                    try Int.fetchOne(
-                        db,
-                        sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
-                        arguments: [key, category.rawValue]
-                    ) ?? 0
-                }
-                publisher.send(count)
-            } catch {
-                print("Error updating completed repeats count: \(error)")
-            }
+
+        if let category = zikr.category, let categoryCount, let publisher = completedRepeatsPublishers[category] {
+            publisher.send(categoryCount)
         }
     }
     
     public func observeCompletedRepeats(in category: ZikrCategory) -> AnyPublisher<Int, Never> {
-        let key = getKey()
-        
-        // Create or get an existing publisher for this category
         let publisher = completedRepeatsPublishers[category] ?? CurrentValueSubject<Int, Never>(0)
         completedRepeatsPublishers[category] = publisher
-        
+
+        guard let dbQueue else {
+            return publisher.eraseToAnyPublisher()
+        }
+
+        let key = getKey()
+
         // Immediately start fetching the current count
         Task {
             do {
-                let count = try await getDatabaseQueue().read { db in
+                let count = try await dbQueue.read { db in
                     try Int.fetchOne(
                         db,
                         sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
@@ -157,41 +155,34 @@ public final class DatabaseZikrCounter: ZikrCounterType {
                 print("Error fetching completed repeats count: \(error)")
             }
         }
-        
-        // Set up observation using GRDB's ValueObservation
-        do {
-            let queue = try getDatabaseQueue()
-            
-            // Use ValueObservation to track changes to the counters table for this category
-            let observation = ValueObservation.tracking { db in
-                try Int.fetchOne(
-                    db,
-                    sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
-                    arguments: [key, category.rawValue]
-                ) ?? 0
-            }
-            
-            // Start the observation on a background queue
-            observation.start(
-                in: queue,
-                onError: { error in
-                    print("Error observing completed repeats: \(error)")
-                },
-                onChange: { [weak publisher] count in
-                    publisher?.send(count)
-                }
-            )
-        } catch {
-            print("Failed to start observation: \(error)")
+
+        // Use ValueObservation to track changes to the counters table for this category
+        let observation = ValueObservation.tracking { db in
+            try Int.fetchOne(
+                db,
+                sql: "SELECT COUNT(*) FROM counters WHERE key = ? AND category = ?",
+                arguments: [key, category.rawValue]
+            ) ?? 0
         }
-        
+
+        observation.start(
+            in: dbQueue,
+            onError: { error in
+                print("Error observing completed repeats: \(error)")
+            },
+            onChange: { [weak publisher] count in
+                publisher?.send(count)
+            }
+        )
+
         return publisher.eraseToAnyPublisher()
     }
     
     public func resetCounterForCategory(_ category: ZikrCategory) async {
+        guard let dbQueue else { return }
         let key = getKey()
         do {
-            try await getDatabaseQueue().write { db in
+            try await dbQueue.write { db in
                 try db.execute(
                     sql: "DELETE FROM counters WHERE key = ? AND category = ?",
                     arguments: [key, category.rawValue]
@@ -203,6 +194,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
     
     public func getCompletionHistory(days: Int) async -> [Int: Set<String>] {
+        guard let dbQueue else { return [:] }
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let keys = (0..<days).compactMap { offset -> Int? in
@@ -213,7 +205,7 @@ public final class DatabaseZikrCounter: ZikrCounterType {
         guard !keys.isEmpty else { return [:] }
 
         do {
-            return try await getDatabaseQueue().read { db in
+            return try await dbQueue.read { db in
                 let placeholders = keys.map { _ in "?" }.joined(separator: ",")
                 let sql = """
                     SELECT DISTINCT key, category FROM completion_marks
@@ -235,9 +227,10 @@ public final class DatabaseZikrCounter: ZikrCounterType {
     }
 
     public func resetCategoryCompletionMark(_ category: ZikrCategory) async {
+        guard let dbQueue else { return }
         let key = getKey()
         do {
-            try await getDatabaseQueue().write { db in
+            try await dbQueue.write { db in
                 try db.execute(
                     sql: "DELETE FROM completion_marks WHERE key = ? AND category = ?",
                     arguments: [key, category.rawValue]

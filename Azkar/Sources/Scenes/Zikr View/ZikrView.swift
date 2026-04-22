@@ -42,12 +42,12 @@ struct ZikrView: View {
 
     func incrementZikrCounter() {
         counterTapCallback?()
+        if viewModel.preferences.enableCounterHapticFeedback, let remaining = viewModel.remainingRepeatsNumber, remaining > 0 {
+            HapticGenerator.performFeedback(.impact(flexibility: .soft))
+        }
         Task {
             await viewModel.incrementZikrCount()
             WidgetCenter.reloadAzkarWidgets()
-        }
-        if let remainingRepeatsNumber = viewModel.remainingRepeatsNumber, remainingRepeatsNumber > 0, viewModel.preferences.enableCounterHapticFeedback {
-            HapticGenerator.performFeedback(.impact(flexibility: .soft))
         }
     }
     
