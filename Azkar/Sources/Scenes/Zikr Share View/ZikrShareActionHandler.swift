@@ -90,7 +90,8 @@ private extension ZikrShareActionHandler {
             player: player
         )
 
-        let view = ZikrShareView(
+        let renderer = ZikrShareImageRenderer()
+        let image = renderer.render(ZikrShareImageRenderer.Options(
             viewModel: viewModel,
             includeTitle: options.includeTitle,
             includeOriginalText: options.includeOriginalText,
@@ -98,19 +99,13 @@ private extension ZikrShareActionHandler {
             includeTransliteration: options.includeTransliteration,
             includeBenefits: options.includeBenefits,
             includeLogo: options.includeLogo,
-            includeSource: false,
-            arabicTextAlignment: options.textAlignment.isCentered ? .center : .trailing,
-            otherTextAlignment: options.textAlignment.isCentered ? .center : .leading,
-            nestIntoScrollView: false,
+            textAlignment: options.textAlignment,
             useFullScreen: options.shareType != .text,
             selectedBackground: options.selectedBackground,
-            enableLineBreaks: options.enableLineBreaks
-        )
-        .environment(\.arabicFont, options.arabicFont)
-        .environment(\.translationFont, options.translationFont)
-        .frame(width: min(440, UIScreen.main.bounds.width))
-
-        let image = view.snapshot()
+            enableLineBreaks: options.enableLineBreaks,
+            arabicFont: options.arabicFont,
+            translationFont: options.translationFont
+        ))
 
         if options.actionType == .saveImage {
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
