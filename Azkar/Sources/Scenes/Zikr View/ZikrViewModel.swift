@@ -2,6 +2,7 @@ import UIKit
 import SwiftUI
 import Combine
 import AVFoundation
+import AudioToolbox
 import Library
 import AzkarServices
 import DatabaseInteractors
@@ -88,7 +89,6 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
     
     private var cancellables: Set<AnyCancellable> = []
     private let player: Player
-    private var tickerPlayer: AVAudioPlayer?
     
     public var audioURL: URL? {
         if let link = zikr.audio?.link {
@@ -218,6 +218,9 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
             .store(in: &cancellables)
 
         updateRemainingRepeatsText()
+        if preferences.enableCounterTicker {
+            CounterTickerPlayer.shared.prepare()
+        }
     }
     
     func getShareText(
@@ -262,7 +265,7 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         }
 
         if preferences.enableCounterTicker, !player.isPlaying {
-            playTickerSound()
+            CounterTickerPlayer.shared.play()
         }
 
         do {
@@ -279,27 +282,6 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         showRemainingCounter.toggle()
     }
 
-    private func playTickerSound() {
-        guard let url = Bundle.main.url(forResource: "counter-ticker", withExtension: "m4a") else {
-            return
-        }
-
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
-
-            if tickerPlayer == nil {
-                tickerPlayer = try AVAudioPlayer(contentsOf: url)
-                tickerPlayer?.volume = 0.25
-                tickerPlayer?.prepareToPlay()
-            }
-
-            tickerPlayer?.currentTime = 0
-            tickerPlayer?.play()
-        } catch {
-            return
-        }
-    }
-    
     func playAudio(at index: Int) {
         if text.count > 1 {
             indexToHighlight = index
@@ -333,6 +315,44 @@ final class ZikrViewModel: ObservableObject, Identifiable, Hashable {
         }
     }
     
+}
+
+private final class CounterTickerPlayer {
+
+    static let shared = CounterTickerPlayer()
+
+    private var soundID: SystemSoundID?
+
+    private init() {}
+
+    func prepare() {
+        prepareSoundIfNeeded()
+    }
+
+    func play() {
+        prepare()
+        guard let soundID else {
+            return
+        }
+        AudioServicesPlaySystemSound(soundID)
+    }
+
+    private func prepareSoundIfNeeded() {
+        guard soundID == nil else {
+            return
+        }
+
+        guard let url = Bundle.main.url(forResource: "counter-ticker", withExtension: "m4a") else {
+            return
+        }
+
+        var loadedSoundID: SystemSoundID = 0
+        let status = AudioServicesCreateSystemSoundID(url as CFURL, &loadedSoundID)
+        if status == kAudioServicesNoError {
+            soundID = loadedSoundID
+        }
+    }
+
 }
 
 extension ZikrViewModel {
