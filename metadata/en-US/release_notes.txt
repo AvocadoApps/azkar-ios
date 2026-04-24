@@ -1,6 +1,1 @@
-- Home Screen Widgets: dhikr counter, next dhikr, weekly streak, articles, and a Control Center widget (iOS 18+)
-- Spotlight Search for adhkar, articles, and hadiths
-- Improved VoiceOver accessibility with localized spoken labels
-- Go to Unread button, auto-scroll to first unread zikr, and per-category page indicators
-- Dark and tinted app icon variants
-- Added Tatar language support
+Fixed counter performance.
