@@ -37,7 +37,7 @@ struct MainMenuView: View {
     }
 
     private var hasUnseenChangelog: Bool {
-        lastSeenVersion != AppFlowView.appVersion
+        AppFlowView.hasUnseenReleaseNotes(since: lastSeenVersion)
     }
 
     var body: some View {

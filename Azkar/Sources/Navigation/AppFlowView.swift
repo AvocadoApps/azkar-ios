@@ -154,6 +154,14 @@ struct AppFlowView: View {
         loadAllSections().flatMap(\.items)
     }
 
+    static func hasUnseenReleaseNotes(since lastSeenVersion: String) -> Bool {
+        if lastSeenVersion.isEmpty {
+            return loadAllReleaseNotes().isEmpty == false
+        }
+
+        return boundaryVersion(for: lastSeenVersion) != nil
+    }
+
     /// Returns the version string that marks the boundary between new and previously seen notes.
     ///
     /// If `lastSeenVersion` doesn't exist in the changelog, the highest version

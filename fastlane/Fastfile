@@ -159,6 +159,16 @@ platform :ios do
     )
   end
 
+  lane :internal_beta do
+    build_for_app_store
+
+    testflight(
+      api_key: get_api_key,
+      distribute_external: false,
+      changelog: get_changelog_from_git()
+    )
+  end
+
 end
 
 platform :mac do

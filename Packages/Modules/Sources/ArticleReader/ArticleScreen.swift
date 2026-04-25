@@ -133,11 +133,11 @@ public struct ArticleScreen: View {
     }
     
     var textContent: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(LocalizedStringKey(viewModel.text))
-                .customFont(.title3)
-                .applyAccessibilityLanguage(viewModel.language.id)
-        }
+        SelectableTextView(
+            text: viewModel.text,
+            textFormat: viewModel.textFormat
+        )
+        .applyAccessibilityLanguage(viewModel.language.id)
         .frame(maxWidth: .infinity)
     }
     
