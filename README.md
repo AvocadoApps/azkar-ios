@@ -1,11 +1,9 @@
 بسم الله الرحمن الرحيم
 
 <div align="center">
-  <img src="Azkar/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" height="80" style="border-radius: 18px"/>
+  <img src=".github/social-preview.png" alt="Azkar App" />
   
-  # Azkar App
-  
-  Azkar is an iOS app that helps you learn and recite daily adhkar consistently. Track your progress, set reminders, deepen your understanding and memozie adhkar using Azkar App.
+  Azkar is an iOS app that helps you learn and recite daily adhkar consistently. Track your progress, set reminders, deepen your understanding and memorize adhkar using Azkar App.
   
   [![Download on the App Store](https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1704067200)](https://apple.co/2X7LNo7)
   
