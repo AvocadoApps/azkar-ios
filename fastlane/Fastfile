@@ -50,8 +50,23 @@ def get_changelog_from_git
   if changelog.nil? || changelog.empty?
     changelog = "- Bug fixes and improvements"
   end
-  
+
   return changelog
+end
+
+# Reads release notes from metadata/<locale>/release_notes.txt and returns a
+# { "en-US" => "...", ... } hash for deliver's `release_notes` option. Only
+# locales that actually have a non-empty file are included.
+def release_notes_from_metadata
+  notes = {}
+  metadata_dir = File.expand_path('../metadata', __dir__)
+  Dir.glob(File.join(metadata_dir, '*', 'release_notes.txt')).sort.each do |path|
+    locale = File.basename(File.dirname(path))
+    text = File.read(path).strip
+    notes[locale] = text unless text.empty?
+  end
+  UI.message("📝 Release notes loaded for locales: #{notes.keys.join(', ')}")
+  notes
 end
 
 desc 'Synchronizes certificates / profiles using via the App Store Connect API. Optionally creates new ones.'
@@ -134,12 +149,19 @@ platform :ios do
       next # Exit the lane gracefully without failing Fastlane
     end
     build_for_app_store
+    # Upload only the "What's New" release notes, not the rest of the metadata
+    # directory. We point `metadata_path` at an empty temp dir and pass the
+    # release notes explicitly so description/keywords/etc. in App Store Connect
+    # stay untouched.
+    require 'tmpdir'
     upload_to_app_store(
       api_key: get_api_key,
       force: true,
       submit_for_review: true,
       skip_screenshots: true,
-      skip_metadata: true,
+      skip_metadata: false,
+      metadata_path: Dir.mktmpdir('azkar_release_notes'),
+      release_notes: release_notes_from_metadata,
       run_precheck_before_submit: false,
       submission_information: {
         add_id_info_uses_idfa: false,

@@ -1,1 +1,1 @@
-Fixed counter performance.
+Set separate morning, evening, and Friday reminders, each with its own time and notification sound. Reminder notifications can also show rotating Quran and hadith quotes.

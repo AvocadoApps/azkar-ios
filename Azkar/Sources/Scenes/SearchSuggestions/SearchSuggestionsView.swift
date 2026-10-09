@@ -13,7 +13,7 @@ struct SearchSuggestionsView: View {
         
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
+            LazyVStack(spacing: 8) {
                 content
             }
         }
@@ -40,68 +40,101 @@ struct SearchSuggestionsView: View {
     
     var suggestedSearchQueriesSection: some View {
         Section {
-            ForEachIndexed(viewModel.suggestedQueries) { _, position, query in
-                Button {
-                    onSearchSuggestionSelection(query)
-                } label: {
-                    HStack {
-                        Image(systemName: .magnifyingglass)
-                            .foregroundStyle(Color.secondary)
-                        Text(query)
+            VStack(spacing: 0) {
+                ForEachIndexed(viewModel.suggestedQueries) { _, position, query in
+                    HStack(spacing: 0) {
+                        Button {
+                            onSearchSuggestionSelection(query)
+                        } label: {
+                            HStack {
+                                Image(systemName: .magnifyingglass)
+                                    .foregroundStyle(Color.secondary)
+                                Text(query)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading)
+                            .padding(.vertical, 4)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(query)
+                        .accessibilityHint(Text("accessibility.search.search-hint"))
+
+                        Button {
+                            viewModel.removeRecentQuery(query)
+                        } label: {
+                            Image(systemName: "xmark")
+                                .systemFont(.footnote)
+                                .foregroundStyle(.secondaryText)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("common.delete"))
+                        .padding(.trailing, 4)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+
+                    if position != .last {
+                        Divider()
+                    }
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(query)
-                .accessibilityHint(Text("accessibility.search.search-hint"))
-                .padding()
-                .foregroundStyle(.text)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.contentBackground)
-                .applyTheme(indexPosition: position)
-                .padding(.horizontal)
             }
+            .foregroundStyle(.text)
+            .background(.contentBackground)
+            .applyTheme(isInteractive: false)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
         } header: {
             headerView("search.suggested-queries")
         }
     }
-    
+
     var suggestedAzkarSection: some View {
         Section {
-            ForEachIndexed(viewModel.suggestedAzkar) { _, position, zikr in
-                let text = zikr.title ?? zikr.translation ?? zikr.text
-                NavigationButton(
-                    title: LocalizedStringKey(text.prefix(50) + "..."),
-                    applyVerticalPadding: false,
-                    action: {
+            VStack(spacing: 0) {
+                ForEachIndexed(viewModel.suggestedAzkar) { _, position, zikr in
+                    let text = zikr.title ?? zikr.translation ?? zikr.text
+                    Button {
                         viewModel.navigateToZikr(zikr.id)
+                    } label: {
+                        NavigationLabel(
+                            title: LocalizedStringKey(text.prefix(50) + "..."),
+                            applyVerticalPadding: false
+                        )
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
-                )
-                .accessibilityLabel(text)
-                .accessibilityHint(Text("accessibility.common.open-dhikr"))
-                .applyAccessibilityLanguage(zikr.language.id)
-                .padding()
-                .foregroundStyle(.text)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.contentBackground)
-                .applyTheme(indexPosition: position)
-                .padding(.horizontal)
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(text)
+                    .accessibilityHint(Text("accessibility.common.open-dhikr"))
+                    .applyAccessibilityLanguage(zikr.language.id)
+
+                    if position != .last {
+                        Divider()
+                    }
+                }
             }
+            .foregroundStyle(.text)
+            .background(.contentBackground)
+            .applyTheme(isInteractive: false)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
         } header: {
             headerView("search.suggested-adhkar")
         }
     }
-    
+
     func headerView(_ label: LocalizedStringKey) -> some View {
         Text(label)
             .foregroundStyle(.secondaryText)
             .systemFont(.title3, modification: .smallCaps)
             .accessibilityAddTraits(.isHeader)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .background(.background)
-            .padding(.top, 6)
+            .padding(.horizontal)
+            .padding(.top, 12)
+            .padding(.bottom, 4)
     }
     
 }

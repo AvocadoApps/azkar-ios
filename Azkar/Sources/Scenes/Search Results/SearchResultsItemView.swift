@@ -43,30 +43,36 @@ struct SearchResultsItemView: View {
         VStack(spacing: 10) {
             if let title = result.title {
                 Text(getText(title))
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let text = result.text {
-                Text(getText(text))
+                Text(getText(text, highlights: textHighlights))
+                    .lineLimit(3)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             if let translation = result.translation {
                 Text(getText(translation))
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let caption = result.caption {
                 Text(getText(caption))
                     .systemFont(.caption)
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let caption2 = result.caption2 {
                 Text(getText(caption2))
                     .systemFont(.caption2)
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let footnote = result.footnote {
                 Text(getText(footnote))
                     .systemFont(.footnote)
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -76,21 +82,31 @@ struct SearchResultsItemView: View {
         .multilineTextAlignment(.leading)
     }
     
+    /// Highlight tokens for the Arabic `text` field: the exact vowelled spans
+    /// that matched, falling back to the raw query for non-Arabic content.
+    private var textHighlights: [String] {
+        result.textHighlights.isEmpty ? [result.highlightText] : result.textHighlights
+    }
+
     private func getText(
-        _ text: String
+        _ text: String,
+        highlights: [String]? = nil
     ) -> AttributedString {
         var attributedString = AttributedString(text)
-        var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
 
-        while let range = attributedString[currentSearchRange].range(of: result.highlightText, options: [.caseInsensitive, .diacriticInsensitive]) {
-            let globalRange = range.lowerBound..<range.upperBound
-            attributedString[globalRange].underlineStyle = .single
-            attributedString[globalRange].underlineColor = UIColor(colorTheme.getColor(.accent))
-            
-            if globalRange.upperBound < attributedString.endIndex {
-                currentSearchRange = globalRange.upperBound..<attributedString.endIndex
-            } else {
-                break
+        for token in (highlights ?? [result.highlightText]) where token.isEmpty == false {
+            var currentSearchRange = attributedString.startIndex..<attributedString.endIndex
+
+            while let range = attributedString[currentSearchRange].range(of: token, options: [.caseInsensitive, .diacriticInsensitive]) {
+                let globalRange = range.lowerBound..<range.upperBound
+                attributedString[globalRange].underlineStyle = .single
+                attributedString[globalRange].underlineColor = UIColor(colorTheme.getColor(.accent))
+
+                if globalRange.upperBound < attributedString.endIndex {
+                    currentSearchRange = globalRange.upperBound..<attributedString.endIndex
+                } else {
+                    break
+                }
             }
         }
 

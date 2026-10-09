@@ -38,6 +38,129 @@ public extension String {
       return components(separatedBy: arabicVowelsSet).joined()
     }
 
+    /// Normalizes Arabic text for full-text search.
+    ///
+    /// Unlike `trimmingArabicVowels` (which is tuned for display and keeps the
+    /// shadda), this removes *all* tashkeel including the shadda, drops the
+    /// tatweel, and unifies common letter variants (alef/hamza forms, alef
+    /// maqsura, ta marbuta). The exact same normalization is applied to both the
+    /// `azkar_search` FTS index and to user queries so that searching works with
+    /// or without vowels and regardless of how alef/hamza are typed.
+    ///
+    /// IMPORTANT: the offline indexing script
+    /// (`scripts/populate_arabic_search_index.py`) replicates this logic. Keep
+    /// the two in sync — any change here must be mirrored there and the database
+    /// regenerated, otherwise Arabic search will silently stop matching.
+    var arabicSearchNormalized: String {
+        var result = ""
+        result.unicodeScalars.reserveCapacity(unicodeScalars.count)
+        for scalar in unicodeScalars {
+            let value = scalar.value
+            // Drop tashkeel / Quranic annotation marks and the tatweel.
+            if (0x0610...0x061A).contains(value)
+                || (0x064B...0x065F).contains(value)
+                || value == 0x0670
+                || (0x06D6...0x06ED).contains(value)
+                || value == 0x0640 {
+                continue
+            }
+            switch value {
+            case 0x0622, 0x0623, 0x0625, 0x0671: // آ أ إ ٱ -> ا
+                result.append("ا")
+            case 0x0649: // ى -> ي
+                result.append("ي")
+            case 0x0629: // ة -> ه
+                result.append("ه")
+            default:
+                result.unicodeScalars.append(scalar)
+            }
+        }
+        return result
+    }
+
+    /// Returns the Arabic-search-normalized form of the string together with a
+    /// mapping back to the original.
+    ///
+    /// For every character in the normalized string, `starts[i]` / `ends[i]`
+    /// hold the index range in `self` of the original character it came from.
+    /// Because normalization only ever drops a character or replaces it with a
+    /// single one (never expands), this lets callers locate a match in the
+    /// normalized text and translate the range back onto the *original*
+    /// (vowelled) text — so search results can be displayed with their tashkeel
+    /// while still highlighting exactly what matched.
+    func arabicSearchNormalizedWithMapping() -> (normalized: String, starts: [String.Index], ends: [String.Index]) {
+        var normalized = ""
+        var starts: [String.Index] = []
+        var ends: [String.Index] = []
+        var index = startIndex
+        while index < endIndex {
+            let next = self.index(after: index)
+            // A grapheme cluster has a single base letter, so its normalized
+            // form is at most one character; the loop is defensive regardless.
+            for character in String(self[index]).arabicSearchNormalized {
+                normalized.append(character)
+                starts.append(index)
+                ends.append(next)
+            }
+            index = next
+        }
+        return (normalized, starts, ends)
+    }
+
+    /// Finds `query` inside the receiver using Arabic-insensitive matching
+    /// (ignoring tashkeel and alef/hamza variants) and returns context windows
+    /// taken from the *original* text, plus the exact original substrings that
+    /// matched so they can be highlighted with their vowels intact.
+    ///
+    /// Returns `nil` when the query is empty or no match is found.
+    func extractArabicHighlightContexts(
+        query: String,
+        contextWords: Int = 10
+    ) -> (snippet: String, matches: [String])? {
+        let mapping = arabicSearchNormalizedWithMapping()
+        let normalizedSelf = mapping.normalized
+        let normalizedQuery = query.arabicSearchNormalized
+        guard normalizedQuery.isEmpty == false else { return nil }
+
+        let contexts = normalizedSelf.extractContext(normalizedQuery, contextWords: contextWords)
+        guard contexts.isEmpty == false else { return nil }
+
+        func originalLowerBound(_ index: String.Index) -> String.Index {
+            let offset = normalizedSelf.distance(from: normalizedSelf.startIndex, to: index)
+            return offset < mapping.starts.count ? mapping.starts[offset] : endIndex
+        }
+        func originalUpperBound(_ index: String.Index) -> String.Index {
+            let offset = normalizedSelf.distance(from: normalizedSelf.startIndex, to: index)
+            guard offset > 0 else { return startIndex }
+            return offset - 1 < mapping.ends.count ? mapping.ends[offset - 1] : endIndex
+        }
+
+        var snippets: [String] = []
+        var matches: [String] = []
+        for context in contexts {
+            let lower = originalLowerBound(context.contextRange.lowerBound)
+            let upper = originalUpperBound(context.contextRange.upperBound)
+            guard lower < upper else { continue }
+
+            var snippet = String(self[lower..<upper]).replacingOccurrences(of: "\n", with: " ")
+            if lower != startIndex { snippet = "... " + snippet }
+            if upper != endIndex { snippet += " ..." }
+            snippets.append(snippet)
+
+            let matchLower = originalLowerBound(context.resultRange.lowerBound)
+            let matchUpper = originalUpperBound(context.resultRange.upperBound)
+            if matchLower < matchUpper {
+                matches.append(String(self[matchLower..<matchUpper]))
+            }
+        }
+
+        guard let snippet = snippets.joined(separator: "\n\n").textOrNil else { return nil }
+        // Preserve order while removing duplicate match spans.
+        var seen = Set<String>()
+        let uniqueMatches = matches.filter { seen.insert($0).inserted }
+        return (snippet, uniqueMatches)
+    }
+
     /// Normalizes the string for use in URLs or file paths.
     /// - Returns: A normalized string with special characters removed/replaced, spaces converted to hyphens, and lowercase.
     func normalizeForPath() -> String {

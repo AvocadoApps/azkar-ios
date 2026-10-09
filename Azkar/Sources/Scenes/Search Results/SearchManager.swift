@@ -32,9 +32,16 @@ final class SearchManager {
         // Cancel the previous task if it's still running
         searchTask?.cancel()
 
+        SearchLog.log("SearchManager[\(category.rawValue)].performSearch query=\(query.debugDescription) languages=\(languages.map(\.id))")
+
         // Start a new search task
         searchTask = Task {
             let results = await executeSearch(query: query)
+            if Task.isCancelled {
+                SearchLog.log("SearchManager[\(category.rawValue)] task cancelled before publishing (query=\(query.debugDescription))")
+                return
+            }
+            SearchLog.log("SearchManager[\(category.rawValue)] publishing section with \(results.count) result(s) for query=\(query.debugDescription)")
             searchResultSectionsPublisher.send(SearchResultsSection(
                 title: category.title,
                 image: category.systemImageName,
@@ -56,7 +63,7 @@ final class SearchManager {
                 languages: languages
             )
         } catch {
-            print(error.localizedDescription)
+            SearchLog.log("SearchManager[\(category.rawValue)].executeSearch ERROR: \(error)")
             return []
         }
     }

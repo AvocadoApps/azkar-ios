@@ -12,6 +12,10 @@ struct SearchResultZikr: Identifiable, Hashable {
     var caption2: String?
     var footnote: String?
     let highlightText: String
+    /// Exact (vowelled) substrings to underline in the Arabic `text` field.
+    /// When non-empty these take precedence over `highlightText`, which can't
+    /// match the original text once vowels/alef-variants differ from the query.
+    var textHighlights: [String] = []
     let zikrId: Zikr.ID
     let language: Language
 }
@@ -31,7 +35,10 @@ extension SearchResultZikr {
     init(zikr: Zikr, query: String) {
         var title: String?
         let titleMatches = SearchResultZikr.extractContextFrom(zikr.title, query: query)
-        let textMatches = SearchResultZikr.extractContextFrom(zikr.text.trimmingArabicVowels, query: query.trimmingArabicVowels)
+        // Match against the normalized (vowel/alef-insensitive) text but display
+        // the original text with its tashkeel, highlighting the matched spans.
+        let arabicTextMatch = zikr.text.extractArabicHighlightContexts(query: query)
+        let textMatches = arabicTextMatch?.snippet
         let translationMatches = SearchResultZikr.extractContextFrom(zikr.translation, query: query)
         let sourceMatches = SearchResultZikr.extractContextFrom(zikr.source, query: query)
         let benefitsMatches = SearchResultZikr.extractContextFrom(zikr.benefits, query: query)
@@ -53,6 +60,7 @@ extension SearchResultZikr {
             caption2: benefitsMatches,
             footnote: notesMatches,
             highlightText: query,
+            textHighlights: arabicTextMatch?.matches ?? [],
             zikrId: zikr.id,
             language: zikr.language
         )
@@ -82,7 +90,6 @@ final class SearchResultsViewModel: ObservableObject {
     
     init(
         azkarDatabase: AzkarDatabase,
-        preferencesDatabase: PreferencesDatabase,
         searchTokens: AnyPublisher<[SearchToken], Never>,
         searchQuery: AnyPublisher<String, Never>,
         analytics: AppAnalyticsTracking
@@ -90,20 +97,17 @@ final class SearchResultsViewModel: ObservableObject {
         self.azkarDatabase = azkarDatabase
         self.analytics = analytics
         searchTokens.assign(to: &$selectedTokens)
-        searchQuery.map { _ in [] }.assign(to: &$searchResults)
         configureSearch(
             query: searchQuery.eraseToAnyPublisher(),
             tokens: searchTokens,
-            azkarDatabase: azkarDatabase,
-            preferencesDatabase: preferencesDatabase
+            azkarDatabase: azkarDatabase
         )
     }
-    
+
     private func configureSearch(
         query: AnyPublisher<String, Never>,
         tokens: AnyPublisher<[SearchToken], Never>,
-        azkarDatabase: AzkarDatabase,
-        preferencesDatabase: PreferencesDatabase
+        azkarDatabase: AzkarDatabase
     ) {
         let searchManagers = ZikrCategory.allCases.map { category in
             return SearchManager(
@@ -112,20 +116,22 @@ final class SearchResultsViewModel: ObservableObject {
                 azkarDatabase: azkarDatabase
             )
         }
-        
-        let searchResults = query
+
+        let computedResults = query
             .combineLatest(tokens)
             .debounce(
-                for: .seconds(1),
+                for: .seconds(0.3),
                 scheduler: DispatchQueue.main
             )
             .receive(on: DispatchQueue.global(qos: .userInitiated))
             .flatMap(maxPublishers: .max(1)) { query, tokens -> AnyPublisher<[SearchResultsSection], Never> in
                 guard let query = query.textOrNil, query.count >= 3 else {
+                    SearchLog.log("ViewModel: query too short or empty (query=\(query.debugDescription)) — clearing results")
                     return Just([]).eraseToAnyPublisher()
                 }
-                
+
                 let searchTokens = tokens.isEmpty ? SearchToken.allCases : tokens
+                SearchLog.log("ViewModel: dispatching search query=\(query.debugDescription) activeTokens=\(searchTokens.map(\.rawValue))")
                 searchManagers.forEach { manager in
                     if searchTokens.contains(where: { $0 == manager.category }) {
                         manager.performSearch(query: query)
@@ -135,24 +141,25 @@ final class SearchResultsViewModel: ObservableObject {
                     .eraseToAnyPublisher()
             }
             .map { sections in
-                sections.filter { $0.results.isEmpty == false }
+                let nonEmpty = sections.filter { $0.results.isEmpty == false }
+                SearchLog.log("ViewModel: aggregated \(sections.count) section(s), \(nonEmpty.count) non-empty — \(nonEmpty.map { "\($0.title ?? "?"):\($0.results.count)" })")
+                return nonEmpty
             }
             .receive(on: DispatchQueue.main)
             .share()
             .eraseToAnyPublisher()
-        
-        searchResults.combineLatest(query)
-            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
-            .sink(receiveValue: { results, query in
-                if query.count >= 3, results.contains(where: { !$0.results.isEmpty }) {
-                    Task {
-                        await preferencesDatabase.storeSearchQuery(query)
-                    }
-                }
 
-                guard query.count >= 3 else {
-                    return
-                }
+        // Clear results immediately when the query changes, then replace with
+        // real results once the search pipeline emits.
+        Publishers.Merge(
+            query.map { _ -> [SearchResultsSection] in [] },
+            computedResults
+        )
+        .assign(to: &$searchResults)
+
+        computedResults.combineLatest(query)
+            .sink(receiveValue: { [weak self] results, query in
+                guard let self, query.count >= 3 else { return }
 
                 let resultCount = results.reduce(0) { $0 + $1.results.count }
                 self.analytics.search.performed(
@@ -163,12 +170,10 @@ final class SearchResultsViewModel: ObservableObject {
                 )
             })
             .store(in: &cancellables)
-        
-        searchResults.assign(to: &$searchResults)
-        
+
         Publishers.Merge(
-            query.map { _ in true },
-            searchResults.map { _ in false }
+            query.map { $0.count >= 3 },
+            computedResults.map { _ in false }
         )
         .assign(to: &$isPerformingSearch)
     }
@@ -179,7 +184,6 @@ extension SearchResultsViewModel {
     static var placeholder: SearchResultsViewModel {
         let vm = SearchResultsViewModel(
             azkarDatabase: .init(language: Language.english),
-            preferencesDatabase: MockPreferencesDatabase(),
             searchTokens: Empty().eraseToAnyPublisher(),
             searchQuery: Empty().eraseToAnyPublisher(),
             analytics: NoopAppAnalytics()

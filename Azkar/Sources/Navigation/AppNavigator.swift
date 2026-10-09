@@ -78,6 +78,14 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
 
     func showSearchResult(_ result: SearchResultZikr, query: String) {
         selectedZikrPageIndex.send(0)
+        // Arabic matches are found against the original Arabic text, but the zikr
+        // page should always open in the user's content language so their
+        // translation is shown. Other languages already reflect a translation
+        // the user reads, so keep them as-is.
+        let openLanguage = result.language == .arabic
+            ? dependencies.preferences.contentLanguage
+            : result.language
+        SearchLog.log("Navigation: opening search result zikrId=\(result.zikrId) matchedLanguage=\(result.language.id) openLanguage=\(openLanguage.id) query=\(query.debugDescription)")
         analytics.search.openedResult(
             id: result.zikrId,
             language: result.language,
@@ -88,10 +96,10 @@ final class AppNavigator: ObservableObject, AppNavigationRouting {
             language: result.language,
             source: .search
         )
-        storeOpenedZikr(result.zikrId, language: result.language)
+        storeOpenedZikr(result.zikrId, language: openLanguage)
         stack.append(.standaloneZikr(.init(
             zikrId: result.zikrId,
-            language: result.language,
+            language: openLanguage,
             highlightPattern: query,
             isNested: false
         )))

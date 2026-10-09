@@ -78,6 +78,13 @@ final class SearchSuggestionsViewModel: ObservableObject {
         }
     }
     
+    func removeRecentQuery(_ query: String) {
+        suggestedQueries.removeAll { $0 == query }
+        Task {
+            await preferencesDatabase.deleteSearchQuery(query)
+        }
+    }
+
     func clearRecentQueries() {
         suggestedQueries = []
         Task {

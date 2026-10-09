@@ -7,6 +7,7 @@ import Library
 import Entities
 import AzkarResources
 import Extensions
+import Nuke
 
 enum ShareBackgroundTypes: Hashable, Identifiable, CaseIterable {
     static var allCases: [ShareBackgroundTypes] {
@@ -149,6 +150,8 @@ struct ZikrShareOptionsView: View {
 
     @State var processingQuickShareAction: ShareOptions.ShareActionType?
 
+    @State var isPreparingBackground = false
+
     @State var selectedBackgroundType: ShareBackgroundTypes = .any
 
     @AppStorage("kShareSelectedDynamicTypeSizeIndex")
@@ -264,20 +267,49 @@ struct ZikrShareOptionsView: View {
                     print(error)
                 }
             }
+            .task(id: selectedBackground) {
+                await prepareSelectedBackground(selectedBackground)
+            }
+    }
+
+    /// Ensures the selected remote background is fully downloaded into the pipeline
+    /// the renderer reads from, so it isn't dropped from the exported image.
+    /// While the download is in flight the save/share buttons are disabled.
+    @MainActor
+    private func prepareSelectedBackground(_ background: ZikrShareBackgroundItem) async {
+        guard case .remoteImage(let item) = background.background else {
+            isPreparingBackground = false
+            return
+        }
+        let request = ImageRequest(url: item.url)
+        if ImagePipeline.shared.cache.containsCachedImage(for: request) {
+            isPreparingBackground = false
+            return
+        }
+        isPreparingBackground = true
+        _ = try? await ImagePipeline.shared.image(for: request)
+        if selectedBackground == background {
+            isPreparingBackground = false
+        }
     }
     
     var toolbarButtons: some View {
-        HStack(spacing: 16) {
+        let actionsDisabled = isPreparingBackground && selectedShareType == .image
+        return HStack(spacing: 16) {
             Button(action: {
                 Task {
                     await performAction(actionType: selectedShareType == .image ? .saveImage : .copyText)
                 }
             }, label: {
-                Image(systemName: selectedShareType == .image ? "square.and.arrow.down" : "doc.on.doc")
+                if isPreparingBackground && selectedShareType == .image {
+                    ProgressView()
+                } else {
+                    Image(systemName: selectedShareType == .image ? "square.and.arrow.down" : "doc.on.doc")
+                }
             })
-            .disabled(processingQuickShareAction != nil)
-            .opacity(processingQuickShareAction != nil ? 0.5 : 1)
-            
+            .disabled(processingQuickShareAction != nil || actionsDisabled)
+            .opacity(processingQuickShareAction != nil || actionsDisabled ? 0.5 : 1)
+
             Button(action: {
                 Task {
                     share(actionType: .sheet)
@@ -285,6 +317,8 @@ struct ZikrShareOptionsView: View {
             }, label: {
                 Text("common.share")
             })
+            .disabled(actionsDisabled)
+            .opacity(actionsDisabled ? 0.5 : 1)
         }
     }
 

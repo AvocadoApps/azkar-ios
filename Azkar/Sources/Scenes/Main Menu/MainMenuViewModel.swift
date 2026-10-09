@@ -24,7 +24,6 @@ final class MainMenuViewModel: ObservableObject {
     
     private(set) lazy var searchViewModel = SearchResultsViewModel(
         azkarDatabase: azkarDatabase,
-        preferencesDatabase: preferencesDatabase,
         searchTokens: $searchTokens.eraseToAnyPublisher(),
         searchQuery: searchQueryPublisher.removeDuplicates().eraseToAnyPublisher(),
         analytics: analytics
@@ -173,8 +172,17 @@ final class MainMenuViewModel: ObservableObject {
         
         $searchQuery
             .removeDuplicates()
-            .subscribe(on: DispatchQueue.global(qos: .userInteractive))
+            .handleEvents(receiveOutput: { query in
+                SearchLog.log("Input: searchQuery changed -> \(query.debugDescription) (chars=\(query.count))")
+            })
             .subscribe(searchQueryPublisher)
+            .store(in: &cancellables)
+
+        $searchTokens
+            .removeDuplicates()
+            .sink { tokens in
+                SearchLog.log("Selection: searchTokens changed -> \(tokens.map(\.rawValue))")
+            }
             .store(in: &cancellables)
         
         Task {
@@ -214,15 +222,28 @@ final class MainMenuViewModel: ObservableObject {
     }
 
     func selectSearchSuggestion(_ query: String) {
+        SearchLog.log("Selection: search suggestion tapped query=\(query.debugDescription)")
         analytics.search.selectedSuggestion(
             queryLength: query.count,
             source: .recentQuery
         )
-        searchQuery = query
+        // Defer to the next runloop so UIKit's search controller picks up the
+        // programmatic text change. Assigning synchronously during the tap
+        // handler is dropped on the floor by `.searchable`.
+        DispatchQueue.main.async { [weak self] in
+            self?.searchQuery = query
+        }
     }
     
     func navigateToSearchResult(_ searchResult: SearchResultZikr) {
-        navigator.showSearchResult(searchResult, query: searchQuery)
+        SearchLog.log("Selection: search result tapped zikrId=\(searchResult.zikrId) language=\(searchResult.language.id) query=\(searchQuery.debugDescription)")
+        let query = searchQuery
+        if query.count >= 3 {
+            Task {
+                await preferencesDatabase.storeSearchQuery(query)
+            }
+        }
+        navigator.showSearchResult(searchResult, query: query)
     }
 
     func navigateToZikr(_ zikr: Zikr) {

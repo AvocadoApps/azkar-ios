@@ -262,23 +262,33 @@ public extension AdhkarSQLiteDatabaseService {
         category: ZikrCategory,
         languages: [Language]
     ) async throws -> [Zikr] {
-        return try await getDatabaseQueue().read { db in
-            try self.getSearchResults(
-                for: query,
-                resultsLimit: resultsLimit,
-                category: category,
-                languages: languages,
-                from: db
-            )
+        SearchLog.log("DB.searchAdhkar called: query=\(query.debugDescription) category=\(category.rawValue) currentLanguage=\(language.id) languages=\(languages.map(\.id)) limit=\(resultsLimit)")
+        do {
+            let results = try await getDatabaseQueue().read { db in
+                try self.getSearchResults(
+                    for: query,
+                    resultsLimit: resultsLimit,
+                    category: category,
+                    languages: languages,
+                    from: db
+                )
+            }
+            SearchLog.log("DB.searchAdhkar returned \(results.count) zikr(s) for category=\(category.rawValue): ids=\(results.map(\.id))")
+            return results
+        } catch {
+            SearchLog.log("DB.searchAdhkar ERROR for category=\(category.rawValue): \(error)")
+            throw error
         }
     }
-    
+
     private func normalizeSearchQuery(_ query: String) -> String {
-        query
-            .trimmingArabicVowels
+        let normalized = query
+            .arabicSearchNormalized
             .replacingOccurrences(of: "Ё|ё|Е|е", with: "*", options: .regularExpression)
             .trimmingCharacters(in: .whitespacesAndNewlines)
         + "*"
+        SearchLog.log("DB.normalizeSearchQuery: raw=\(query.debugDescription) -> normalized=\(normalized.debugDescription) (scalars=\(normalized.unicodeScalars.map { String(format: "U+%04X", $0.value) }))")
+        return normalized
     }
 
     private func getSearchResults(
@@ -290,33 +300,43 @@ public extension AdhkarSQLiteDatabaseService {
     ) throws -> [Zikr] {
         let normalizedQuery = normalizeSearchQuery(query)
         var azkar: [Zikr] = []
-        
+
         let currentLanguage = self.language
-                
+        SearchLog.log("getSearchResults: category=\(category.rawValue) currentLanguage=\(currentLanguage.id) iterating languages=\(languages.map(\.id))")
+
         for language in languages {
-            
+
             var tableName = language.databaseTableName
             if language == .arabic, currentLanguage != .arabic {
                 tableName = currentLanguage.databaseTableName
             }
-            
-            let translations = try ZikrTranslation.fetchAll(
-                db,
-                sql: """
-                SELECT \(tableName).*
-                FROM \(tableName)
-                JOIN "azkar+azkar_group" ON \(tableName).id = "azkar+azkar_group"."azkar_id"
-                WHERE "azkar+azkar_group"."group" = ?
-                AND \(tableName).id IN (
-                    SELECT rowid FROM azkar_search
-                    WHERE text_\(language.id) MATCH ?
+            let ftsColumn = "text_\(language.id)"
+
+            let translations: [ZikrTranslation]
+            do {
+                translations = try ZikrTranslation.fetchAll(
+                    db,
+                    sql: """
+                    SELECT \(tableName).*
+                    FROM azkar_search
+                    JOIN \(tableName) ON \(tableName).id = azkar_search.rowid
+                    JOIN "azkar+azkar_group" ON "azkar+azkar_group"."azkar_id" = azkar_search.rowid
+                    WHERE "azkar+azkar_group"."group" = ?
+                    AND azkar_search.\(ftsColumn) MATCH ?
                     ORDER BY rank
                     LIMIT ?
+                    """,
+                    arguments: [category.rawValue, normalizedQuery, resultsLimit]
                 )
-                """,
-                arguments: [category.rawValue, normalizedQuery, resultsLimit]
-            )
-            
+                SearchLog.log("  language=\(language.id): MATCH \(ftsColumn) on table=\(tableName) -> \(translations.count) row(s), ids=\(translations.map(\.id))")
+            } catch {
+                // The azkar_search FTS table may not have a column for this language
+                // (e.g. tatar has a translations table but no FTS column). Skip it
+                // instead of failing the whole search.
+                SearchLog.log("  language=\(language.id): SKIPPED (column=\(ftsColumn) table=\(tableName)) error=\(error)")
+                continue
+            }
+
             for translation in translations {
                 let zikrId = translation.id
                 guard let origin = try ZikrOrigin.fetchOne(
@@ -345,10 +365,11 @@ public extension AdhkarSQLiteDatabaseService {
                 azkar.append(zikr)
             }
         }
-        
+
+        SearchLog.log("getSearchResults: category=\(category.rawValue) total=\(azkar.count) ids=\(azkar.map(\.id))")
         return azkar
     }
-    
+
     func getAdhkarCount(_ category: ZikrCategory) throws -> Int {
         return try getDatabaseQueue().read { db in
             guard let row = try Row

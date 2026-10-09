@@ -109,6 +109,7 @@ struct ZikrShareView: View {
                             }
                         }
                     }
+                    .pipeline(.shared)
                 }
             }
         }

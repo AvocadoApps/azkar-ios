@@ -1,1 +1,1 @@
-Sayaç performansı düzeltildi.
+Sabah, akşam ve Cuma zikirleri için her biri kendi saatine ve bildirim sesine sahip ayrı hatırlatıcılar ayarlayın. Hatırlatma bildirimleri artık dönüşümlü olarak Kur'an ve hadis alıntıları da gösterebilir.

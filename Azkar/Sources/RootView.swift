@@ -51,6 +51,7 @@ struct RootView: View {
             placement: .navigationBarDrawer(displayMode: .always)
         )
         .autocorrectionDisabled(true)
+        .textInputAutocapitalization(.never)
         .attachSafariPresenter()
     }
     
