@@ -13,6 +13,18 @@ final class NotificationsScheduler {
 
     static let backgroundRefreshTaskIdentifier = "io.jawziyya.azkar-app.reminders.refresh"
 
+    private var timeZoneObserver: NSObjectProtocol?
+
+    init() {
+        timeZoneObserver = NotificationCenter.default.addObserver(
+            forName: .NSSystemTimeZoneDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.rescheduleAll()
+        }
+    }
+
     private var database: AzkarDatabase {
         AzkarDatabase(language: preferences.contentLanguage)
     }
@@ -27,6 +39,7 @@ final class NotificationsScheduler {
     }
 
     func rescheduleAll() {
+        keepReminderTimesInCurrentTimeZone()
         notificationsHandler.removeScheduledNotifications()
 
         var reminders: [(id: String, category: NotificationCategory, fireTime: Date, quoteCategory: NotificationQuoteCategory, selection: ReminderTitleSelection, sound: ReminderSound, isDaily: Bool)] = []
@@ -89,6 +102,46 @@ final class NotificationsScheduler {
             // Nothing left to rotate: drop a refresh request submitted earlier.
             cancelBackgroundRefresh()
         }
+    }
+
+    /// Reminder times are stored as instants and read back in the current time zone.
+    /// When the time zone changes (e.g. while traveling), move the stored times so
+    /// each reminder keeps its wall-clock time instead of shifting by the offset.
+    private func keepReminderTimesInCurrentTimeZone() {
+        let currentZone = TimeZone.current
+        let recordedIdentifier = preferences.reminderTimesTimeZone
+        guard recordedIdentifier != currentZone.identifier else { return }
+        defer { preferences.reminderTimesTimeZone = currentZone.identifier }
+
+        // With no recorded zone, the times were picked in the current one.
+        guard let previousZone = recordedIdentifier.flatMap(TimeZone.init(identifier:)) else {
+            return
+        }
+
+        let times: [(key: String, keyPath: ReferenceWritableKeyPath<Preferences, Date>)] = [
+            (Keys.morningNotificationsTime, \.morningNotificationTime),
+            (Keys.eveningNotificationsTime, \.eveningNotificationTime),
+            (Keys.jumuaReminderTime, \.jumuaReminderTime)
+        ]
+        // Times that were never set fall back to defaults built in the current zone.
+        for time in times where UserDefaults.standard.object(forKey: time.key) != nil {
+            let storedTime = preferences[keyPath: time.keyPath]
+            preferences[keyPath: time.keyPath] = rebased(storedTime, from: previousZone, to: currentZone)
+        }
+    }
+
+    private func rebased(_ date: Date, from previousZone: TimeZone, to currentZone: TimeZone) -> Date {
+        var previousCalendar = Calendar.current
+        previousCalendar.timeZone = previousZone
+        var currentCalendar = Calendar.current
+        currentCalendar.timeZone = currentZone
+        let time = previousCalendar.dateComponents([.hour, .minute], from: date)
+        return currentCalendar.date(
+            bySettingHour: time.hour ?? 0,
+            minute: time.minute ?? 0,
+            second: 0,
+            of: date
+        ) ?? date
     }
 
     /// Default titles are localized by the system when the notification is

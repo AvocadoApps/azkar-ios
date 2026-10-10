@@ -46,7 +46,8 @@ enum Keys {
     static let morningNotificationsTime = "kMorningNotificationsTime"
     static let eveningNotificationsTime = "kEveningNotificationsTime"
     static let jumuaReminderTime = "kJumuaReminderTime"
-    
+    static let reminderTimesTimeZone = "kReminderTimesTimeZone"
+
     static let preferredAdhkarReminderSound = "kAdhkarReminderSound"
     static let preferredMorningReminderSound = "kMorningReminderSound"
     static let preferredEveningReminderSound = "kEveningReminderSound"

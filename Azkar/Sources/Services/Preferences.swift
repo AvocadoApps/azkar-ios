@@ -177,6 +177,10 @@ final class Preferences: ObservableObject, TextProcessingPreferences {
     @Preference(Keys.eveningNotificationsTime, defaultValue: defaultEveningNotificationTime)
     var eveningNotificationTime: Date
 
+    /// Identifier of the time zone the stored reminder times are expressed in.
+    @Preference(Keys.reminderTimesTimeZone, defaultValue: nil)
+    var reminderTimesTimeZone: String?
+
     @Preference(Keys.appIcon, defaultValue: AppIcon.gold)
     var appIcon: AppIcon
 
