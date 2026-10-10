@@ -104,7 +104,8 @@ private extension ZikrShareActionHandler {
             selectedBackground: options.selectedBackground,
             enableLineBreaks: options.enableLineBreaks,
             arabicFont: options.arabicFont,
-            translationFont: options.translationFont
+            translationFont: options.translationFont,
+            interfaceStyle: rootViewController.traitCollection.userInterfaceStyle
         ))
 
         if options.actionType == .saveImage {

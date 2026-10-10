@@ -20,6 +20,9 @@ final class ZikrShareImageRenderer {
         let enableLineBreaks: Bool
         let arabicFont: ArabicFont
         let translationFont: TranslationFont
+        /// Appearance the share preview is shown in. A dynamic background color
+        /// (the default one) is judged light or dark the way the preview shows it.
+        let interfaceStyle: UIUserInterfaceStyle
     }
 
     struct Style {
@@ -28,6 +31,9 @@ final class ZikrShareImageRenderer {
         let cardLabelWidth: CGFloat
         let cornerRadius: CGFloat
         let isDark: Bool
+        /// Every color in the image is resolved with these traits, so text, card
+        /// and background never mix light and dark variants.
+        let traits: UITraitCollection
         let textColor: UIColor
         let separatorColor: UIColor
         let cardBgColor: UIColor
@@ -53,7 +59,7 @@ private extension ZikrShareImageRenderer {
     func resolveStyle(_ opts: Options) -> Style {
         let imageWidth = min(440, UIScreen.main.bounds.width)
         let contentWidth = imageWidth - outerHPadding * 2
-        let isDark = detectIsDark(opts.selectedBackground)
+        let isDark = detectIsDark(opts.selectedBackground, interfaceStyle: opts.interfaceStyle)
         let traits = UITraitCollection(userInterfaceStyle: isDark ? .dark : .light)
 
         return Style(
@@ -62,6 +68,7 @@ private extension ZikrShareImageRenderer {
             cardLabelWidth: contentWidth - labelPadding * 2,
             cornerRadius: AppTheme.current.cornerRadius,
             isDark: isDark,
+            traits: traits,
             textColor: UIColor.label.resolvedColor(with: traits),
             separatorColor: UIColor.separator.resolvedColor(with: traits),
             cardBgColor: resolveCardBackground(opts.selectedBackground, traits: traits)
@@ -190,7 +197,7 @@ private extension ZikrShareImageRenderer {
         let container = UIView(frame: CGRect(x: 0, y: 0, width: style.imageWidth, height: imageHeight))
         container.clipsToBounds = true
 
-        let bgView = makeBackgroundView(opts.selectedBackground, frame: container.bounds)
+        let bgView = makeBackgroundView(opts.selectedBackground, frame: container.bounds, traits: style.traits)
         container.addSubview(bgView)
         if let titleView { container.addSubview(titleView) }
         container.addSubview(cardView)
@@ -305,11 +312,11 @@ private extension ZikrShareImageRenderer {
         return container
     }
 
-    func makeBackgroundView(_ background: ZikrShareBackgroundItem, frame: CGRect) -> UIView {
+    func makeBackgroundView(_ background: ZikrShareBackgroundItem, frame: CGRect, traits: UITraitCollection) -> UIView {
         switch background.background {
         case .solidColor(let color):
             let view = UIView(frame: frame)
-            view.backgroundColor = color
+            view.backgroundColor = color.resolvedColor(with: traits)
             return view
         case .localImage(let image):
             return makeImageBackgroundView(image, frame: frame)
@@ -319,7 +326,7 @@ private extension ZikrShareImageRenderer {
                 return makeImageBackgroundView(cached.image, frame: frame)
             }
             let view = UIView(frame: frame)
-            view.backgroundColor = .systemBackground
+            view.backgroundColor = UIColor.systemBackground.resolvedColor(with: traits)
             return view
         }
     }
@@ -367,14 +374,17 @@ private extension ZikrShareImageRenderer {
             return UIColor.systemBackground.resolvedColor(with: traits).withAlphaComponent(0.8)
         }
         let ns = ColorTheme.current.assetsNamespace
-        return UIColor(named: ns + "contentBackground", in: azkarResourcesBundle, compatibleWith: traits)
-            ?? UIColor.secondarySystemBackground.resolvedColor(with: traits)
+        // Catalog colors stay dynamic whatever traits they are loaded with. Unresolved,
+        // the card took the device's dark variant under text picked for a light background.
+        let color = UIColor(named: ns + "contentBackground", in: azkarResourcesBundle, compatibleWith: traits)
+            ?? UIColor.secondarySystemBackground
+        return color.resolvedColor(with: traits)
     }
 
-    func detectIsDark(_ background: ZikrShareBackgroundItem) -> Bool {
+    func detectIsDark(_ background: ZikrShareBackgroundItem, interfaceStyle: UIUserInterfaceStyle) -> Bool {
         switch background.background {
         case .solidColor(let color):
-            return isDarkColor(color)
+            return isDarkColor(color.resolvedColor(with: UITraitCollection(userInterfaceStyle: interfaceStyle)))
         case .localImage(let image):
             return image.dominantColor().map(isDarkColor) ?? false
         case .remoteImage(let item):

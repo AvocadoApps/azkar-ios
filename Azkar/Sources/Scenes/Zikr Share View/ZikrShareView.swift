@@ -77,7 +77,12 @@ struct ZikrShareView: View {
     }
     
     var customColorScheme: ColorScheme {
-        dynamicColorScheme ?? colorScheme
+        // Solid colors pick light or dark content by brightness, like the exported image.
+        if case .solidColor(let color) = selectedBackground.background {
+            let traits = UITraitCollection(userInterfaceStyle: colorScheme == .dark ? .dark : .light)
+            return isDarkColor(color.resolvedColor(with: traits)) ? .dark : .light
+        }
+        return dynamicColorScheme ?? colorScheme
     }
     
     var backgroundForContent: some View {
@@ -269,7 +274,7 @@ struct ZikrShareView: View {
                 }
             }
             .cornerRadius(appTheme.cornerRadius)
-            .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
+            .shadow(color: customColorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 5, x: 0, y: 1)
         }
     }
 
