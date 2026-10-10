@@ -22,8 +22,15 @@ struct AzkarApp: App {
     @Injected(\.deeplinker) private var deepLinker: Deeplinker
     @Injected(\.quickActionDispatcher) private var quickActionDispatcher: QuickActionDispatcher
     @Injected(\.subscriptionManager) private var subscriptionManager: SubscriptionManagerType
-    @Injected(\.localAnalytics) private var localAnalytics: AppAnalyticsTracking
     @Injected(\.notificationsScheduler) private var notificationsScheduler: NotificationsScheduler
+
+    /// Resolved on first use instead of in `init`: SwiftUI can run `App.init` while the
+    /// system prewarms the process, and the analytics store opens a database in the
+    /// shared App Group container. A process suspended mid-access there is killed
+    /// with 0xdead10cc.
+    private var localAnalytics: AppAnalyticsTracking {
+        Container.shared.localAnalytics()
+    }
 
     init() {
         setNavigationBarFont(theme: preferences.appTheme, colorTheme: preferences.colorTheme)
