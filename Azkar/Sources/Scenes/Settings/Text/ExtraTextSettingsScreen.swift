@@ -2,7 +2,6 @@
 // All Rights Reserved.
 
 import SwiftUI
-import Popovers
 import Entities
 import Library
 
@@ -42,7 +41,7 @@ struct ExtraTextSettingsScreen: View {
                 HStack {
                     Text("settings.breaks.title")
                         .systemFont(.body)
-                    infoButton("settings.breaks.info")
+                    InfoTipButton("settings.breaks.info")
                 }
                 Spacer()
                 Toggle("", isOn: $viewModel.preferences.enableLineBreaks)
@@ -57,7 +56,7 @@ struct ExtraTextSettingsScreen: View {
                 HStack {
                     Text("settings.text.use-system-font-size")
                         .systemFont(.body)
-                    infoButton("settings.text.use_system_font_size_tip")
+                    InfoTipButton("settings.text.use_system_font_size_tip")
                 }
                 Spacer()
                 Toggle("", isOn: $viewModel.preferences.useSystemFontSize)
@@ -99,18 +98,6 @@ struct ExtraTextSettingsScreen: View {
         .padding(.vertical, 8)
     }
 
-    private func infoButton(_ text: LocalizedStringKey) -> some View {
-        Templates.Menu {
-            Text(text)
-                .padding()
-                .cornerRadius(10)
-        } label: { _ in
-            Image(systemName: "info.circle")
-                .foregroundStyle(.accent, opacity: 0.75)
-        }
-        .accessibilityLabel(Text("accessibility.common.more-info"))
-    }
-    
     var lineSpacingView: some View {
         NavigationLink {
             List {

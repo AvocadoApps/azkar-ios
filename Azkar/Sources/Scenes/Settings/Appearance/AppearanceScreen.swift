@@ -1,5 +1,4 @@
 import SwiftUI
-import Popovers
 import Library
 import Entities
 import AzkarResources
@@ -52,7 +51,7 @@ struct AppearanceScreen: View {
                     Text("settings.use_fun_features")
                         .systemFont(.body)
                         .foregroundStyle(.text)
-                    infoButton("settings.use_fun_features_tip")
+                    InfoTipButton("settings.use_fun_features_tip")
                 }
                 Spacer()
 
@@ -139,19 +138,7 @@ struct AppearanceScreen: View {
         .accessibilityLabel(Text(category.title))
         .accessibilityValue(isSelected ? String(localized: "accessibility.common.selected") : String(localized: "accessibility.common.not-selected"))
     }
-    
-    private func infoButton(_ text: LocalizedStringKey) -> some View {
-        Templates.Menu {
-            Text(text)
-                .padding()
-                .cornerRadius(10)
-        } label: { _ in
-            Image(systemName: "info.circle")
-                .foregroundStyle(.accent, opacity: 0.75)
-        }
-        .accessibilityLabel(Text("accessibility.common.more-info"))
-    }
-    
+
 }
 
 private struct FlowLayout<Content: View>: View {

@@ -1,5 +1,4 @@
 import SwiftUI
-import Popovers
 import Library
 
 struct CounterView: View {
@@ -74,7 +73,7 @@ struct CounterView: View {
                 HStack {
                     Text("settings.counter.go-to-next-dhikr")
 
-                    infoButton("settings.counter.go-to-next-dhikr-tip")
+                    InfoTipButton("settings.counter.go-to-next-dhikr-tip")
                 }
                 Spacer()
 
@@ -96,7 +95,7 @@ struct CounterView: View {
             Text("settings.counter.counter-type.title")
             Spacer()
 
-            infoButton("settings.counter.counter-type.info")
+            InfoTipButton("settings.counter.counter-type.info")
 
             Picker(
                 CounterType.allCases,
@@ -111,19 +110,6 @@ struct CounterView: View {
         .padding(.vertical, 3)
     }
 
-    private func infoButton(_ text: LocalizedStringKey) -> some View {
-        Templates.Menu {
-            Text(text)
-                .padding()
-                .cornerRadius(10)
-                .foregroundStyle(.text)
-        } label: { _ in
-            Image(systemName: "info.circle")
-                .foregroundStyle(.accent, opacity: 0.75)
-        }
-        .accessibilityLabel(Text("accessibility.common.more-info"))
-    }
-    
 }
 
 #Preview {
