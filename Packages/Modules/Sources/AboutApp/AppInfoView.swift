@@ -11,6 +11,7 @@ public struct AppInfoView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.appTheme) var appTheme
     @Environment(\.colorTheme) var colorTheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var iconAppeared = false
     @State private var iconBreathing = false
@@ -121,9 +122,12 @@ public struct AppInfoView: View {
                     appIconImage(image)
                         .scaleEffect(iconDragScale)
                         .scaleEffect(iconBreathing ? 1.03 : 1.0)
-                        .scaleEffect(iconAppeared ? 1 : 0.85)
+                        .scaleEffect(iconAppeared || reduceMotion ? 1 : 0.85)
                         .opacity(iconAppeared ? 1 : 0)
-                        .animation(.easeInOut(duration: 2.6).repeatForever(autoreverses: true), value: iconBreathing)
+                        .animation(
+                            iconBreathing ? Animation.easeInOut(duration: 2.6).repeatForever(autoreverses: true) : .default,
+                            value: iconBreathing
+                        )
                         .offset(iconDragOffset)
                         .contentShape(RoundedRectangle(cornerRadius: 23, style: .continuous))
                         .gesture(
@@ -142,7 +146,11 @@ public struct AppInfoView: View {
                             withAnimation(.spring(response: 0.6, dampingFraction: 0.68)) {
                                 iconAppeared = true
                             }
-                            iconBreathing = true
+                            // No endless breathing animation with Reduce Motion on.
+                            iconBreathing = !reduceMotion
+                        }
+                        .onChange(of: reduceMotion) { isReduced in
+                            iconBreathing = !isReduced
                         }
                 }
                 Spacer()

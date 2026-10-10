@@ -121,7 +121,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func initialize(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         FontsHelper.registerFonts()
 
-        notificationsHandler.removeDeliveredNotifications()
+        // Delivered notifications are cleared on the first user-visible activation
+        // (AzkarApp), not here: background launches must not remove unseen reminders.
 
         notificationsHandler
             .getNotificationsAuthorizationStatus(completion: { status in
@@ -253,9 +254,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func registerBackgroundRefreshTask() {
         #if !targetEnvironment(macCatalyst)
         if #available(iOS 13.0, *) {
+            // Run on the main queue like every other rescheduleAll() caller, so the
+            // background run can't interleave with a foreground reschedule.
             BGTaskScheduler.shared.register(
                 forTaskWithIdentifier: NotificationsScheduler.backgroundRefreshTaskIdentifier,
-                using: nil
+                using: .main
             ) { task in
                 task.expirationHandler = {
                     task.setTaskCompleted(success: false)

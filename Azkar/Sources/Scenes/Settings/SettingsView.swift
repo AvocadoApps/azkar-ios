@@ -53,8 +53,12 @@ struct SettingsView: View {
         
     var content: some View {
         Group {
-            premiumSection
-            Divider()
+            // The iPad app on Mac has every feature unlocked (see
+            // SubscriptionManager.isProUser), so there is no purchase to show.
+            if !UIDevice.current.isMac {
+                premiumSection
+                Divider()
+            }
             appearanceSection
             Divider()
             counterSection

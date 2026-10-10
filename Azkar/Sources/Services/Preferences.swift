@@ -75,6 +75,19 @@ extension NotificationCategory {
             return String(localized: "notifications.jumua.title")
         }
     }
+
+    /// Localization key of `defaultNotificationTitle`, for notification content
+    /// that the system localizes when the notification is delivered.
+    var defaultNotificationTitleKey: String {
+        switch self {
+        case .morning:
+            return "notifications.morning-notification-title"
+        case .evening:
+            return "notifications.evening-notification-title"
+        case .jumua:
+            return "notifications.jumua.title"
+        }
+    }
 }
 
 final class Preferences: ObservableObject, TextProcessingPreferences {

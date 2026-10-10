@@ -108,8 +108,11 @@ private struct FlowNavigationNode<Screen: Equatable>: View {
             get: { !stack.isEmpty },
             set: { isActive in
                 guard !isActive else { return }
+                // Deactivating this link pops every screen above this node. The
+                // user can pop several levels at once (back button menu), so
+                // truncate the stack to this node's depth.
                 if !stack.isEmpty, currentResetToken == nodeResetToken {
-                    stack.removeLast()
+                    stack.removeAll()
                 }
             }
         )

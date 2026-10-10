@@ -23,8 +23,13 @@ final class SettingsViewModel: ObservableObject {
     @Injected(\.notificationsScheduler) private var notificationsScheduler: NotificationsScheduler
 
     private let formatter: DateFormatter
-    @Published private(set) var isProUser = false
-    
+
+    /// Read live: purchases from any paywall and RevenueCat updates write the
+    /// stored flag, and the storage-changes subscription below re-renders the view.
+    var isProUser: Bool {
+        subscriptionManager.isProUser()
+    }
+
     var themeTitle: String {
         "\(preferences.theme.title), \(preferences.colorTheme.title)"
     }
@@ -40,8 +45,7 @@ final class SettingsViewModel: ObservableObject {
         formatter.timeStyle = .short
 
         self.formatter = formatter
-        self.isProUser = subscriptionManager.isProUser()
-        
+
         preferences
             .storageChangesPublisher()
             .receive(on: RunLoop.main)
@@ -73,21 +77,9 @@ final class SettingsViewModel: ObservableObject {
         navigator.show(.aboutApp)
     }
 
-    func refreshSubscriptionState() {
-        isProUser = subscriptionManager.isProUser()
-    }
-
     func navigateToSubscription() {
-        guard isProUser == false else {
-            refreshSubscriptionState()
-            return
-        }
-
-        navigator.presentSubscription(sourceScreen: SettingsView.viewName) { [weak self] in
-            Task { @MainActor in
-                self?.refreshSubscriptionState()
-            }
-        }
+        guard isProUser == false else { return }
+        navigator.presentSubscription(sourceScreen: SettingsView.viewName)
     }
 
     /// Observes some preferences to reschedule notifications if needed.
@@ -104,7 +96,9 @@ final class SettingsViewModel: ObservableObject {
                 preferences.$enableJumuaReminder.toVoid().dropFirst(),
                 preferences.$jumuaReminderTime.toVoid().dropFirst(),
                 preferences.$jumuahDuaReminderSound.toVoid().dropFirst(),
-                preferences.$jumuaReminderTitle.toVoid().dropFirst()
+                preferences.$jumuaReminderTitle.toVoid().dropFirst(),
+                // Quote and random reminder bodies are rendered in the content language.
+                preferences.$contentLanguage.toVoid().dropFirst()
             )
             .receive(on: DispatchQueue.main)
             .throttle(for: 2, scheduler: DispatchQueue.main, latest: true)

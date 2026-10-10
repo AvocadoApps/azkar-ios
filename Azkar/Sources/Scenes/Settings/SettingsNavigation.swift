@@ -42,20 +42,14 @@ struct SettingsSheet: Identifiable {
 @MainActor
 protocol SettingsNavigationRouting: AnyObject {
     func show(_ destination: SettingsDestination)
-    func presentSubscription(sourceScreen: String, completion: (() -> Void)?)
+    func presentSubscription(sourceScreen: String)
     func presentZikrCollectionsOnboarding()
-}
-
-extension SettingsNavigationRouting {
-    func presentSubscription(sourceScreen: String) {
-        presentSubscription(sourceScreen: sourceScreen, completion: nil)
-    }
 }
 
 @MainActor
 final class EmptySettingsNavigator: SettingsNavigationRouting {
     func show(_ destination: SettingsDestination) {}
-    func presentSubscription(sourceScreen: String, completion: (() -> Void)?) {}
+    func presentSubscription(sourceScreen: String) {}
     func presentZikrCollectionsOnboarding() {}
 }
 
@@ -80,10 +74,10 @@ final class SettingsNavigator: ObservableObject, SettingsNavigationRouting {
         stack.append(destination)
     }
 
-    func presentSubscription(sourceScreen: String, completion: (() -> Void)?) {
+    func presentSubscription(sourceScreen: String) {
         subscriptionManager.presentPaywall(
             presentationType: .screen(sourceScreen),
-            completion: completion
+            completion: nil
         )
     }
 

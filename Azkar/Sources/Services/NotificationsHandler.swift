@@ -98,9 +98,6 @@ final class NotificationsHandler: NSObject {
     private override init() {
         super.init()
         notificationCenter.delegate = self
-
-        // Clean up the notifications list.
-        notificationCenter.removeAllDeliveredNotifications()
     }
     
     private func readNotificationSettings() -> AnyPublisher<UNNotificationSettings, Never> {

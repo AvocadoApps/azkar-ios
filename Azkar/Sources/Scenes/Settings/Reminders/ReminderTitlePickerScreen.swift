@@ -323,6 +323,9 @@ struct ReminderTitlePickerScreen: View {
         .sheet(isPresented: $showingQuoteSheet) {
             quoteSheet
         }
+        .onAppear {
+            AnalyticsReporter.reportScreen("Settings", className: viewName)
+        }
     }
 }
 
@@ -342,6 +345,13 @@ private struct ReminderNotificationPreview: View {
     let title: String
     let bodyText: String?
     let appIcon: AppIcon
+
+    /// The system's localized "now", as shown on a just-delivered notification.
+    private static let nowLabel: String = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.dateTimeStyle = .named
+        return formatter.localizedString(fromTimeInterval: 0)
+    }()
 
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
@@ -363,7 +373,7 @@ private struct ReminderNotificationPreview: View {
 
             Spacer()
 
-            Text(verbatim: "now")
+            Text(verbatim: Self.nowLabel)
                 .font(.system(size: 13, weight: .regular))
                 .foregroundStyle(.secondary)
         }

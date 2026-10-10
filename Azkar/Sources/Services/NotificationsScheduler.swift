@@ -1,5 +1,6 @@
 import Foundation
 import BackgroundTasks
+import UserNotifications
 import Entities
 import FactoryKit
 import Library
@@ -84,7 +85,16 @@ final class NotificationsScheduler {
 
         if hasRandom {
             scheduleBackgroundRefresh()
+        } else {
+            // Nothing left to rotate: drop a refresh request submitted earlier.
+            cancelBackgroundRefresh()
         }
+    }
+
+    /// Default titles are localized by the system when the notification is
+    /// delivered, so a language change applies without rescheduling.
+    private func deliveryLocalizedTitle(for category: NotificationCategory) -> String {
+        NSString.localizedUserNotificationString(forKey: category.defaultNotificationTitleKey, arguments: nil)
     }
 
     private func quoteBody(text: String, source: String?) -> String {
@@ -99,7 +109,7 @@ final class NotificationsScheduler {
             notificationsHandler.scheduleNotification(
                 id: reminder.id,
                 date: reminder.fireTime,
-                title: reminder.category.defaultNotificationTitle,
+                title: deliveryLocalizedTitle(for: reminder.category),
                 subtitle: nil,
                 category: reminder.category,
                 sound: reminder.sound
@@ -109,7 +119,7 @@ final class NotificationsScheduler {
             components.weekday = 6
             notificationsHandler.scheduleNotification(
                 id: reminder.id,
-                title: reminder.category.defaultNotificationTitle,
+                title: deliveryLocalizedTitle(for: reminder.category),
                 subtitle: nil,
                 dateComponents: components,
                 category: reminder.category,
@@ -185,6 +195,12 @@ final class NotificationsScheduler {
                 print("Failed to schedule background refresh: \(error)")
             }
         }
+        #endif
+    }
+
+    private func cancelBackgroundRefresh() {
+        #if !targetEnvironment(macCatalyst)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundRefreshTaskIdentifier)
         #endif
     }
 }

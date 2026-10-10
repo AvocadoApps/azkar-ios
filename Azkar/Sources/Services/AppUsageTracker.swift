@@ -112,8 +112,13 @@ final class AppUsageTracker {
             serialize: String.init(describing:)
         )
         observeSetting(
-            .enableAdhkarReminder,
-            publisher: preferences.$enableAdhkarReminder.eraseToAnyPublisher(),
+            .enableMorningReminder,
+            publisher: preferences.$enableMorningReminder.eraseToAnyPublisher(),
+            serialize: String.init(describing:)
+        )
+        observeSetting(
+            .enableEveningReminder,
+            publisher: preferences.$enableEveningReminder.eraseToAnyPublisher(),
             serialize: String.init(describing:)
         )
         observeSetting(

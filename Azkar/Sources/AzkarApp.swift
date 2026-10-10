@@ -14,6 +14,7 @@ import Combine
 struct AzkarApp: App {
 
     private static var hasHandledLaunchPaywall = false
+    private static var hasClearedDeliveredNotifications = false
 
     @UIApplicationDelegateAdaptor var delegate: AppDelegate
 
@@ -80,6 +81,7 @@ struct AzkarApp: App {
                 handleIncomingURL(url)
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                clearDeliveredNotificationsOnFirstActivation()
                 handlePendingQuickAction()
                 handleControlCenterDeepLink()
                 notificationsScheduler.rescheduleAll()
@@ -88,6 +90,15 @@ struct AzkarApp: App {
                 handleSearchActivity(userActivity)
             }
         }
+    }
+
+    /// Clears delivered notifications once per process, when the user actually
+    /// brings the app to the foreground. Background launches (e.g. the reminders
+    /// refresh task) must not remove reminders the user hasn't seen yet.
+    private func clearDeliveredNotificationsOnFirstActivation() {
+        guard !Self.hasClearedDeliveredNotifications else { return }
+        Self.hasClearedDeliveredNotifications = true
+        delegate.notificationsHandler.removeDeliveredNotifications()
     }
 
     private func handleControlCenterDeepLink() {

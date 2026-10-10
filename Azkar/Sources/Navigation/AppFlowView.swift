@@ -40,7 +40,11 @@ struct AppFlowView: View {
                     RootView(viewModel: rootViewModel)
                 },
                 destination: { destination in
-                    AnyView(destinationView(destination))
+                    // Key the screen's identity on its destination: a deep link that
+                    // replaces the pushed screen with another one of the same kind
+                    // (e.g. morning -> evening adhkar) must build fresh state instead
+                    // of keeping the previous screen's @StateObject view model.
+                    AnyView(destinationView(destination).id(destination))
                 }
             )
             .ignoresSafeArea(.all, edges: .bottom)
@@ -245,13 +249,14 @@ private struct StandaloneZikrRouteView: View {
         dependencies: AppDependencies,
         navigator: AppNavigator
     ) {
-        let zikrViewModel = dependencies.standaloneZikrViewModel(request: request) ?? .demo()
+        // Build the zikr view model inside the StateObject autoclosure so the
+        // database fetch runs once per screen, not on every flow re-render.
         _viewModel = StateObject(
             wrappedValue: ZikrPagesViewModel(
                 navigator: navigator,
                 category: .other,
                 title: "",
-                azkar: [zikrViewModel],
+                azkar: [dependencies.standaloneZikrViewModel(request: request) ?? .demo()],
                 preferences: dependencies.preferences,
                 analytics: dependencies.analytics,
                 selectedPagePublisher: Empty().eraseToAnyPublisher(),
